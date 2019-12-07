@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Reversi</string>
+    <string name="title_activity_game">GameActivity</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="ass1">Assignment 1</string>
+    <string name="game">Othello</string>
+
+    <string name="othello">OTHELLO</string>
+    <string name="black">BLACK : 2</string>
+    <string name="white">WHITE : 2</string>
+    <string name="black_wins">BLACK WINS!</string>
+    <string name="white_wins">WHITE WINS!</string>
+    <string name="no_move">Turn skipped!</string>
+    <string name="ties">GAME DRAW!</string>
+    <string name="restart">Please start a new game!</string>
+    <string name="newGame">NEW GAME</string>
+    <string name="question_newGame">Start a new game?</string>
+    <string name="hint">HINT</string>
+    <string name="title_activity_home">HomeActivity</string>
+</resources>
