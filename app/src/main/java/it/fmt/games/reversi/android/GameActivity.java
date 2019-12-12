@@ -2,18 +2,16 @@ package it.fmt.games.reversi.android;
 
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.view.View;
-import android.widget.GridView;
+import it.fmt.games.reversi.GameRenderer;
+import it.fmt.games.reversi.Reversi;
+import it.fmt.games.reversi.UserInputReader;
+import it.fmt.games.reversi.model.GameSnapshot;
 
-public class GameActivity extends AppCompatActivity {
 
-    private GridView gridView;
+public class GameActivity extends AppCompatActivity implements GameRenderer, UserInputReader {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +20,13 @@ public class GameActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       // this.gridView = (GridView) findViewById(R.id.chessboard_gridview);
-        //ChessboardViewAdapter adapter = new ChessboardViewAdapter(this, 8, 8);
-        //gridView.setAdapter(adapter);
-       // gridView.set
+        Reversi reversi = new Reversi(this, this, null, null);
+
+        reversi.play();
     }
 
+    @Override
+    public void render(GameSnapshot gameSnapshot) {
+
+    }
 }

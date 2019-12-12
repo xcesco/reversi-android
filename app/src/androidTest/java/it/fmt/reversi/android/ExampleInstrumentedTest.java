@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("it.fmt.reversi.android", appContext.getPackageName());
+        assertEquals("it.fmt.it.fmt.games.reversi.android.reversi.android", appContext.getPackageName());
     }
 }
