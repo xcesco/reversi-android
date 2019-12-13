@@ -9,6 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -93,7 +94,7 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     @Override
     public void render(GameSnapshot gameSnapshot) {
         Log.i("RENDER", "draw");
-        final boolean showHints=showHints(gameSnapshot.getActivePiece());
+        final boolean showHints = showHints(gameSnapshot.getActivePiece());
         this.blackNum.setText(MessageFormat.format("BLACK: {0}", gameSnapshot.getScore().getPlayer1Score()));
         this.whiteNum.setText(MessageFormat.format("WHITE: {0}", gameSnapshot.getScore().getPlayer2Score()));
         final List<Coordinates> availableMoves = gameSnapshot.getAvailableMoves().getMovesActivePlayer();
@@ -127,6 +128,10 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
                     break;
             }
         });
+
+        if (gameSnapshot.getStatus().isGameOver()) {
+            (new AlertDialog.Builder(this)).setMessage(gameSnapshot.getStatus().toString()).show();
+        }
     }
 
     private void changeImage(GridViewItem view, Drawable startPiece, Drawable endkPiece, int animDuration) {
