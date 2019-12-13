@@ -11,19 +11,19 @@ android {
         versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    signingConfigs {
-        config {
-            keyAlias System.getenv("GRADLE_KEYSTORE_ALIAS")
-            keyPassword System.getenv("GRADLE_KEYSTORE_ALIAS_PASSWORD")
-            storeFile file(System.getenv("GRADLE_KEYSTORE_FILE"))
-            storePassword System.getenv("GRADLE_KEYSTORE_PASSWORD")
-        }
-    }
+//    signingConfigs {
+//        config {
+//            keyAlias System.getenv("GRADLE_KEYSTORE_ALIAS")
+//            keyPassword System.getenv("GRADLE_KEYSTORE_ALIAS_PASSWORD")
+//            storeFile file(System.getenv("GRADLE_KEYSTORE_FILE"))
+//            storePassword System.getenv("GRADLE_KEYSTORE_PASSWORD")
+//        }
+//    }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+//            signingConfig signingConfigs.config
         }
     }
     compileOptions {
