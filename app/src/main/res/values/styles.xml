@@ -33,11 +33,11 @@
     </style>
 
     <style name="AppGridItemDark" parent="@style/AppGridItem">
-        <item name="android:background">#009966</item>
+        <item name="android:background">@drawable/transparent</item>
     </style>
 
     <style name="AppGridItemLight" parent="@style/AppGridItem">
-        <item name="android:background">#00CC99</item>
+        <item name="android:background">@drawable/transparent</item>
     </style>
 
 </resources>

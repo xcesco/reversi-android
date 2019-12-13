@@ -43,11 +43,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="15dp"
+        android:visibility="visible">
 
         <Button
             android:id="@+id/newGame"
@@ -81,6 +81,7 @@
             android:layout_width="@integer/AppGridWidth"
             android:layout_height="@integer/AppGridHeight"
             android:layout_margin="12dp"
+            android:background="#009966"
             android:columnCount="8"
             android:rowCount="8"
             android:rowOrderPreserved="true"
@@ -423,17 +424,17 @@
         </it.fmt.games.reversi.android.ui.AppGridLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--    <GridView-->
-<!--        android:id="@+id/chessboard_gridview"-->
-<!--        android:numColumns="8"-->
-<!--        android:layout_margin="0dp"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:gravity="start"-->
-<!--        android:stretchMode="none"-->
-<!--        android:horizontalSpacing="0dp"-->
-<!--        android:padding="0dp">-->
-<!--    </GridView>-->
+    <!--    <GridView-->
+    <!--        android:id="@+id/chessboard_gridview"-->
+    <!--        android:numColumns="8"-->
+    <!--        android:layout_margin="0dp"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:gravity="start"-->
+    <!--        android:stretchMode="none"-->
+    <!--        android:horizontalSpacing="0dp"-->
+    <!--        android:padding="0dp">-->
+    <!--    </GridView>-->
 
 
 </LinearLayout>
