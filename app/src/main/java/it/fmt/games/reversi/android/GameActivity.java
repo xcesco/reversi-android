@@ -35,6 +35,7 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Use
 
     @BindView(R.id.gridLayout)
     AppGridLayout appGridLayout;
+    private Coordinates coordinate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +58,10 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Use
         this.whiteNum.setText(MessageFormat.format("WHITE: {0}", gameSnapshot.getScore().getPlayer2Score()));
 
         gameSnapshot.getBoard().getCellStream().forEach(item -> {
-            GridViewItem view= (GridViewItem) appGridLayout.getChildAt(item.getCoordinates().getRow()* Board.BOARD_SIZE+item.getCoordinates().getColumn());
+            GridViewItem view = (GridViewItem) appGridLayout.getChildAt(item.getCoordinates().getRow() * Board.BOARD_SIZE + item.getCoordinates().getColumn());
             view.setOnClickListener(GameActivity.this);
             view.setTag(item.getCoordinates());
-            switch(item.getPiece()) {
+            switch (item.getPiece()) {
                 case EMPTY:
                     view.setImageResource(R.drawable.transparent);
                     break;
@@ -78,12 +79,19 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Use
 
     @Override
     public Coordinates readInputFor(Player player, List<Coordinates> list) {
-        return list.get(0);
+        try {
+            while (coordinate == null || list.indexOf(coordinate)==-1) {
+                Thread.sleep(100);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return coordinate;
     }
 
     @Override
     public void onClick(View v) {
-        Coordinates coordinate= (Coordinates) v.getTag();
+        coordinate = (Coordinates) v.getTag();
 
     }
 }
