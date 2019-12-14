@@ -2,6 +2,7 @@ package it.fmt.games.reversi.android;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import it.fmt.games.reversi.android.ui.GridViewItem;
 import it.fmt.games.reversi.model.Board;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
+import it.fmt.games.reversi.model.GameStatus;
 import it.fmt.games.reversi.model.Piece;
 
 
@@ -123,7 +125,7 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
         final List<Coordinates> availableMoves = gameSnapshot.getAvailableMoves().getMovesActivePlayer();
         final List<Coordinates> capturedMoves = gameSnapshot.getLastMove() != null ? gameSnapshot.getLastMove().getCapturedEnemyPiecesCoords() : new ArrayList<>();
 
-        animatePlayerSelection(gameSnapshot);
+        animatePlayerSelection();
 
         gameSnapshot.getBoard().getCellStream().forEach(item -> {
             Coordinates coords = item.getCoordinates();
@@ -155,12 +157,33 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
             }
         });
 
-        if (gameSnapshot.getStatus().isGameOver()) {
-            (new AlertDialog.Builder(this)).setMessage(gameSnapshot.getStatus().toString()).show();
+        GameStatus status = gameSnapshot.getStatus();
+        if (status.isGameOver()) {
+            String msg = "";
+            switch (status) {
+                case DRAW:
+                    msg = String.format("Game draw!");
+                    break;
+                case PLAYER1_WIN:
+                    msg = String.format("Player 1 wins %s to %s", gameSnapshot.getScore().getPlayer1Score(), gameSnapshot.getScore().getPlayer2Score());
+                    break;
+                case PLAYER2_WIN:
+                    msg = String.format("Player 2 wins %s to %s", gameSnapshot.getScore().getPlayer2Score(), gameSnapshot.getScore().getPlayer1Score());
+                    break;
+
+            }
+
+            AlertDialog.Builder builder = (new AlertDialog.Builder(this));
+            builder.setPositiveButton("Play again", (dialog, which) -> {
+                GameActivity.this.startActivity(MainActivity.createIntent(GameActivity.this));
+                GameActivity.this.finish();
+            })
+                    .setNegativeButton("OK", null)
+                    .setTitle(R.string.title_end).setMessage(msg).show();
         }
     }
 
-    private void animatePlayerSelection(GameSnapshot gameSnapshot) {
+    private void animatePlayerSelection() {
         ivPlayerSelector.animate().setDuration(600).rotation(rotationAngle).start();
         rotationAngle *= -1;
     }

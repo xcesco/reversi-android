@@ -19,4 +19,5 @@
     <string name="question_newGame">Start a new game?</string>
     <string name="hint">HINT</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="title_end">Game result</string>
 </resources>
