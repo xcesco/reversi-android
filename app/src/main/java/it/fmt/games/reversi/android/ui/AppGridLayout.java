@@ -19,14 +19,11 @@ public class AppGridLayout extends GridLayout {
 
     public AppGridLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-
-
     }
 
     @Override
     protected void onMeasure(int widthSpec, int heightSpec) {
         int measure = Math.max(widthSpec, heightSpec);
-        //super.onMeasure(widthSpec, heightSpec);
         super.onMeasure(measure, measure);
     }
 }

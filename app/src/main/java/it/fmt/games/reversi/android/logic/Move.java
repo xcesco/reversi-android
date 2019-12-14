@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android;
+package it.fmt.games.reversi.android.logic;
 
 import it.fmt.games.reversi.model.Coordinates;
 

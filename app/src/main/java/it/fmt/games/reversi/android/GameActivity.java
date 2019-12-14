@@ -1,12 +1,12 @@
 package it.fmt.games.reversi.android;
 
 import android.animation.Animator;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -23,19 +23,19 @@ import it.fmt.games.reversi.GameRenderer;
 import it.fmt.games.reversi.Player1;
 import it.fmt.games.reversi.Player2;
 import it.fmt.games.reversi.PlayerFactory;
-import it.fmt.games.reversi.Reversi;
-import it.fmt.games.reversi.UserInputReader;
+import it.fmt.games.reversi.android.logic.AndroidPlayer;
+import it.fmt.games.reversi.android.logic.GameLogicThread;
 import it.fmt.games.reversi.android.ui.AppGridLayout;
 import it.fmt.games.reversi.android.ui.GridViewItem;
 import it.fmt.games.reversi.model.Board;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Piece;
-import it.fmt.games.reversi.model.Player;
-import it.fmt.games.reversi.model.RandomDecisionHandler;
 
 
 public class GameActivity extends AppCompatActivity implements GameRenderer, View.OnClickListener {
+
+    private static final String GAME_TYPE = "game_type";
 
     @BindView(R.id.blackNum)
     TextView blackNum;
@@ -45,12 +45,20 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
 
     @BindView(R.id.gridLayout)
     AppGridLayout appGridLayout;
+
     private Coordinates coordinate;
-    private GameThread gameThread;
+    private GameLogicThread gameLogic;
     private Drawable whitePiece;
     private Drawable blackPiece;
     private Player1 player1;
     private Player2 player2;
+
+
+    public static Intent createIntent(Context context, String gameType) {
+        Intent intent = new Intent(context, GameActivity.class);
+        intent.putExtra(GAME_TYPE, gameType);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,36 +67,35 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
 
         ButterKnife.bind(this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         whitePiece = getDrawable(R.drawable.white_256);
         blackPiece = this.getDrawable(R.drawable.black_256);
 
-        player1 = PlayerFactory.createUserPlayer1();
-        player2 = PlayerFactory.createRoboPlayer2(new AndroidPlayer());
+        String type=getIntent().getStringExtra(GAME_TYPE);
 
-        gameThread = new GameThread(this, player1, player2, this);
-        gameThread.start();
+        switch (type) {
+            case "1":
+                player1 = PlayerFactory.createUserPlayer1();
+                player2 = PlayerFactory.createUserPlayer2();
+                break;
+            case "2":
+                player1 = PlayerFactory.createUserPlayer1();
+                player2 = PlayerFactory.createRoboPlayer2(new AndroidPlayer());
+                break;
+            case "3":
+                player1 = PlayerFactory.createRoboPlayer1(new AndroidPlayer());
+                player2 = PlayerFactory.createUserPlayer2();
+                break;
+        }
+
+        gameLogic = new GameLogicThread(this, player1, player2, this);
+        gameLogic.start();
     }
 
-    boolean showHints(Piece activePiece) {
+    private boolean showHints(Piece activePiece) {
         if (player1.isHumanPlayer() && activePiece == player1.getPiece()) return true;
         if (player2.isHumanPlayer() && activePiece == player2.getPiece()) return true;
 
         return false;
-    }
-
-    public class AndroidPlayer extends RandomDecisionHandler {
-        @Override
-        public Coordinates compute(List<Coordinates> availableMoves) {
-            try {
-                Thread.sleep(1200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return super.compute(availableMoves);
-        }
     }
 
     @Override
@@ -165,9 +172,9 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     public void onClick(View v) {
         coordinate = (Coordinates) v.getTag();
 
-        synchronized (gameThread.acceptedMove) {
-            gameThread.acceptedMove.setCoordinates(coordinate);
-            gameThread.acceptedMove.notifyAll();
+        synchronized (gameLogic.acceptedMove) {
+            gameLogic.acceptedMove.setCoordinates(coordinate);
+            gameLogic.acceptedMove.notifyAll();
         }
     }
 }
