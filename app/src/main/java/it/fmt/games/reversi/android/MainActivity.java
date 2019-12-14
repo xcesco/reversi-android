@@ -11,7 +11,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
-    @OnClick({R.id.btnCPUVsHuman, R.id.btnHumanVsCPU, R.id.btnHumanVsHuman})
+    @OnClick({R.id.btnCPUVsHuman, R.id.btnHumanVsCPU, R.id.btnHumanVsHuman, R.id.btnCPUVsCPU})
     public void onOpenView(View view) {
         Intent intent=GameActivity.createIntent(this, view.getTag().toString());
         startActivity(intent);

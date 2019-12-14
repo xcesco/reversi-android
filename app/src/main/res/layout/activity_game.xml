@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
@@ -10,15 +10,21 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="5dp"
-        android:visibility="visible">
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
+            android:layout_width="148dp"
+            android:layout_height="148dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -72,34 +78,46 @@
         </FrameLayout>
 
 
-        <TextView
-            android:id="@+id/blackNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/black"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-        <TextView
-            android:id="@+id/whiteNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/white"
-            android:textSize="20sp"
+        <ImageView
+            android:id="@+id/ivPlayerSelector"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:srcCompat="@drawable/ic_navigation" />
+
+
+
+
+
+        <TextView
+            android:id="@+id/tvPlayer1Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player1"
+            app:layout_constraintBottom_toTopOf="@+id/imageView2"
+            app:layout_constraintEnd_toEndOf="@+id/imageView2"
+            app:layout_constraintStart_toStartOf="@+id/imageView2" />
+
+        <TextView
+            android:id="@+id/tvPlayer2Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player2"
+            app:layout_constraintBottom_toTopOf="@+id/imageView3"
+            app:layout_constraintEnd_toEndOf="@+id/imageView3"
+            app:layout_constraintStart_toStartOf="@+id/imageView3" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <it.fmt.games.reversi.android.ui.AppGridLayout
             android:id="@+id/gridLayout"
@@ -254,29 +272,29 @@
             <it.fmt.games.reversi.android.ui.GridViewItem
                 android:id="@+id/board32"
                 style="@style/AppGridItemLight"
-                app:srcCompat="@drawable/transparent"  />
+                app:srcCompat="@drawable/transparent" />
 
             <it.fmt.games.reversi.android.ui.GridViewItem
                 android:id="@+id/board33"
                 style="@style/AppGridItemDark"
                 app:srcCompat="@drawable/transparent"
-                tools:srcCompat="@drawable/black_256"/>
+                tools:srcCompat="@drawable/black_256" />
 
             <it.fmt.games.reversi.android.ui.GridViewItem
                 android:id="@+id/board34"
                 style="@style/AppGridItemLight"
                 app:srcCompat="@drawable/transparent"
-                tools:srcCompat="@drawable/white_256"/>
+                tools:srcCompat="@drawable/white_256" />
 
             <it.fmt.games.reversi.android.ui.GridViewItem
                 android:id="@+id/board35"
                 style="@style/AppGridItemDark"
-                app:srcCompat="@drawable/transparent"  />
+                app:srcCompat="@drawable/transparent" />
 
             <it.fmt.games.reversi.android.ui.GridViewItem
                 android:id="@+id/board36"
                 style="@style/AppGridItemLight"
-                app:srcCompat="@drawable/transparent"  />
+                app:srcCompat="@drawable/transparent" />
 
             <it.fmt.games.reversi.android.ui.GridViewItem
                 android:id="@+id/board37"
@@ -303,13 +321,13 @@
                 android:id="@+id/board43"
                 style="@style/AppGridItemLight"
                 app:srcCompat="@drawable/transparent"
-                tools:srcCompat="@drawable/white_256"/>
+                tools:srcCompat="@drawable/white_256" />
 
             <it.fmt.games.reversi.android.ui.GridViewItem
                 android:id="@+id/board44"
                 style="@style/AppGridItemDark"
                 app:srcCompat="@drawable/transparent"
-                tools:srcCompat="@drawable/black_256"/>
+                tools:srcCompat="@drawable/black_256" />
 
             <it.fmt.games.reversi.android.ui.GridViewItem
                 android:id="@+id/board45"
@@ -453,4 +471,4 @@
         </it.fmt.games.reversi.android.ui.AppGridLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

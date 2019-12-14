@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -37,10 +36,10 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
 
     private static final String GAME_TYPE = "game_type";
 
-    @BindView(R.id.blackNum)
+    @BindView(R.id.tvPlayer1Score)
     TextView blackNum;
 
-    @BindView(R.id.whiteNum)
+    @BindView(R.id.tvPlayer2Score)
     TextView whiteNum;
 
     @BindView(R.id.gridLayout)
@@ -83,6 +82,10 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
             case "3":
                 player1 = PlayerFactory.createRoboPlayer1(new AndroidPlayer());
                 player2 = PlayerFactory.createUserPlayer2();
+                break;
+            case "4":
+                player1 = PlayerFactory.createRoboPlayer1(new AndroidPlayer());
+                player2 = PlayerFactory.createRoboPlayer2(new AndroidPlayer());
                 break;
         }
 
@@ -156,9 +159,10 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                //view.setImageDrawable(middlePiece);
+
                 view.setImageDrawable(endkPiece);
                 view.animate().setDuration(animDuration / 2).scaleY(1.0f).setListener(null);
-
             }
 
             @Override
