@@ -46,7 +46,6 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     @BindView(R.id.gridLayout)
     AppGridLayout appGridLayout;
 
-    private Coordinates coordinate;
     private GameLogicThread gameLogic;
     private Drawable whitePiece;
     private Drawable blackPiece;
@@ -102,32 +101,33 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     public void render(GameSnapshot gameSnapshot) {
         Log.i("RENDER", "draw");
         final boolean showHints = showHints(gameSnapshot.getActivePiece());
-        this.blackNum.setText(MessageFormat.format("BLACK: {0}", gameSnapshot.getScore().getPlayer1Score()));
-        this.whiteNum.setText(MessageFormat.format("WHITE: {0}", gameSnapshot.getScore().getPlayer2Score()));
+        this.blackNum.setText(""+gameSnapshot.getScore().getPlayer1Score());
+        this.whiteNum.setText(""+gameSnapshot.getScore().getPlayer2Score());
         final List<Coordinates> availableMoves = gameSnapshot.getAvailableMoves().getMovesActivePlayer();
         final List<Coordinates> capturedMoves = gameSnapshot.getLastMove() != null ? gameSnapshot.getLastMove().getCapturedEnemyPiecesCoords() : new ArrayList<>();
 
         gameSnapshot.getBoard().getCellStream().forEach(item -> {
-            GridViewItem view = (GridViewItem) appGridLayout.getChildAt(item.getCoordinates().getRow() * Board.BOARD_SIZE + item.getCoordinates().getColumn());
+            Coordinates coords=item.getCoordinates();
+            GridViewItem view = (GridViewItem) appGridLayout.getChildAt(coords.getRow() * Board.BOARD_SIZE + coords.getColumn());
             view.setOnClickListener(GameActivity.this);
-            view.setTag(item.getCoordinates());
+            view.setTag(coords);
             switch (item.getPiece()) {
                 case EMPTY:
-                    if (showHints && availableMoves.indexOf(item.getCoordinates()) >= 0) {
+                    if (showHints && availableMoves.indexOf(coords) >= 0) {
                         view.setImageResource(R.drawable.hint_256);
                     } else {
                         view.setImageResource(R.drawable.transparent);
                     }
                     break;
                 case PLAYER_1:
-                    if (capturedMoves.indexOf(item.getCoordinates()) >= 0) {
+                    if (capturedMoves.indexOf(coords) >= 0) {
                         changeImage(view, whitePiece, blackPiece, 500);
                     } else {
                         view.setImageDrawable(blackPiece);
                     }
                     break;
                 case PLAYER_2:
-                    if (capturedMoves.indexOf(item.getCoordinates()) >= 0) {
+                    if (capturedMoves.indexOf(coords) >= 0) {
                         changeImage(view, blackPiece, whitePiece, 500);
                     } else {
                         view.setImageDrawable(whitePiece);
@@ -170,7 +170,7 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
 
     @Override
     public void onClick(View v) {
-        coordinate = (Coordinates) v.getTag();
+        Coordinates coordinate = (Coordinates) v.getTag();
 
         synchronized (gameLogic.acceptedMove) {
             gameLogic.acceptedMove.setCoordinates(coordinate);
