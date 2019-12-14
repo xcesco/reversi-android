@@ -7,12 +7,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +36,15 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
 
     private static final String GAME_TYPE = "game_type";
 
+    @BindView(R.id.ivPlayerSelector)
+    ImageView ivPlayerSelector;
+
+    @BindView(R.id.tvPlayer1Title)
+    TextView tvPlayer1Title;
+
+    @BindView(R.id.tvPlayer2Title)
+    TextView tvPlayer2Title;
+
     @BindView(R.id.tvPlayer1Score)
     TextView blackNum;
 
@@ -50,6 +59,7 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     private Drawable blackPiece;
     private Player1 player1;
     private Player2 player2;
+    private float rotationAngle;
 
 
     public static Intent createIntent(Context context, String gameType) {
@@ -67,13 +77,15 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
 
         whitePiece = getDrawable(R.drawable.white_256);
         blackPiece = this.getDrawable(R.drawable.black_256);
+        rotationAngle = -90f;
 
-        String type=getIntent().getStringExtra(GAME_TYPE);
+        String type = getIntent().getStringExtra(GAME_TYPE);
 
         switch (type) {
             case "1":
                 player1 = PlayerFactory.createUserPlayer1();
                 player2 = PlayerFactory.createUserPlayer2();
+
                 break;
             case "2":
                 player1 = PlayerFactory.createUserPlayer1();
@@ -88,6 +100,8 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
                 player2 = PlayerFactory.createRoboPlayer2(new AndroidPlayer());
                 break;
         }
+        if (!player1.isHumanPlayer()) tvPlayer1Title.setText("CPU");
+        if (!player2.isHumanPlayer()) tvPlayer2Title.setText("CPU");
 
         gameLogic = new GameLogicThread(this, player1, player2, this);
         gameLogic.start();
@@ -104,13 +118,15 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     public void render(GameSnapshot gameSnapshot) {
         Log.i("RENDER", "draw");
         final boolean showHints = showHints(gameSnapshot.getActivePiece());
-        this.blackNum.setText(""+gameSnapshot.getScore().getPlayer1Score());
-        this.whiteNum.setText(""+gameSnapshot.getScore().getPlayer2Score());
+        this.blackNum.setText("" + gameSnapshot.getScore().getPlayer1Score());
+        this.whiteNum.setText("" + gameSnapshot.getScore().getPlayer2Score());
         final List<Coordinates> availableMoves = gameSnapshot.getAvailableMoves().getMovesActivePlayer();
         final List<Coordinates> capturedMoves = gameSnapshot.getLastMove() != null ? gameSnapshot.getLastMove().getCapturedEnemyPiecesCoords() : new ArrayList<>();
 
+        animatePlayerSelection(gameSnapshot);
+
         gameSnapshot.getBoard().getCellStream().forEach(item -> {
-            Coordinates coords=item.getCoordinates();
+            Coordinates coords = item.getCoordinates();
             GridViewItem view = (GridViewItem) appGridLayout.getChildAt(coords.getRow() * Board.BOARD_SIZE + coords.getColumn());
             view.setOnClickListener(GameActivity.this);
             view.setTag(coords);
@@ -124,14 +140,14 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
                     break;
                 case PLAYER_1:
                     if (capturedMoves.indexOf(coords) >= 0) {
-                        changeImage(view, whitePiece, blackPiece, 500);
+                        animatePieceFlip(view, whitePiece, blackPiece, 500);
                     } else {
                         view.setImageDrawable(blackPiece);
                     }
                     break;
                 case PLAYER_2:
                     if (capturedMoves.indexOf(coords) >= 0) {
-                        changeImage(view, blackPiece, whitePiece, 500);
+                        animatePieceFlip(view, blackPiece, whitePiece, 500);
                     } else {
                         view.setImageDrawable(whitePiece);
                     }
@@ -144,7 +160,12 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
         }
     }
 
-    private void changeImage(GridViewItem view, Drawable startPiece, Drawable endkPiece, int animDuration) {
+    private void animatePlayerSelection(GameSnapshot gameSnapshot) {
+        ivPlayerSelector.animate().setDuration(600).rotation(rotationAngle).start();
+        rotationAngle *= -1;
+    }
+
+    private void animatePieceFlip(GridViewItem view, Drawable startPiece, Drawable endkPiece, int animDuration) {
         view.setImageDrawable(startPiece);
         view.setScaleY(1.0f);
         view.animate().setDuration(animDuration / 2).scaleY(0.f).setListener(new Animator.AnimatorListener() {
