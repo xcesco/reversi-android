@@ -2,7 +2,6 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
@@ -25,9 +24,9 @@
             android:paddingTop="24dp"
             android:paddingBottom="24dp"
             android:tag="4"
-            android:text="CPU 1 vs. CPU 2"
+            android:text="@string/cpu_vs_cpu"
             android:textColor="@android:color/white"
-            app:layout_constraintBottom_toTopOf="@+id/btnHumanVsHuman"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -37,14 +36,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/rounded_button"
             android:paddingTop="24dp"
             android:paddingBottom="24dp"
             android:tag="1"
-            android:text="Player 1 vs. Player 2"
+            android:text="@string/player1_vs_player2"
             android:textColor="@android:color/white"
-            app:layout_constraintBottom_toTopOf="@+id/btnHumanVsCPU"
+            app:layout_constraintBottom_toTopOf="@+id/btnCPUVsHuman"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -54,14 +53,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/rounded_button"
             android:paddingTop="24dp"
             android:paddingBottom="24dp"
             android:tag="2"
-            android:text="Player 1 vs. CPU 2"
+            android:text="@string/player1_vs_CPU2"
             android:textColor="@android:color/white"
-            app:layout_constraintBottom_toTopOf="@+id/btnCPUVsHuman"
+            app:layout_constraintBottom_toTopOf="@+id/btnHumanVsHuman"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -71,14 +70,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/rounded_button"
             android:paddingTop="24dp"
             android:paddingBottom="24dp"
             android:tag="3"
-            android:text="CPU Vs. Player 2"
+            android:text="@string/cpu_vs_player2"
             android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btnCPUVsCPU"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -87,6 +86,7 @@
             android:layout_width="196dp"
             android:layout_height="196dp"
             android:layout_marginTop="24dp"
+            android:contentDescription="@string/logo_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

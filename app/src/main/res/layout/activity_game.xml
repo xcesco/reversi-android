@@ -23,6 +23,7 @@
             android:id="@+id/imageView"
             android:layout_width="164dp"
             android:layout_height="164dp"
+            android:contentDescription="@string/logo_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -39,6 +40,7 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
+                android:contentDescription="@string/player1_score"
                 app:srcCompat="@drawable/black_256" />
 
             <TextView
@@ -46,8 +48,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:text="0"
+                android:contentDescription="@string/player1_score"
                 android:textColor="#FFFFFF"
+                tools:text="0"
                 android:textSize="20sp" />
         </FrameLayout>
 
@@ -60,9 +63,11 @@
             android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/ivPlayerSelector">
+
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
+                android:contentDescription="@string/player2_score"
                 app:srcCompat="@drawable/white_256" />
 
             <TextView
@@ -70,9 +75,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:text="0"
+                android:contentDescription="@string/player2_score"
                 android:textColor="#4E4D4D"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="0" />
         </FrameLayout>
 
 
@@ -80,6 +86,7 @@
             android:id="@+id/ivPlayerSelector"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:contentDescription="@string/selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -91,6 +98,7 @@
             android:id="@+id/tvPlayer1Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/player1_score"
             android:text="Player 1"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -102,6 +110,7 @@
             android:id="@+id/tvPlayer2Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/player2_score"
             android:text="Player 2"
             android:textSize="18sp"
             android:textStyle="bold"

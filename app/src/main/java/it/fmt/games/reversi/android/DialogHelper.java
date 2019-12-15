@@ -30,10 +30,10 @@ public abstract class DialogHelper {
                 break;
 
         }
-        builder.setPositiveButton("Play again", (dialog, which) -> {
+        builder.setPositiveButton("Play another game", (dialog, which) -> {
             context.startActivity(MainActivity.createIntent(context));
             context.finish();
         })
-                .setNegativeButton("OK", null).show();
+                .setNegativeButton("Return to board", null).show();
     }
 }
