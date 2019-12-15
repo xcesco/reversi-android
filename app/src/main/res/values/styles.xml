@@ -40,4 +40,9 @@
         <item name="android:background">@drawable/transparent</item>
     </style>
 
+    <style name="my_dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="windowFixedWidthMajor">70%</item>
+        <item name="windowFixedWidthMinor">70%</item>
+    </style>
+
 </resources>
