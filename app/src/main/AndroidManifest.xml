@@ -13,10 +13,13 @@
             android:name=".GameActivity"
             android:label="@string/title_activity_game"
             android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".MainActivity" android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
+        <activity android:name=".MainActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

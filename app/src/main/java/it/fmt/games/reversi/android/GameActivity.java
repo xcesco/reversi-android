@@ -20,6 +20,7 @@ import it.fmt.games.reversi.android.ui.AppGridLayout;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.GameStatus;
+import it.fmt.games.reversi.model.Score;
 
 
 public class GameActivity extends AppCompatActivity implements GameRenderer, View.OnClickListener {
@@ -98,17 +99,21 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
 
     @Override
     public void render(GameSnapshot gameSnapshot) {
-        this.blackNum.setText("" + gameSnapshot.getScore().getPlayer1Score());
-        this.whiteNum.setText("" + gameSnapshot.getScore().getPlayer2Score());
+        showPlayerScore(gameSnapshot.getScore());
 
         animatePlayerSelection();
 
         BoardAndroidDrawer.draw(this, gameSnapshot);
-
         GameStatus status = gameSnapshot.getStatus();
+
         if (status.isGameOver()) {
             DialogHelper.showResultDialog(this, status);
         }
+    }
+
+    private void showPlayerScore(Score score) {
+        this.blackNum.setText("" + score.getPlayer1Score());
+        this.whiteNum.setText("" + score.getPlayer2Score());
     }
 
     private void animatePlayerSelection() {
@@ -120,9 +125,9 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     public void onClick(View v) {
         Coordinates coordinate = (Coordinates) v.getTag();
 
-        synchronized (gameLogic.acceptedMove) {
-            gameLogic.acceptedMove.setCoordinates(coordinate);
-            gameLogic.acceptedMove.notifyAll();
+        synchronized (gameLogic.getAcceptedMove()) {
+            gameLogic.getAcceptedMove().setCoordinates(coordinate);
+            gameLogic.getAcceptedMove().notifyAll();
         }
     }
 }

@@ -3,13 +3,16 @@ package it.fmt.games.reversi.android.logic;
 import java.util.List;
 
 import it.fmt.games.reversi.model.Coordinates;
-import it.fmt.games.reversi.model.RandomDecisionHandler;
+import it.fmt.games.reversi.model.cpu.RandomDecisionHandler;
 
 public class AndroidPlayer extends RandomDecisionHandler {
-        @Override
+
+    public static final int THINKING_TIME = 1200;
+
+    @Override
         public Coordinates compute(List<Coordinates> availableMoves) {
             try {
-                Thread.sleep(1200);
+                Thread.sleep(THINKING_TIME);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

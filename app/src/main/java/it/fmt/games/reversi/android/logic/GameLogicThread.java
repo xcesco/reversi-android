@@ -1,6 +1,5 @@
 package it.fmt.games.reversi.android.logic;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import it.fmt.games.reversi.GameRenderer;
@@ -14,18 +13,24 @@ import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Player;
 
 public class GameLogicThread extends Thread {
+    private final Move acceptedMove = new Move();
+
     private final Reversi reversi;
-    public final Move acceptedMove = new Move();
+
     private final GameActivity activity;
+
     private GameRenderer uiRenderer;
-    public List<Coordinates> availableMoves = new ArrayList<>();
 
     public GameLogicThread(GameActivity activity, Player1 player1, Player2 player2, GameRenderer uiRenderer) {
-        this.activity=activity;
-        this.uiRenderer=uiRenderer;
-        UserInputReader userInputReader = this::getCoordinates;
-        GameRenderer gamerRenderer = this::dispatchToUiRenderer;
-        this.reversi = new Reversi(gamerRenderer, userInputReader, player1, player2);
+        this.activity = activity;
+        this.uiRenderer = uiRenderer;
+        UserInputReader userInputReader = this::readPlayerMove;
+        GameRenderer gamerRendererWrapper = this::dispatchToUiRenderer;
+        this.reversi = new Reversi(gamerRendererWrapper, userInputReader, player1, player2);
+    }
+
+    public Move getAcceptedMove() {
+        return acceptedMove;
     }
 
     private void dispatchToUiRenderer(GameSnapshot gameSnapshot) {
@@ -34,24 +39,22 @@ public class GameLogicThread extends Thread {
         });
     }
 
-    private Coordinates getCoordinates(Player player, List<Coordinates> list) {
-        availableMoves = list;
-
+    private Coordinates readPlayerMove(Player player, List<Coordinates> list) {
         synchronized (acceptedMove) {
-            while (isInvalidMove()) {
-                try {
+            try {
+                while (isInvalidMove(list)) {
                     acceptedMove.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
             return acceptedMove.getCoordinates();
         }
     }
 
-    private boolean isInvalidMove() {
-        return acceptedMove.getCoordinates() == null || availableMoves.indexOf(acceptedMove.getCoordinates()) == -1;
+    private boolean isInvalidMove(List<Coordinates> list) {
+        return acceptedMove.getCoordinates() == null || list.indexOf(acceptedMove.getCoordinates()) == -1;
     }
 
     @Override

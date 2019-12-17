@@ -8,8 +8,8 @@ android {
         applicationId "it.fmt.games.reversi.android"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 103
-        versionName "1.0.3"
+        versionCode 106
+        versionName "1.0.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         setProperty("archivesBaseName", "$applicationId-$versionName")
@@ -46,7 +46,7 @@ dependencies {
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
     implementation 'com.jakewharton:butterknife:10.2.0'
-    implementation 'it.fmt.games.reversi:reversi-core:0.1.0-SNAPSHOT:jdk8'
+    implementation 'it.fmt.games.reversi:reversi-core:0.3.0-SNAPSHOT:jdk8'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.0.0'
 

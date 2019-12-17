@@ -12,16 +12,16 @@ public class GameActivityHelper {
         String type = gameActivity.getIntent().getStringExtra(GameActivity.GAME_TYPE);
         switch (type) {
             case "1":
-                gameActivity.player1 = PlayerFactory.createUserPlayer1();
-                gameActivity.player2 = PlayerFactory.createUserPlayer2();
+                gameActivity.player1 = PlayerFactory.createHumanPlayer1();
+                gameActivity.player2 = PlayerFactory.createHumanPlayer2();
                 break;
             case "2":
-                gameActivity.player1 = PlayerFactory.createUserPlayer1();
+                gameActivity.player1 = PlayerFactory.createHumanPlayer1();
                 gameActivity.player2 = PlayerFactory.createRoboPlayer2(new AndroidPlayer());
                 break;
             case "3":
                 gameActivity.player1 = PlayerFactory.createRoboPlayer1(new AndroidPlayer());
-                gameActivity.player2 = PlayerFactory.createUserPlayer2();
+                gameActivity.player2 = PlayerFactory.createHumanPlayer2();
                 break;
             case "4":
                 gameActivity.player1 = PlayerFactory.createRoboPlayer1(new AndroidPlayer());
