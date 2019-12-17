@@ -19,11 +19,11 @@ public class GameLogicThread extends Thread {
 
     private final GameActivity activity;
 
-    private GameRenderer uiRenderer;
+    private final GameRenderer uiRenderer;
 
-    public GameLogicThread(GameActivity activity, Player1 player1, Player2 player2, GameRenderer uiRenderer) {
+    public GameLogicThread(GameActivity activity, Player1 player1, Player2 player2, GameRenderer gameRenderer) {
         this.activity = activity;
-        this.uiRenderer = uiRenderer;
+        this.uiRenderer = gameRenderer;
         UserInputReader userInputReader = this::readPlayerMove;
         GameRenderer gamerRendererWrapper = this::dispatchToUiRenderer;
         this.reversi = new Reversi(gamerRendererWrapper, userInputReader, player1, player2);
