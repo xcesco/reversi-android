@@ -1,8 +1,8 @@
 <img src="https://github.com/xcesco/reversi-android/blob/master/docs/logo.png" alt="logo" width="200"/>
 
 # Reversi for Android
-This is the Android version of the project <a href="https://github.com/xesco/reversi">fmt-reversi</a>. More information
-on main project can be found at <a href="https://github.com/xesco/reversi">reversi github</a> repository. 
+This is the Android version of the project <a href="https://github.com/xcesco/reversi">fmt-reversi</a>. More information
+on main project can be found at <a href="https://github.com/xcesco/reversi">reversi github</a> repository. 
 
 ## The game
 There are different set of rules applied to Reversi. Our project take its from [Wikipedia](https://en.wikipedia.org/wiki/Reversi) 
