@@ -16,6 +16,11 @@ To compile the project you need:
  
 Use Android Studio github integration to clone and import the project.
 
+## Used libraries and frameworks
+In addition to the standard libraries, I used the following libraries in this project:
+
+ - [butterknife](https://jakewharton.github.io/butterknife/)
+
 ## Store availability
 Game is available on [Play store](https://play.google.com/store/apps/details?id=it.fmt.games.reversi.android)
 
