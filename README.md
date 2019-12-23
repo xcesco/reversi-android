@@ -1,4 +1,4 @@
-<img src="https://github.com/xcesco/reversi/blob/master/docs/logo.png" alt="logo" width="200"/>
+<img src="https://github.com/xcesco/reversi-android/blob/master/docs/logo.png" alt="logo" width="200"/>
 
 # reversi-android
 This is the Android version of the project <a href="https://github.com/xesco/reversi">fmt-reversi</a>. More information
