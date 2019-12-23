@@ -1,6 +1,6 @@
 <img src="https://github.com/xcesco/reversi-android/blob/master/docs/logo.png" alt="logo" width="200"/>
 
-# reversi-android
+# Reversi for Android
 This is the Android version of the project <a href="https://github.com/xesco/reversi">fmt-reversi</a>. More information
 on main project can be found at <a href="https://github.com/xesco/reversi">reversi github</a> repository. 
 
