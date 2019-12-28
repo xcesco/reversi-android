@@ -9,14 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.fmt.games.reversi.GameRenderer;
 import it.fmt.games.reversi.Player1;
 import it.fmt.games.reversi.Player2;
-import it.fmt.games.reversi.android.logic.GameLogicThread;
-import it.fmt.games.reversi.android.ui.AppGridLayout;
+import it.fmt.games.reversi.android.support.BoardAndroidDrawer;
+import it.fmt.games.reversi.android.logic.GameViewModel;
+import it.fmt.games.reversi.android.views.AppGridLayout;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.GameStatus;
@@ -45,8 +47,6 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     @BindView(R.id.gridLayout)
     AppGridLayout appGridLayout;
 
-    private GameLogicThread gameLogic;
-
     Drawable whitePieceDrawable;
 
     Drawable blackPieceDrawable;
@@ -56,6 +56,8 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     Player2 player2;
 
     float rotationAngle;
+    
+    private GameViewModel viewModel;
 
     public static Intent createIntent(Context context, String gameType) {
         Intent intent = new Intent(context, GameActivity.class);
@@ -92,23 +94,21 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
 
         GameActivityHelper.definePlayersAndPieces(this);
 
-        gameLogic = new GameLogicThread(this, player1, player2, this);
-        gameLogic.start();
+        viewModel = ViewModelProviders.of(this).get(GameViewModel.class);
+        viewModel.play(this,player1, player2,this).observe(this, finalGameSnapshot -> {
+            GameStatus status = finalGameSnapshot.getStatus();
+            if (status.isGameOver() && !this.isFinishing()) {
+                DialogHelper.showResultDialog(this, status);
+            }
+        });
     }
 
 
     @Override
     public void render(GameSnapshot gameSnapshot) {
         showPlayerScore(gameSnapshot.getScore());
-
         animatePlayerSelection();
-
         BoardAndroidDrawer.draw(this, gameSnapshot);
-        GameStatus status = gameSnapshot.getStatus();
-
-        if (status.isGameOver()) {
-            DialogHelper.showResultDialog(this, status);
-        }
     }
 
     private void showPlayerScore(Score score) {
@@ -125,9 +125,9 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     public void onClick(View v) {
         Coordinates coordinate = (Coordinates) v.getTag();
 
-        synchronized (gameLogic.getAcceptedMove()) {
-            gameLogic.getAcceptedMove().setCoordinates(coordinate);
-            gameLogic.getAcceptedMove().notifyAll();
+        synchronized (viewModel.getAcceptedMove()) {
+            viewModel.getAcceptedMove().setCoordinates(coordinate);
+            viewModel.getAcceptedMove().notifyAll();
         }
     }
 }

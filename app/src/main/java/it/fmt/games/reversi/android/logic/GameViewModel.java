@@ -1,6 +1,12 @@
 package it.fmt.games.reversi.android.logic;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import it.fmt.games.reversi.GameRenderer;
 import it.fmt.games.reversi.Player1;
@@ -12,21 +18,32 @@ import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Player;
 
-public class GameLogicThread extends Thread {
+public class GameViewModel extends ViewModel {
+
+    private Executor executor = Executors.newSingleThreadExecutor();
+
+    private GameActivity activity;
+
+    private GameRenderer uiRenderer;
+
     private final Move acceptedMove = new Move();
 
-    private final Reversi reversi;
-
-    private final GameActivity activity;
-
-    private final GameRenderer uiRenderer;
-
-    public GameLogicThread(GameActivity activity, Player1 player1, Player2 player2, GameRenderer gameRenderer) {
-        this.activity = activity;
-        this.uiRenderer = gameRenderer;
+    public LiveData<GameSnapshot> play(final GameActivity activity, final Player1 player1, final Player2 player2, final GameRenderer gameRenderer) {
+        MutableLiveData<GameSnapshot> result = new MutableLiveData<>();
+        this.activity=activity;
+        this.uiRenderer=gameRenderer;
         UserInputReader userInputReader = this::readPlayerMove;
         GameRenderer gamerRendererWrapper = this::dispatchToUiRenderer;
-        this.reversi = new Reversi(gamerRendererWrapper, userInputReader, player1, player2);
+
+        executor.execute(() -> {
+            Reversi reversi = new Reversi(gamerRendererWrapper, userInputReader, player1, player2);
+            GameSnapshot finalGameSnapshot=reversi.play();
+
+            result.postValue(finalGameSnapshot);
+        });
+
+
+        return result;
     }
 
     public Move getAcceptedMove() {
@@ -34,9 +51,7 @@ public class GameLogicThread extends Thread {
     }
 
     private void dispatchToUiRenderer(GameSnapshot gameSnapshot) {
-        activity.runOnUiThread(() -> {
-            uiRenderer.render(gameSnapshot);
-        });
+        activity.runOnUiThread(() -> uiRenderer.render(gameSnapshot));
     }
 
     private Coordinates readPlayerMove(Player player, List<Coordinates> list) {
@@ -55,10 +70,5 @@ public class GameLogicThread extends Thread {
 
     private boolean isInvalidMove(List<Coordinates> list) {
         return acceptedMove.getCoordinates() == null || list.indexOf(acceptedMove.getCoordinates()) == -1;
-    }
-
-    @Override
-    public void run() {
-        reversi.play();
     }
 }

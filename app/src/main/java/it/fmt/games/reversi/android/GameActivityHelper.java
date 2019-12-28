@@ -1,7 +1,7 @@
 package it.fmt.games.reversi.android;
 
 import it.fmt.games.reversi.PlayerFactory;
-import it.fmt.games.reversi.android.logic.AndroidPlayer;
+import it.fmt.games.reversi.android.logic.AndroidDecisionHandler;
 
 public class GameActivityHelper {
     public static void definePlayersAndPieces(GameActivity gameActivity) {
@@ -17,15 +17,15 @@ public class GameActivityHelper {
                 break;
             case "2":
                 gameActivity.player1 = PlayerFactory.createHumanPlayer1();
-                gameActivity.player2 = PlayerFactory.createRoboPlayer2(new AndroidPlayer());
+                gameActivity.player2 = PlayerFactory.createRoboPlayer2(new AndroidDecisionHandler());
                 break;
             case "3":
-                gameActivity.player1 = PlayerFactory.createRoboPlayer1(new AndroidPlayer());
+                gameActivity.player1 = PlayerFactory.createRoboPlayer1(new AndroidDecisionHandler());
                 gameActivity.player2 = PlayerFactory.createHumanPlayer2();
                 break;
             case "4":
-                gameActivity.player1 = PlayerFactory.createRoboPlayer1(new AndroidPlayer());
-                gameActivity.player2 = PlayerFactory.createRoboPlayer2(new AndroidPlayer());
+                gameActivity.player1 = PlayerFactory.createRoboPlayer1(new AndroidDecisionHandler());
+                gameActivity.player2 = PlayerFactory.createRoboPlayer2(new AndroidDecisionHandler());
                 break;
         }
         if (!gameActivity.player1.isHumanPlayer()) gameActivity.tvPlayer1Title.setText("CPU 1");
