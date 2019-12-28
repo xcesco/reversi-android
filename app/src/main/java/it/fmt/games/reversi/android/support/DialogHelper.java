@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android;
+package it.fmt.games.reversi.android.support;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AlertDialog;
 
+import it.fmt.games.reversi.android.MainActivity;
+import it.fmt.games.reversi.android.R;
 import it.fmt.games.reversi.model.GameStatus;
 
 public abstract class DialogHelper {

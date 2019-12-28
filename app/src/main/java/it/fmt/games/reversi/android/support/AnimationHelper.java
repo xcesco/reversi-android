@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android;
+package it.fmt.games.reversi.android.support;
 
 import android.animation.Animator;
 import android.graphics.drawable.Drawable;

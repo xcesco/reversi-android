@@ -16,8 +16,10 @@ import butterknife.ButterKnife;
 import it.fmt.games.reversi.GameRenderer;
 import it.fmt.games.reversi.Player1;
 import it.fmt.games.reversi.Player2;
-import it.fmt.games.reversi.android.support.BoardAndroidDrawer;
 import it.fmt.games.reversi.android.logic.GameViewModel;
+import it.fmt.games.reversi.android.support.BoardAndroidDrawer;
+import it.fmt.games.reversi.android.support.DialogHelper;
+import it.fmt.games.reversi.android.support.GameActivityHelper;
 import it.fmt.games.reversi.android.views.AppGridLayout;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
@@ -56,7 +58,7 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     Player2 player2;
 
     float rotationAngle;
-    
+
     private GameViewModel viewModel;
 
     public static Intent createIntent(Context context, String gameType) {
@@ -65,12 +67,28 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
         return intent;
     }
 
+    public TextView getTvPlayer1Title() {
+        return tvPlayer1Title;
+    }
+
+    public TextView getTvPlayer2Title() {
+        return tvPlayer2Title;
+    }
+
     public Player1 getPlayer1() {
         return player1;
     }
 
+    public void setPlayer1(Player1 player1) {
+        this.player1 = player1;
+    }
+    
     public Player2 getPlayer2() {
         return player2;
+    }
+
+    public void setPlayer2(Player2 player2) {
+        this.player2 = player2;
     }
 
     public AppGridLayout getAppGridLayout() {
@@ -81,8 +99,16 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
         return whitePieceDrawable;
     }
 
+    public void setWhitePieceDrawable(Drawable whitePieceDrawable) {
+        this.whitePieceDrawable = whitePieceDrawable;
+    }
+
     public Drawable getBlackPieceDrawable() {
         return blackPieceDrawable;
+    }
+
+    public void setBlackPieceDrawable(Drawable blackPieceDrawable) {
+        this.blackPieceDrawable = blackPieceDrawable;
     }
 
     @Override
@@ -91,7 +117,6 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
         setContentView(R.layout.activity_game);
 
         ButterKnife.bind(this);
-
         GameActivityHelper.definePlayersAndPieces(this);
 
         viewModel = ViewModelProviders.of(this).get(GameViewModel.class);
@@ -114,6 +139,10 @@ public class GameActivity extends AppCompatActivity implements GameRenderer, Vie
     private void showPlayerScore(Score score) {
         this.blackNum.setText("" + score.getPlayer1Score());
         this.whiteNum.setText("" + score.getPlayer2Score());
+    }
+
+    public void setRotationAngle(float rotationAngle) {
+        this.rotationAngle = rotationAngle;
     }
 
     private void animatePlayerSelection() {

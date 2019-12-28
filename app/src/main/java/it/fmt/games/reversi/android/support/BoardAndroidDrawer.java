@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.fmt.games.reversi.android.AnimationHelper;
 import it.fmt.games.reversi.android.GameActivity;
 import it.fmt.games.reversi.android.R;
 import it.fmt.games.reversi.android.views.AppGridLayout;
