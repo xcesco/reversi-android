@@ -21,7 +21,7 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_end">Game result</string>
     <string name="logo_description">logo</string>
-    <string name="cpu_vs_player2">CPU vs Player 2</string>
+    <string name="cpu_vs_player2">CPU 1 vs Player 2</string>
     <string name="player1_vs_player2">Player 1 vs Player 2</string>
     <string name="player1_vs_CPU2">Player 1 vs CPU 2</string>
     <string name="cpu_vs_cpu">CPU 1 vs CPU 2</string>
