@@ -42,3 +42,10 @@ Game is available on [Play store](https://play.google.com/store/apps/details?id=
 
  ### Scarlet
  https://proandroiddev.com/websockets-with-scarlet-7d3e2235dc03
+
+ ## Google Game Service
+ https://developers.google.com/games/services/console/enabling
+
+ 886691898919-ck0lcchsjt5s90ovr1a3g21afbehqvle.apps.googleusercontent.com
+
+ ### Firebase Analytics

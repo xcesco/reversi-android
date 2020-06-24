@@ -23,8 +23,7 @@ public class ReversiApplication extends Application {
     }
 
     private void build() {
-        injector = DaggerAppComponent.builder().build();
-
         context = this;
+        injector = DaggerAppComponent.builder().build();
     }
 }
