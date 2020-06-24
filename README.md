@@ -1,3 +1,5 @@
+[![GitHub issues](https://img.shields.io/github/issues/xcesco/reversi-android.svg)](https://github.com/xcesco/reversi-android/issues)
+
 <img src="https://github.com/xcesco/reversi-android/blob/master/docs/logo.png" alt="logo" width="200"/>
 
 # Reversi for Android
