@@ -28,4 +28,7 @@
     <string name="player1_score">player1_score</string>
     <string name="player2_score">player2_score</string>
     <string name="selector">selector</string>
+
+
+    <string name="base_url">https://fmt-reversi.herokuapp.com/</string>
 </resources>
