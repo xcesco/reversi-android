@@ -1,9 +1,9 @@
-package it.fmt.games.reversi.android.support;
+package it.fmt.games.reversi.android.ui.support;
 
 import it.fmt.games.reversi.Player1;
 import it.fmt.games.reversi.Player2;
 import it.fmt.games.reversi.PlayerFactory;
-import it.fmt.games.reversi.android.GameActivity;
+import it.fmt.games.reversi.android.ui.activities.GameActivity;
 import it.fmt.games.reversi.android.R;
 import it.fmt.games.reversi.android.logic.AndroidDecisionHandler;
 
@@ -24,16 +24,16 @@ public class GameActivityHelper {
                 break;
             case "2":
                 player1=PlayerFactory.createHumanPlayer1();
-                player2=PlayerFactory.createRoboPlayer2(new AndroidDecisionHandler());
+                player2=PlayerFactory.createCpuPlayer2(new AndroidDecisionHandler());
                 break;
             case "3":
-                player1=PlayerFactory.createRoboPlayer1(new AndroidDecisionHandler());
+                player1=PlayerFactory.createCpuPlayer1(new AndroidDecisionHandler());
                 player2=PlayerFactory.createHumanPlayer2();
                 break;
             case "4":
             default:
-                player1=PlayerFactory.createRoboPlayer1(new AndroidDecisionHandler());
-                player2=PlayerFactory.createRoboPlayer2(new AndroidDecisionHandler());
+                player1=PlayerFactory.createCpuPlayer1(new AndroidDecisionHandler());
+                player2=PlayerFactory.createCpuPlayer2(new AndroidDecisionHandler());
                 break;
         }
 

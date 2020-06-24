@@ -1,9 +1,9 @@
-package it.fmt.games.reversi.android.support;
+package it.fmt.games.reversi.android.ui.support;
 
 import android.animation.Animator;
 import android.graphics.drawable.Drawable;
 
-import it.fmt.games.reversi.android.views.GridViewItem;
+import it.fmt.games.reversi.android.ui.views.GridViewItem;
 
 public abstract class AnimationHelper {
     public static void animatePieceFlip(GridViewItem view, Drawable startPiece, Drawable endkPiece, int animDuration) {

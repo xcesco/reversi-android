@@ -1,14 +1,14 @@
-package it.fmt.games.reversi.android.support;
+package it.fmt.games.reversi.android.ui.support;
 
 import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import it.fmt.games.reversi.android.GameActivity;
+import it.fmt.games.reversi.android.ui.activities.GameActivity;
 import it.fmt.games.reversi.android.R;
-import it.fmt.games.reversi.android.views.AppGridLayout;
-import it.fmt.games.reversi.android.views.GridViewItem;
+import it.fmt.games.reversi.android.ui.views.AppGridLayout;
+import it.fmt.games.reversi.android.ui.views.GridViewItem;
 import it.fmt.games.reversi.model.Board;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;

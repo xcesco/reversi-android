@@ -13,7 +13,7 @@ import it.fmt.games.reversi.Player1;
 import it.fmt.games.reversi.Player2;
 import it.fmt.games.reversi.Reversi;
 import it.fmt.games.reversi.UserInputReader;
-import it.fmt.games.reversi.android.GameActivity;
+import it.fmt.games.reversi.android.ui.activities.GameActivity;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Player;

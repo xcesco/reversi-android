@@ -11,12 +11,12 @@ public class AndroidDecisionHandler extends RandomDecisionHandler {
     public static final long THINKING_TIME = BuildConfig.THINKING_TIME;
 
     @Override
-        public Coordinates compute(List<Coordinates> availableMoves) {
-            try {
-                Thread.sleep(THINKING_TIME);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return super.compute(availableMoves);
+    public Coordinates compute(List<Coordinates> availableMoves) {
+        try {
+            Thread.sleep(THINKING_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        return super.compute(availableMoves);
     }
+}

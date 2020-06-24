@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android;
+package it.fmt.games.reversi.android.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,6 +9,7 @@ import android.view.View;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import it.fmt.games.reversi.android.R;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -32,3 +32,11 @@ Game is available on [Play store](https://play.google.com/store/apps/details?id=
  <td><img src="https://github.com/xcesco/reversi-android/blob/master/docs/android_screenshot.png" alt="logo" width="300"/></td>
  </row>
  </table>
+
+ ## Used libraries
+ - https://square.github.io/retrofit/
+ - https://square.github.io/okhttp/
+ dagger
+
+ ### Scarlet
+ https://proandroiddev.com/websockets-with-scarlet-7d3e2235dc03

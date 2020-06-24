@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android;
+package it.fmt.games.reversi.android.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,11 +16,12 @@ import butterknife.ButterKnife;
 import it.fmt.games.reversi.GameRenderer;
 import it.fmt.games.reversi.Player1;
 import it.fmt.games.reversi.Player2;
+import it.fmt.games.reversi.android.R;
 import it.fmt.games.reversi.android.logic.GameViewModel;
-import it.fmt.games.reversi.android.support.BoardAndroidDrawer;
-import it.fmt.games.reversi.android.support.DialogHelper;
-import it.fmt.games.reversi.android.support.GameActivityHelper;
-import it.fmt.games.reversi.android.views.AppGridLayout;
+import it.fmt.games.reversi.android.ui.support.BoardAndroidDrawer;
+import it.fmt.games.reversi.android.ui.support.DialogHelper;
+import it.fmt.games.reversi.android.ui.support.GameActivityHelper;
+import it.fmt.games.reversi.android.ui.views.AppGridLayout;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.GameStatus;

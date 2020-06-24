@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android.views;
+package it.fmt.games.reversi.android.ui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
