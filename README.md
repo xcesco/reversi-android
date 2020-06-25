@@ -43,9 +43,23 @@ Game is available on [Play store](https://play.google.com/store/apps/details?id=
  ### Scarlet
  https://proandroiddev.com/websockets-with-scarlet-7d3e2235dc03
 
+ https://github.com/NaikSoftware/StompProtocolAndroid
+ https://stackoverflow.com/questions/41675194/is-it-possible-to-use-stomp-with-okhttp3-websocket
+
  ## Google Game Service
  https://developers.google.com/games/services/console/enabling
 
  886691898919-ck0lcchsjt5s90ovr1a3g21afbehqvle.apps.googleusercontent.com
 
  ### Firebase Analytics
+ ### Firebase Crashlytics
+- https://firebase.google.com/docs/crashlytics/get-started?authuser=0&platform=android
+
+ ## Logger
+ Timber
+ - https://levelup.gitconnected.com/timber-a-logging-library-for-android-56c431cd7300
+ - https://github.com/JakeWharton/timber
+ - https://github.com/JakeWharton/timber/blob/dd94a22/timber-sample/src/main/java/com/example/timber/ExampleApp.java
+
+Timber on JUNIT
+- https://github.com/LachlanMcKee/timber-junit-rule

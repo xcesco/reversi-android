@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android.repositories.network;
+package it.fmt.games.reversi.android.repositories.network.model;
 
 public enum UserStatus {
   READY_TO_PLAY,

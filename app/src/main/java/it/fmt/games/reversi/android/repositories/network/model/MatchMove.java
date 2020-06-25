@@ -9,21 +9,28 @@ import java.util.UUID;
 
 public class MatchMove {
 
+  private final UUID playerId;
+  private final Piece playerPiece;
+  private final Coordinates move;
+  private final UUID matchId;
+
   @JsonCreator
-  public MatchMove(@JsonProperty("matchUUID") UUID matchUUID,
-                   @JsonProperty("playerUUID") UUID playerUUID,
+  public MatchMove(@JsonProperty("matchUUID") UUID matchId,
+                   @JsonProperty("playerUUID") UUID playerId,
                    @JsonProperty("playerPiece") Piece playerPiece,
                    @JsonProperty("move") Coordinates move) {
-    this.playerUUID = playerUUID;
+    this.playerId = playerId;
     this.playerPiece = playerPiece;
     this.move = move;
-    this.matchUUID = matchUUID;
+    this.matchId = matchId;
   }
 
-  private final UUID playerUUID;
+  public static MatchMove of(UUID matchId, UUID playerId, Piece playerPiece, Coordinates move) {
+    return new MatchMove(matchId, playerId, playerPiece, move);
+  }
 
-  public UUID getPlayerUUID() {
-    return playerUUID;
+  public UUID getPlayerId() {
+    return playerId;
   }
 
   public Piece getPlayerPiece() {
@@ -34,15 +41,7 @@ public class MatchMove {
     return move;
   }
 
-  public UUID getMatchUUID() {
-    return matchUUID;
-  }
-
-  private final Piece playerPiece;
-  private final Coordinates move;
-  private final UUID matchUUID;
-
-  public static MatchMove of(UUID matchUUID, UUID playerUUID, Piece playerPiece, Coordinates move) {
-    return new MatchMove(matchUUID, playerUUID, playerPiece, move);
+  public UUID getMatchId() {
+    return matchId;
   }
 }

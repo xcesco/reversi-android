@@ -1,6 +1,7 @@
 package it.fmt.games.reversi.android.repositories.network;
 
-import it.fmt.games.reversi.android.repositories.network.model.ConnectedUserInfo;
+import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
+import it.fmt.games.reversi.android.repositories.network.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.PATCH;
@@ -16,6 +17,6 @@ public interface WebServiceClient {
     Call<User> executeUserIsNotReadyToPlay(@Path("uuid") String userId);
 
     @POST("api/v1/public/users")
-    Call<User> connect(@Body ConnectedUserInfo userInfo);
+    Call<User> connect(@Body ConnectedUser userInfo);
 
 }

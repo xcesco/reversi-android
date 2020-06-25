@@ -5,14 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
-public class ConnectedUserInfo implements Serializable {
+public class ConnectedUser implements Serializable {
     @JsonCreator
-    public ConnectedUserInfo(@JsonProperty("name") String name) {
+    public ConnectedUser(@JsonProperty("name") String name) {
         this.name = name;
     }
 
-    public static ConnectedUserInfo of(String name) {
-        return new ConnectedUserInfo(name);
+    public static ConnectedUser of(String name) {
+        return new ConnectedUser(name);
     }
 
     public String getName() {

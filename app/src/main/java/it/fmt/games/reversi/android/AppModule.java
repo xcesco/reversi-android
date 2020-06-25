@@ -17,7 +17,8 @@ public class AppModule {
     @Singleton
     @Provides
     public NetworkClient providesNetworkClient() {
-        NetworkClient networkClient = new NetworkClient(ReversiApplication.getContext().getResources().getString(R.string.base_url));
+        String baseUrl = ReversiApplication.getContext().getResources().getString(R.string.base_url);
+        NetworkClient networkClient = new NetworkClient(baseUrl, baseUrl);
 
         return networkClient;
     }

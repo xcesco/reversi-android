@@ -1,8 +1,14 @@
 package it.fmt.reversi.android.repositories.network;
 
+import net.lachlanmckee.timberjunit.TimberTestRule;
+
+import org.junit.Rule;
+
 import it.fmt.games.reversi.android.repositories.network.NetworkClient;
 
-abstract class AbstractNetworkUnitTest {
+public abstract class AbstractNetworkUnitTest {
+
+
     public void log(Object message) {
         System.out.println(message);
     }
