@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "886691898919",
+    "firebase_url": "https://fmt-reversi-82521656.firebaseio.com",
+    "project_id": "fmt-reversi-82521656",
+    "storage_bucket": "fmt-reversi-82521656.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886691898919:android:1ae0c2fade1b0b51585002",
+        "android_client_info": {
+          "package_name": "it.fmt.games.reversi.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886691898919-3l5qav0m1d1upp64t8cvlmstepb47n3e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3Y2ALqSg59dr38q6ZAFF6k5hP8wO3MvE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886691898919-3l5qav0m1d1upp64t8cvlmstepb47n3e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
