@@ -8,6 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Completable;
@@ -38,6 +41,7 @@ public class NetworkClient {
   private static final String WS_APP_USER_DESTINATION = "/app/users/{uuid}/moves";
   public static final String HEADER_TYPE = "type";
 
+  private static final ExecutorService executorService = Executors.newFixedThreadPool(4);
   private final ObjectMapper objectMapper;
   private final WebServiceClient webServiceClient;
   private final StompClient stompClient;
@@ -135,27 +139,41 @@ public class NetworkClient {
     connectedUser = webServiceClient.connect(userInfo).execute().body();
     stompClient.connect();
     return connectedUser;
+
   }
 
   public Completable sendMatchMove(UUID userId, Piece piece, UUID matchId, Coordinates move) {
     try {
       String url = WS_APP_USER_DESTINATION.replace("{uuid}", userId.toString());
       String payload = objectMapper.writeValueAsString(MatchMove.of(matchId, userId, piece, move));
-      return stompClient.send(url, payload).observeOn(Schedulers.io());
+      Timber.i("Send %s", payload);
+      return stompClient.send(url, payload).observeOn(Schedulers.io()).subscribeOn(Schedulers.computation());
     } catch (JsonProcessingException e) {
       Timber.e(e);
     }
     return null;
   }
 
-  public User match(final MatchMessageVisitor playerHandler) throws IOException {
+  public void match(final MatchMessageVisitor playerHandler) throws IOException, InterruptedException {
     String url = WS_TOPIC_USER_MATCH_DESTINATION.replace("{uuid}", connectedUser.getId().toString());
     Timber.i("Subscribe %s to '%s'", connectedUser.getName(), url);
-    disposable = stompClient.topic(url)
-            .observeOn(Schedulers.newThread())
-            .subscribeOn(Schedulers.newThread())
-            .subscribe(stompMessage -> MatchMessageParser.parser(connectedUser, objectMapper, stompMessage, playerHandler));
-    return readyToPlay(connectedUser);
+
+    disposable = stompClient
+            .topic(url)
+            .observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.computation())
+            .subscribe(stompMessage -> {
+              MatchMessageParser
+                      .parser(connectedUser, objectMapper, stompMessage, playerHandler);
+             // Timber.i("Subscribed %s to '%s'", connectedUser.getName(), url);
+
+            });
+
+    Thread.sleep(1000);
+
+    connectedUser = readyToPlay(connectedUser);
+    Timber.i("Connected %s to '%s'", connectedUser.getName(), url);
+
   }
 
   private User readyToPlay(final User user) throws IOException {

@@ -15,6 +15,11 @@ public class MatchStatusMessage extends MatchMessage {
     this.gameSnapshot = gameSnapshot;
   }
 
+  @Override
+  public void accept(MatchMessageVisitor visitor) {
+    visitor.visit(this);
+  }
+
   public GameSnapshot getGameSnapshot() {
     return gameSnapshot;
   }

@@ -25,9 +25,4 @@ public abstract class MatchMessage implements MatchMessageVisitable {
     return matchId;
   }
 
-  @Override
-  public void accept(MatchMessageVisitor visitor) {
-    visitor.visit(this);
-  }
-
 }

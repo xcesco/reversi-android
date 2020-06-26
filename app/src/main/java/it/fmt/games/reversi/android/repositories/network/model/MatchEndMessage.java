@@ -14,4 +14,9 @@ public class MatchEndMessage extends MatchMessage {
     super(playerId, matchId, MatchMessageType.MATCH_END);
   }
 
+  @Override
+  public void accept(MatchMessageVisitor visitor) {
+    visitor.visit(this);
+  }
+
 }

@@ -15,6 +15,11 @@ public class MatchStartMessage extends MatchMessage {
     this.assignedPiece = assignedPiece;
   }
 
+  @Override
+  public void accept(MatchMessageVisitor visitor) {
+    visitor.visit(this);
+  }
+
   public Piece getAssignedPiece() {
     return assignedPiece;
   }

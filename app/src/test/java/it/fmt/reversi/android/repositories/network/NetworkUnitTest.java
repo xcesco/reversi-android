@@ -23,13 +23,13 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
     {
       NetworkClient client = new NetworkClient(baseUrl, webSocketBaseUrl);
-      final User user = client.connect(ConnectedUser.of("player1"));
+      final User user = client.connect(ConnectedUser.of("player2"));
       client.match(new TestNetworkPlayerHandler(client, user));
     }
 
     {
       NetworkClient client = new NetworkClient(baseUrl, webSocketBaseUrl);
-      final User user = client.connect(ConnectedUser.of("player2"));
+      final User user = client.connect(ConnectedUser.of("player1"));
       client.match(new TestNetworkPlayerHandler(client, user));
     }
 

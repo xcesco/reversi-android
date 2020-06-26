@@ -16,8 +16,4 @@ public class MatchMessageVisitorImpl implements MatchMessageVisitor {
 
   }
 
-  @Override
-  public void visit(MatchMessage message) {
-
-  }
 }

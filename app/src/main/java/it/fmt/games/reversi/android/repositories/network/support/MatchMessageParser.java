@@ -25,6 +25,6 @@ public abstract class MatchMessageParser {
     MatchMessageType messageType = MatchMessageType.valueOf(getHeaderValue(message, NetworkClient.HEADER_TYPE));
     Timber.i("Player %s received message type %s: %s", user.getName(), messageType, message.getPayload());
     MatchMessage matchMessage = objectMapper.readValue(message.getPayload(), messageType.getType());
-    visitor.visit(matchMessage);
+    matchMessage.accept(visitor);
   }
 }

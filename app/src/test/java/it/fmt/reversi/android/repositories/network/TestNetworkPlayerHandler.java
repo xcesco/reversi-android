@@ -15,15 +15,17 @@ import timber.log.Timber;
 public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
   private final NetworkClient client;
   private final User user;
+  private Piece assignedPiece;
 
   public TestNetworkPlayerHandler(NetworkClient client, User user) {
     this.client = client;
-    this.user=user;
+    this.user = user;
   }
 
   @Override
   public void visit(MatchStartMessage message) {
     Timber.i("player %s receives match start", user.getName());
+    assignedPiece=message.getAssignedPiece();
   }
 
   @Override
@@ -31,11 +33,17 @@ public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
     Timber.i("player %s receives match status", user.getName());
     GameSnapshot gameSnapshot = message.getGameSnapshot();
     Piece playerPiece = gameSnapshot.getActivePiece();
-    Coordinates move = gameSnapshot.getAvailableMoves().getMovesActivePlayer().get(0);
 
     if (gameSnapshot.getStatus() == GameStatus.RUNNING) {
-      Timber.i("user %s decides to move on %s", playerPiece, move);
-      client.sendMatchMove(message.getPlayerId(), gameSnapshot.getActivePiece(), message.getMatchId(), move);
+      if (gameSnapshot.getActivePiece() == assignedPiece && gameSnapshot.getAvailableMoves().getMovesActivePlayer().size()>0) {
+        Coordinates move = gameSnapshot.getAvailableMoves().getMovesActivePlayer().get(0);
+        Timber.i("user %s decides to move on %s", playerPiece, move);
+        client.sendMatchMove(message.getPlayerId(), gameSnapshot.getActivePiece(), message.getMatchId(), move).subscribe();
+      } else {
+        Timber.i("user %s do nothing", user.getName());
+      }
+
+
     } else {
       Timber.i("player %s detects match has status %s %s - %s",
               playerPiece, gameSnapshot.getStatus(),
