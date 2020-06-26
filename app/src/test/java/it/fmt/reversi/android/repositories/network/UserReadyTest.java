@@ -8,11 +8,13 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import io.reactivex.functions.Action;
 import it.fmt.games.reversi.android.repositories.network.NetworkClient;
 import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
 import it.fmt.games.reversi.android.repositories.network.model.User;
+import timber.log.Timber;
 
-public class NetworkUnitTest extends AbstractNetworkUnitTest {
+public class UserReadyTest extends AbstractNetworkUnitTest {
 
   @Rule
   public TimberTestRule logAllAlwaysRule = TimberTestRule.logAllAlways();
@@ -24,14 +26,16 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
     {
       NetworkClient client = new NetworkClient(baseUrl, webSocketBaseUrl);
+      // get user from server
       final User user = client.connect(ConnectedUser.of("player2"));
-      client.match(new TestNetworkPlayerHandler(client, user));
-    }
 
-    {
-      NetworkClient client = new NetworkClient(baseUrl, webSocketBaseUrl);
-      final User user = client.connect(ConnectedUser.of("player1"));
-      client.match(new TestNetworkPlayerHandler(client, user));
+      // register to user status
+      client.observeUserStatus().subscribe(stompMessage -> {
+        Timber.i("observeUserStatus receives " + stompMessage.getPayload());
+      });
+
+      // tell to server user is ready to play
+      client.sendUserReady(user.getId()).subscribe(() -> Timber.i("sendUserReady complete" ));
     }
 
     Thread.sleep(200_000);

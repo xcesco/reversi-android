@@ -8,13 +8,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Completable;
-import io.reactivex.Scheduler;
+import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import it.fmt.games.reversi.android.BuildConfig;
@@ -38,10 +37,12 @@ import ua.naiksoftware.stomp.dto.StompMessage;
 
 public class NetworkClient {
   private static final String WS_TOPIC_USER_MATCH_DESTINATION = "/topic/user/{uuid}";
+  private static final String WS_USER_STATUS_REPLY = "/user/status";
   private static final String WS_APP_USER_DESTINATION = "/app/users/{uuid}/moves";
+  private static final String WS_APP_USER_READY_DESTINATION = "/app/users/{uuid}/ready";
+
   public static final String HEADER_TYPE = "type";
 
-  private static final ExecutorService executorService = Executors.newFixedThreadPool(4);
   private final ObjectMapper objectMapper;
   private final WebServiceClient webServiceClient;
   private final StompClient stompClient;
@@ -70,7 +71,7 @@ public class NetworkClient {
   private StompClient buildStompOverWebSocketClient(String webSocketUrl, OkHttpClient httpClient) {
     webSocketUrl += "api/messages/websocket/";
     StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, webSocketUrl, null, httpClient);
-    connectionDisposable = stompClient.lifecycle().observeOn(Schedulers.io()).subscribe(lifecycleEvent -> {
+    connectionDisposable = stompClient.lifecycle().observeOn(Schedulers.io()).subscribeOn(Schedulers.computation()).subscribe(lifecycleEvent -> {
       switch (lifecycleEvent.getType()) {
         case OPENED:
           Timber.d("Stomp connection OPENED");
@@ -137,9 +138,12 @@ public class NetworkClient {
 
   public User connect(final ConnectedUser userInfo) throws IOException {
     connectedUser = webServiceClient.connect(userInfo).execute().body();
-    stompClient.connect();
+    connectWebSocket();
     return connectedUser;
+  }
 
+  void connectWebSocket() {
+    stompClient.connect();
   }
 
   public Completable sendMatchMove(UUID userId, Piece piece, UUID matchId, Coordinates move) {
@@ -154,9 +158,29 @@ public class NetworkClient {
     return null;
   }
 
-  public void match(final MatchMessageVisitor playerHandler) throws IOException, InterruptedException {
+
+  public Completable sendUserReady(UUID userId) {
+    String url = WS_APP_USER_READY_DESTINATION.replace("{uuid}", userId.toString());
+    // String payload = objectMapper.writeValueAsString(MatchMove.of(matchId, userId, piece, move));
+    Timber.i("sendUserReady to %s", url);
+    return stompClient.send(url, "")
+            .observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.computation());
+  }
+
+  public Flowable<StompMessage> observeUserStatus() {
+    return stompClient.topic(WS_USER_STATUS_REPLY)
+            .observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.computation());
+  }
+
+  public void match(final MatchMessageVisitor playerHandler) throws IOException, InterruptedException, ExecutionException {
     String url = WS_TOPIC_USER_MATCH_DESTINATION.replace("{uuid}", connectedUser.getId().toString());
     Timber.i("Subscribe %s to '%s'", connectedUser.getName(), url);
+
+    sendUserReady(connectedUser.getId());
+
+    CompletableFuture<Boolean> attached = new CompletableFuture<>();
 
     disposable = stompClient
             .topic(url)
@@ -165,11 +189,12 @@ public class NetworkClient {
             .subscribe(stompMessage -> {
               MatchMessageParser
                       .parser(connectedUser, objectMapper, stompMessage, playerHandler);
-             // Timber.i("Subscribed %s to '%s'", connectedUser.getName(), url);
-
+              //Timber.i("Subscribed %s to '%s'", connectedUser.getName(), url);
+              attached.complete(true);
             });
 
-    Thread.sleep(1000);
+
+    attached.get();
 
     connectedUser = readyToPlay(connectedUser);
     Timber.i("Connected %s to '%s'", connectedUser.getName(), url);
