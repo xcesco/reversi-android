@@ -25,7 +25,7 @@ public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
   @Override
   public void visit(MatchStartMessage message) {
     Timber.i("player %s receives match start", user.getName());
-    assignedPiece=message.getAssignedPiece();
+    assignedPiece = message.getAssignedPiece();
   }
 
   @Override
@@ -35,7 +35,7 @@ public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
     Piece playerPiece = gameSnapshot.getActivePiece();
 
     if (gameSnapshot.getStatus() == GameStatus.RUNNING) {
-      if (gameSnapshot.getActivePiece() == assignedPiece && gameSnapshot.getAvailableMoves().getMovesActivePlayer().size()>0) {
+      if (gameSnapshot.getActivePiece() == assignedPiece && gameSnapshot.getAvailableMoves().getMovesActivePlayer().size() > 0) {
         Coordinates move = gameSnapshot.getAvailableMoves().getMovesActivePlayer().get(0);
         Timber.i("user %s decides to move on %s", playerPiece, move);
         client.sendMatchMove(message.getPlayerId(), gameSnapshot.getActivePiece(), message.getMatchId(), move).subscribe();
@@ -45,16 +45,15 @@ public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
 
 
     } else {
-      Timber.i("player %s detects match has status %s %s - %s",
-              playerPiece, gameSnapshot.getStatus(),
-              gameSnapshot.getScore().getPlayer1Score(),
-              gameSnapshot.getScore().getPlayer2Score()
+      Timber.i("player %s detects match has status %s",
+              playerPiece, gameSnapshot.getStatus()
       );
     }
   }
 
   @Override
   public void visit(MatchEndMessage message) {
-    Timber.i("player %s receives match end", user.getName());
+    Timber.i("player %s receives match end: %s (%s - %s)", user.getName(), message.getStatus(),
+            message.getScore().getPlayer1Score(), message.getScore().getPlayer2Score());
   }
 }
