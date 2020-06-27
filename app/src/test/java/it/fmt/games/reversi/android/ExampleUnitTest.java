@@ -1,4 +1,4 @@
-package it.fmt.reversi.android;
+package it.fmt.games.reversi.android;
 
 import org.junit.Test;
 

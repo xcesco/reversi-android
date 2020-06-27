@@ -17,12 +17,15 @@ import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import it.fmt.games.reversi.android.BuildConfig;
-import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
+import it.fmt.games.reversi.android.exceptions.ReversiRuntimeException;
+import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
+import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMessageVisitor;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMove;
-import it.fmt.games.reversi.android.repositories.network.model.User;
+import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
+import it.fmt.games.reversi.android.repositories.network.model.UserStatus;
+import it.fmt.games.reversi.android.repositories.network.support.HttpClientBuilder;
 import it.fmt.games.reversi.android.repositories.network.support.JSONMapperFactory;
-import it.fmt.games.reversi.android.repositories.network.support.MatchMessageParser;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.Piece;
 import okhttp3.OkHttpClient;
@@ -35,6 +38,8 @@ import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
 import ua.naiksoftware.stomp.dto.StompMessage;
 
+import static it.fmt.games.reversi.android.repositories.network.support.MatchMessageParser.*;
+
 public class NetworkClient {
   private static final String WS_TOPIC_USER_MATCH_DESTINATION = "/topic/user/{uuid}";
   private static final String WS_USER_STATUS_REPLY = "/user/status";
@@ -46,7 +51,7 @@ public class NetworkClient {
   private final ObjectMapper objectMapper;
   private final WebServiceClient webServiceClient;
   private final StompClient stompClient;
-  private User connectedUser;
+  private ConnectedUser connectedUser;
   private Disposable connectionDisposable;
   private Disposable disposable;
 
@@ -55,7 +60,7 @@ public class NetworkClient {
   }
 
   public NetworkClient(String baseUrl, String webSocketUrl) {
-    OkHttpClient httpClient = buildHttpClient();
+    OkHttpClient httpClient = HttpClientBuilder.buildHttpClient();
 
     objectMapper = buildObjectMapper();
 
@@ -86,7 +91,6 @@ public class NetworkClient {
           Timber.d("Stomp connection FAILED_SERVER_HEARTBEAT");
           break;
       }
-
     });
 
     return stompClient;
@@ -97,32 +101,6 @@ public class NetworkClient {
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     return objectMapper;
-  }
-
-  @NotNull
-  private OkHttpClient buildHttpClient() {
-    HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-
-    if (BuildConfig.LOG_ENABLED) {
-      interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-    }
-    // rest call
-    return new OkHttpClient.Builder()
-            .callTimeout(240, TimeUnit.SECONDS)
-            .readTimeout(240, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
-            .addInterceptor(chain -> {
-              Request.Builder ongoing = chain.request().newBuilder();
-
-              ongoing.addHeader("Accept", "application/json");
-
-//              ongoing.addHeader("X-REVERSI-OS", "Android");
-//              ongoing.addHeader("X-REVERSI-OSVersion", Build.VERSION.RELEASE + ", SDK " + String.valueOf(Build.VERSION.SDK_INT));
-//              ongoing.addHeader("X-REVERSI-App", "FMT Reversi");
-//              ongoing.addHeader("X-REVERSI-AppVersion", BuildConfig.VERSION_NAME);
-
-              return chain.proceed(ongoing.build());
-            }).addInterceptor(interceptor).build();
   }
 
   public void diconnect() {
@@ -136,8 +114,13 @@ public class NetworkClient {
     }
   }
 
-  public User connect(final ConnectedUser userInfo) throws IOException {
-    connectedUser = webServiceClient.connect(userInfo).execute().body();
+  public ConnectedUser connect(final UserRegistration userInfo) {
+    try {
+      connectedUser = webServiceClient.connect(userInfo).execute().body();
+    } catch (IOException e) {
+      Timber.e(e);
+      throw new ReversiRuntimeException(e);
+    }
     connectWebSocket();
     return connectedUser;
   }
@@ -150,7 +133,7 @@ public class NetworkClient {
     try {
       String url = WS_APP_USER_DESTINATION.replace("{uuid}", userId.toString());
       String payload = objectMapper.writeValueAsString(MatchMove.of(matchId, userId, piece, move));
-      Timber.i("Send %s", payload);
+      Timber.i("%s send message %s", connectedUser.getName(), payload);
       return stompClient.send(url, payload).observeOn(Schedulers.io()).subscribeOn(Schedulers.computation());
     } catch (JsonProcessingException e) {
       Timber.e(e);
@@ -159,53 +142,90 @@ public class NetworkClient {
   }
 
 
-  public Completable sendUserReady(UUID userId) {
+  private Completable sendUserReady(UUID userId) {
     String url = WS_APP_USER_READY_DESTINATION.replace("{uuid}", userId.toString());
-    // String payload = objectMapper.writeValueAsString(MatchMove.of(matchId, userId, piece, move));
-    Timber.i("sendUserReady to %s", url);
+    Timber.i("%s send %s to %s", connectedUser.getName(), UserStatus.READY_TO_PLAY, url);
     return stompClient.send(url, "")
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.computation());
   }
 
-  public Flowable<StompMessage> observeUserStatus() {
+  private Flowable<StompMessage> observeUserStatus() {
     return stompClient.topic(WS_USER_STATUS_REPLY)
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.computation());
   }
 
-  public void match(final MatchMessageVisitor playerHandler) throws IOException, InterruptedException, ExecutionException {
+  public void match(final MatchMessageVisitor playerHandler) {
     String url = WS_TOPIC_USER_MATCH_DESTINATION.replace("{uuid}", connectedUser.getId().toString());
-    Timber.i("Subscribe %s to '%s'", connectedUser.getName(), url);
 
-    sendUserReady(connectedUser.getId());
-
-    CompletableFuture<Boolean> attached = new CompletableFuture<>();
-
+    // prepare user to match
+    final ConnectedUser user;
+    try {
+      user = prepareUserToMatch();
+    } catch (ExecutionException | InterruptedException | IOException e) {
+      Timber.e(e);
+      throw new ReversiRuntimeException(e);
+    }
     disposable = stompClient
             .topic(url)
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.computation())
-            .subscribe(stompMessage -> {
-              MatchMessageParser
-                      .parser(connectedUser, objectMapper, stompMessage, playerHandler);
-              //Timber.i("Subscribed %s to '%s'", connectedUser.getName(), url);
-              attached.complete(true);
-            });
+            .subscribe(stompMessage -> parser(connectedUser, objectMapper, stompMessage, playerHandler));
 
-
-    attached.get();
-
-    connectedUser = readyToPlay(connectedUser);
-    Timber.i("Connected %s to '%s'", connectedUser.getName(), url);
-
+    MatchEndMessage finalMessage;
+    try {
+      finalMessage = playerHandler.getMatchEndMessage();
+    } catch (ExecutionException | InterruptedException e) {
+      Timber.e(e);
+      throw new ReversiRuntimeException(e);
+    }
+    Timber.i("%s receives result %s: %s - %s ", user.getName(),
+            finalMessage.getStatus(),
+            finalMessage.getScore().getPlayer1Score(),
+            finalMessage.getScore().getPlayer2Score());
+    try {
+      notReadyToPlay(user);
+    } catch (IOException e) {
+      Timber.e(e);
+      throw new ReversiRuntimeException(e);
+    }
+    disposable.dispose();
   }
 
-  private User readyToPlay(final User user) throws IOException {
+  ConnectedUser prepareUserToMatch() throws ExecutionException, InterruptedException, IOException {
+    final CompletableFuture<ConnectedUser> userInGameFuture = new CompletableFuture<>();
+    // observe to user status
+    Disposable disposableStatus = observeUserStatus().subscribe(stompMessage -> {
+      ConnectedUser userChanged = getObjectMapper().readValue(stompMessage.getPayload(), ConnectedUser.class);
+      Timber.i("player %s receives user status is %s", userChanged.getName(), userChanged.getStatus());
+
+      switch (userChanged.getStatus()) {
+        case AWAITNG_TO_START:
+          userInGameFuture.complete(userChanged);
+          break;
+        default:
+          break;
+      }
+    });
+
+    // tell to server user is ready to play
+    Disposable disposableUserReady = sendUserReady(connectedUser.getId())
+            .subscribe(() -> Timber.i("%s set status %s", connectedUser.getName(), UserStatus.READY_TO_PLAY));
+
+    // wait user ready to play
+    final ConnectedUser userInGame = userInGameFuture.get();
+    disposableStatus.dispose();
+    disposableUserReady.dispose();
+
+    return userInGame;
+  }
+
+  private ConnectedUser readyToPlay(final ConnectedUser user) throws IOException {
     return webServiceClient.executeUserIsReadyToPlay(user.getId().toString()).execute().body();
   }
 
-  public User notReadyToPlay(final User user) throws IOException {
+  public ConnectedUser notReadyToPlay(final ConnectedUser user) throws IOException {
     return webServiceClient.executeUserIsNotReadyToPlay(user.getId().toString()).execute().body();
   }
 

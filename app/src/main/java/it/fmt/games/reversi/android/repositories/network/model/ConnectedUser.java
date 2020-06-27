@@ -3,21 +3,37 @@ package it.fmt.games.reversi.android.repositories.network.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
+import java.util.UUID;
 
-public class ConnectedUser implements Serializable {
-    @JsonCreator
-    public ConnectedUser(@JsonProperty("name") String name) {
-        this.name = name;
-    }
+import it.fmt.games.reversi.model.Piece;
 
-    public static ConnectedUser of(String name) {
-        return new ConnectedUser(name);
-    }
+public class ConnectedUser {
+  private final String name;
+  private final UserStatus status;
+  private final Piece piece;
+  private final UUID id;
 
-    public String getName() {
-        return name;
-    }
+  @JsonCreator
+  public ConnectedUser(@JsonProperty("id") UUID id, @JsonProperty("name") String name, @JsonProperty("status") UserStatus status, @JsonProperty("piece") Piece piece) {
+    this.id = id;
+    this.name = name;
+    this.status = status;
+    this.piece = piece;
+  }
 
-    private final String name;
+  public UserStatus getStatus() {
+    return status;
+  }
+
+  public Piece getPiece() {
+    return piece;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public UUID getId() {
+    return id;
+  }
 }

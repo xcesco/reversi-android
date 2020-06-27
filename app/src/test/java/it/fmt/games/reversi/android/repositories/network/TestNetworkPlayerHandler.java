@@ -1,11 +1,10 @@
-package it.fmt.reversi.android.repositories.network;
+package it.fmt.games.reversi.android.repositories.network;
 
-import it.fmt.games.reversi.android.repositories.network.NetworkClient;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMessageVisitorImpl;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
-import it.fmt.games.reversi.android.repositories.network.model.User;
+import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.GameStatus;
@@ -14,10 +13,10 @@ import timber.log.Timber;
 
 public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
   private final NetworkClient client;
-  private final User user;
+  private final ConnectedUser user;
   private Piece assignedPiece;
 
-  public TestNetworkPlayerHandler(NetworkClient client, User user) {
+  public TestNetworkPlayerHandler(NetworkClient client, ConnectedUser user) {
     this.client = client;
     this.user = user;
   }
@@ -42,8 +41,6 @@ public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
       } else {
         Timber.i("user %s do nothing", user.getName());
       }
-
-
     } else {
       Timber.i("player %s detects match has status %s",
               playerPiece, gameSnapshot.getStatus()
@@ -55,5 +52,7 @@ public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
   public void visit(MatchEndMessage message) {
     Timber.i("player %s receives match end: %s (%s - %s)", user.getName(), message.getStatus(),
             message.getScore().getPlayer1Score(), message.getScore().getPlayer2Score());
+    super.visit(message);
+
   }
 }

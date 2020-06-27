@@ -1,10 +1,4 @@
-package it.fmt.reversi.android.repositories.network;
-
-import net.lachlanmckee.timberjunit.TimberTestRule;
-
-import org.junit.Rule;
-
-import it.fmt.games.reversi.android.repositories.network.NetworkClient;
+package it.fmt.games.reversi.android.repositories.network;
 
 public abstract class AbstractNetworkUnitTest {
 

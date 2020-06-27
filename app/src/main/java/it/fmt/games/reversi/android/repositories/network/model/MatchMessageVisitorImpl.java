@@ -1,6 +1,11 @@
 package it.fmt.games.reversi.android.repositories.network.model;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 public class MatchMessageVisitorImpl implements MatchMessageVisitor {
+  private final CompletableFuture<MatchEndMessage> matchEndMessageCompletableFuture = new CompletableFuture<>();
+
   @Override
   public void visit(MatchStartMessage message) {
 
@@ -13,7 +18,12 @@ public class MatchMessageVisitorImpl implements MatchMessageVisitor {
 
   @Override
   public void visit(MatchEndMessage message) {
+    matchEndMessageCompletableFuture.complete(message);
+  }
 
+  @Override
+  public MatchEndMessage getMatchEndMessage() throws ExecutionException, InterruptedException {
+    return matchEndMessageCompletableFuture.get();
   }
 
 }
