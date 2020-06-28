@@ -55,6 +55,9 @@ Game is available on [Play store](https://play.google.com/store/apps/details?id=
  ### Firebase Crashlytics
 - https://firebase.google.com/docs/crashlytics/get-started?authuser=0&platform=android
 
+#ViewBinding
+- https://developer.android.com/topic/libraries/view-binding#java
+
  ## Logger
  Timber
  - https://levelup.gitconnected.com/timber-a-logging-library-for-android-56c431cd7300

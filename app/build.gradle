@@ -4,6 +4,10 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 
 android {
+    buildFeatures {
+        viewBinding true
+    }
+
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
@@ -56,7 +60,6 @@ android {
 }
 
 dependencies {
-
     def lifecycle_version = '2.2.0'
 
     // ViewModel and LiveData
@@ -65,9 +68,6 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
-
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
-    implementation 'com.jakewharton:butterknife:10.2.0'
 
     // reversi
     implementation 'it.fmt.games.reversi:reversi-core:1.1.2:jdk8'
@@ -99,7 +99,6 @@ dependencies {
     // firebase
     implementation 'com.google.firebase:firebase-analytics:17.4.3'
     implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
-
 
     testImplementation 'net.lachlanmckee:timber-junit-rule:1.0.1'
     // https://stackoverflow.com/questions/35562238/log-messages-in-android-studio-junit-test

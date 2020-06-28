@@ -1,34 +1,39 @@
 package it.fmt.games.reversi.android.ui.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import it.fmt.games.reversi.android.R;
+import androidx.appcompat.app.AppCompatActivity;
+
+import it.fmt.games.reversi.android.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    @OnClick({R.id.btnCPUVsHuman, R.id.btnHumanVsCPU, R.id.btnHumanVsHuman, R.id.btnCPUVsCPU})
-    public void onOpenView(View view) {
-        Intent intent=GameActivity.createIntent(this, view.getTag().toString());
-        startActivity(intent);
-    }
+  private ActivityMainBinding binding;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  public void onOpenView(View view) {
+    Intent intent = GameActivity.createIntent(this, view.getTag().toString());
+    startActivity(intent);
+  }
 
-        ButterKnife.bind(this);
-    }
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-    public static Intent createIntent(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        return intent;
-    }
+    binding = ActivityMainBinding.inflate(getLayoutInflater());
+    View view = binding.getRoot();
+    setContentView(view);
+
+    binding.btnCPUVsHuman.setOnClickListener(this::onOpenView);
+    binding.btnHumanVsCPU.setOnClickListener(this::onOpenView);
+    binding.btnHumanVsHuman.setOnClickListener(this::onOpenView);
+    binding.btnCPUVsCPU.setOnClickListener(this::onOpenView);
+  }
+
+  public static Intent createIntent(Context context) {
+    Intent intent = new Intent(context, MainActivity.class);
+    return intent;
+  }
 }
