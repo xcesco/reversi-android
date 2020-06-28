@@ -22,31 +22,67 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
   public TimberTestRule logAllAlwaysRule = TimberTestRule.logAllAlways();
 
   @Test
-  public void connect() throws IOException, InterruptedException, ExecutionException {
-    final String baseUrl = "https://8c23a3cad349.ngrok.io/";
-    final String webSocketBaseUrl = "wss://8c23a3cad349.ngrok.io/";
+  public void playerMatchBothHuman() throws IOException, InterruptedException, ExecutionException {
+    String baseUrl = "e26cebedeada.ngrok.io";
+    final String httpUrl = "https://{baseUrl}/".replace("{baseUrl}", baseUrl);
+    final String webSocketBaseUrl = "wss://{baseUrl}/".replace("{baseUrl}", baseUrl);
 
-    CompletableFuture<Boolean> finish1 = new CompletableFuture<>();
-    CompletableFuture<Boolean> finish2 = new CompletableFuture<>();
+    final CompletableFuture<Boolean> finish1 = new CompletableFuture<>();
+    final CompletableFuture<Boolean> finish2 = new CompletableFuture<>();
 
+    final NetworkClient client1 = new NetworkClient(httpUrl, webSocketBaseUrl);
+    final NetworkClient client2 = new NetworkClient(httpUrl, webSocketBaseUrl);
 
     ExecutorService executorService = Executors.newFixedThreadPool(2);
     executorService.submit(() -> {
-      NetworkClient client = new NetworkClient(baseUrl, webSocketBaseUrl);
-      final ConnectedUser user = client.connect(UserRegistration.of("player2"));
-      client.match(new TestNetworkPlayerHandler(client, user));
+      final ConnectedUser user = client1.connect(UserRegistration.of("player2"));
+      client1.match(user, new TestNetworkPlayerHandler(client1, user));
       finish1.complete(true);
+
     });
+
     executorService.submit(() -> {
-      NetworkClient client = new NetworkClient(baseUrl, webSocketBaseUrl);
-      final ConnectedUser user = client.connect(UserRegistration.of("player1"));
-      client.match(new TestNetworkPlayerHandler(client, user));
+      final ConnectedUser user = client2.connect(UserRegistration.of("player1"));
+      client2.match(user, new TestNetworkPlayerHandler(client2, user));
       finish2.complete(true);
     });
 
-    boolean result=finish1.get() && finish2.get();
-    assertTrue(result);
+    //Thread.sleep(5_000);
+    boolean result1 = finish1.get();
+    boolean result2 = finish2.get();
+    assertTrue(result1 && result2);
     //client.diconnect();
+    client1.disconnect();
+    client2.disconnect();
+  }
+
+  @Test
+  public void playerMatchOneHuman() throws IOException, InterruptedException, ExecutionException {
+    String baseUrl = "e26cebedeada.ngrok.io";
+    final String httpUrl = "https://{baseUrl}/".replace("{baseUrl}", baseUrl);
+    final String webSocketBaseUrl = "wss://{baseUrl}/".replace("{baseUrl}", baseUrl);
+
+    final CompletableFuture<Boolean> finish1 = new CompletableFuture<>();
+    //final CompletableFuture<Boolean> finish2 = new CompletableFuture<>();
+
+    final NetworkClient client1 = new NetworkClient(httpUrl, webSocketBaseUrl);
+    //final NetworkClient client2 = new NetworkClient(httpUrl, webSocketBaseUrl);
+
+    ExecutorService executorService = Executors.newFixedThreadPool(2);
+    executorService.submit(() -> {
+      final ConnectedUser user = client1.connect(UserRegistration.of("player1"));
+      client1.match(user, new TestNetworkPlayerHandler(client1, user));
+      finish1.complete(true);
+
+    });
+
+    //Thread.sleep(5_000);
+    boolean result1 = finish1.get();
+   // boolean result2 = finish2.get();
+    assertTrue(result1);
+    //client.diconnect();
+    client1.disconnect();
+   // client2.disconnect();
   }
 
 

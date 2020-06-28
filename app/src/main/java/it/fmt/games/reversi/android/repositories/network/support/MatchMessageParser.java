@@ -25,7 +25,7 @@ public abstract class MatchMessageParser {
                             @NotNull StompMessage message,
                             @NotNull MatchMessageVisitor visitor) throws JsonProcessingException {
     MatchMessageType messageType = MatchMessageType.valueOf(getHeaderValue(message, NetworkClient.HEADER_TYPE));
-    Timber.i("Player %s received message type %s: %s", user.getName(), messageType, message.getPayload());
+    Timber.i("%s received message type %s: %s", user.getName(), messageType, message.getPayload());
     MatchMessage matchMessage = objectMapper.readValue(message.getPayload(), messageType.getType());
     matchMessage.accept(visitor);
   }

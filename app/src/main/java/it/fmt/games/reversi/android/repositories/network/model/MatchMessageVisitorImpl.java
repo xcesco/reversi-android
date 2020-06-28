@@ -4,6 +4,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class MatchMessageVisitorImpl implements MatchMessageVisitor {
+  public MatchMessageVisitorImpl() {
+
+  }
+
   private final CompletableFuture<MatchEndMessage> matchEndMessageCompletableFuture = new CompletableFuture<>();
 
   @Override

@@ -18,15 +18,16 @@ public class UserReadyTest extends AbstractNetworkUnitTest {
 
   @Test
   public void connect() throws IOException, InterruptedException, ExecutionException {
-    String baseUrl = "https://8c23a3cad349.ngrok.io/";
-    String webSocketBaseUrl = "wss://8c23a3cad349.ngrok.io/";
+    String baseUrl = "e26cebedeada.ngrok.io";
+    final String httpUrl = "https://{baseUrl}/".replace("{baseUrl}", baseUrl);
+    final String webSocketBaseUrl = "wss://{baseUrl}/".replace("{baseUrl}", baseUrl);
 
     {
-      final NetworkClient client = new NetworkClient(baseUrl, webSocketBaseUrl);
+      final NetworkClient client = new NetworkClient(httpUrl, webSocketBaseUrl);
       // register user from server
       final ConnectedUser user = client.connect(UserRegistration.of("player2"));
 
-      client.prepareUserToMatch();
+     // client.watchUserStatus();
     }
 
     Thread.sleep(200_000);

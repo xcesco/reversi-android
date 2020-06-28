@@ -29,7 +29,7 @@ public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
 
   @Override
   public void visit(MatchStatusMessage message) {
-    Timber.i("player %s receives match status", user.getName());
+    Timber.i("%s receives match status", user.getName());
     GameSnapshot gameSnapshot = message.getGameSnapshot();
     Piece playerPiece = gameSnapshot.getActivePiece();
 
