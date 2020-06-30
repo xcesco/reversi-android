@@ -24,14 +24,13 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
   @Test
   public void playerMatchBothHuman() throws IOException, InterruptedException, ExecutionException {
     String baseUrl = "e26cebedeada.ngrok.io";
-    final String httpUrl = "https://{baseUrl}/".replace("{baseUrl}", baseUrl);
-    final String webSocketBaseUrl = "wss://{baseUrl}/".replace("{baseUrl}", baseUrl);
+    final String serverUrl = "https://{baseUrl}/".replace("{baseUrl}", baseUrl);
 
     final CompletableFuture<Boolean> finish1 = new CompletableFuture<>();
     final CompletableFuture<Boolean> finish2 = new CompletableFuture<>();
 
-    final NetworkClient client1 = new NetworkClient(httpUrl, webSocketBaseUrl);
-    final NetworkClient client2 = new NetworkClient(httpUrl, webSocketBaseUrl);
+    final NetworkClientImpl client1 = new NetworkClientImpl(serverUrl);
+    final NetworkClientImpl client2 = new NetworkClientImpl(serverUrl);
 
     ExecutorService executorService = Executors.newFixedThreadPool(2);
     executorService.submit(() -> {
@@ -58,14 +57,12 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
   @Test
   public void playerMatchOneHuman() throws IOException, InterruptedException, ExecutionException {
-    String baseUrl = "e26cebedeada.ngrok.io";
-    final String httpUrl = "https://{baseUrl}/".replace("{baseUrl}", baseUrl);
-    final String webSocketBaseUrl = "wss://{baseUrl}/".replace("{baseUrl}", baseUrl);
+    String baseUrl = "https://e26cebedeada.ngrok.io/";
 
     final CompletableFuture<Boolean> finish1 = new CompletableFuture<>();
     //final CompletableFuture<Boolean> finish2 = new CompletableFuture<>();
 
-    final NetworkClient client1 = new NetworkClient(httpUrl, webSocketBaseUrl);
+    final NetworkClientImpl client1 = new NetworkClientImpl(baseUrl);
     //final NetworkClient client2 = new NetworkClient(httpUrl, webSocketBaseUrl);
 
     ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -78,11 +75,11 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
     //Thread.sleep(5_000);
     boolean result1 = finish1.get();
-   // boolean result2 = finish2.get();
+    // boolean result2 = finish2.get();
     assertTrue(result1);
     //client.diconnect();
     client1.disconnect();
-   // client2.disconnect();
+    // client2.disconnect();
   }
 
 

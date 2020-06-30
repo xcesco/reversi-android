@@ -1,30 +1,35 @@
 package it.fmt.games.reversi.android.repositories.network;
 
+import androidx.annotation.NonNull;
+
+import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMessageVisitorImpl;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
-import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.GameStatus;
 import it.fmt.games.reversi.model.Piece;
 import timber.log.Timber;
 
-public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
+public class NetworkPlayerHandler extends MatchMessageVisitorImpl {
   private final NetworkClientImpl client;
   private final ConnectedUser user;
+  private final MatchEventListener listener;
   private Piece assignedPiece;
 
-  public TestNetworkPlayerHandler(NetworkClientImpl client, ConnectedUser user) {
+  public NetworkPlayerHandler(@NonNull NetworkClientImpl client, @NonNull ConnectedUser user, @NonNull MatchEventListener listener) {
     this.client = client;
     this.user = user;
+    this.listener = listener;
   }
 
   @Override
   public void visit(MatchStartMessage message) {
     Timber.i("player %s receives match start", user.getName());
     assignedPiece = message.getAssignedPiece();
+    listener.onMatchStart(message);
   }
 
   @Override
@@ -35,7 +40,7 @@ public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
 
     if (gameSnapshot.getStatus() == GameStatus.RUNNING) {
       if (gameSnapshot.getActivePiece() == assignedPiece && gameSnapshot.getAvailableMoves().getMovesActivePlayer().size() > 0) {
-        Coordinates move = gameSnapshot.getAvailableMoves().getMovesActivePlayer().get(0);
+        Coordinates move = listener.onMatchPlayerMove(message);
         Timber.i("user %s decides to move on %s", playerPiece, move);
         client.sendMatchMove(message.getPlayerId(), gameSnapshot.getActivePiece(), message.getMatchId(), move).subscribe();
       } else {
@@ -53,6 +58,7 @@ public class TestNetworkPlayerHandler extends MatchMessageVisitorImpl {
     Timber.i("player %s receives match end: %s (%s - %s)", user.getName(), message.getStatus(),
             message.getScore().getPlayer1Score(), message.getScore().getPlayer2Score());
     super.visit(message);
+    listener.onMatchEnd(message);
 
   }
 }

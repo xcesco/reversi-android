@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android.logic;
+package it.fmt.games.reversi.android.repositories.model;
 
 import java.util.List;
 

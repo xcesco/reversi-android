@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_id">886691898919</string>
+    <string name="server_url">https://fmt-reversi.herokuapp.com/</string>
+</resources>

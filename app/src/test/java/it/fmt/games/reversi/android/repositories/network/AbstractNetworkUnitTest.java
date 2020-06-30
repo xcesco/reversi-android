@@ -11,7 +11,7 @@ public abstract class AbstractNetworkUnitTest {
         System.out.println(String.format(message, args));
     }
 
-    protected NetworkClient networkClient;
+    protected NetworkClientImpl networkClient;
 
 
 }

@@ -25,7 +25,6 @@ public class MatchMessageVisitorImpl implements MatchMessageVisitor {
     matchEndMessageCompletableFuture.complete(message);
   }
 
-  @Override
   public MatchEndMessage getMatchEndMessage() throws ExecutionException, InterruptedException {
     return matchEndMessageCompletableFuture.get();
   }

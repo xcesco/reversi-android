@@ -50,6 +50,12 @@ Game is available on [Play store](https://play.google.com/store/apps/details?id=
  https://developers.google.com/games/services/console/enabling
 
  886691898919-ck0lcchsjt5s90ovr1a3g21afbehqvle.apps.googleusercontent.com
+### How to get certifcate sha
+https://stackoverflow.com/questions/27609442/how-to-get-the-sha-1-fingerprint-certificate-in-android-studio-for-debug-mode
+debug
+B1:B0:5B:41:EA:08:48:14:2E:A8:D4:AC:F9:17:F0:A8:04:4B:2E:07
+release
+42:01:E6:E7:B1:29:63:E0:B0:50:27:87:41:BC:C2:79:E8:D6:61:A7
 
  ### Firebase Analytics
  ### Firebase Crashlytics
