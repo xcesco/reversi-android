@@ -28,20 +28,18 @@ public class LocalMatchViewModel extends AbstractMatchViewModel {
 
   private Executor executor = Executors.newSingleThreadExecutor();
 
-  public LiveData<MatchMessage> match(final GameActivity activity, GameType gameType) {
+  public void match(final GameActivity activity, GameType gameType) {
     Pair<Player1, Player2> players = definePlayers(Piece.PLAYER_1, gameType);
     final Player1 player1 = players.first;
     final Player2 player2 = players.second;
     final MutableLiveData<MatchMessage> result = new MutableLiveData<>();
     final UserInputReader userInputReader = this::readPlayerMove;
-    final LocalMatchEventListener listener = new LocalMatchEventListener(result, player1, player2, userInputReader);
-    final GameRenderer gamerRendererWrapper = new LocalRendererWrapper(player1, player2, listener);
+    final LocalMatchEventListener listener = new LocalMatchEventListener(result);
+    final GameRenderer gamerRendererWrapper = new LocalRendererWrapper(this, player1, player2, listener);
 
     executor.execute(() -> {
       Reversi reversi = new Reversi(gamerRendererWrapper, userInputReader, player1, player2);
       reversi.play();
     });
-
-    return result;
   }
 }

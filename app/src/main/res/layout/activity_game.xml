@@ -95,11 +95,11 @@
 
 
         <TextView
-            android:id="@+id/tvPlayer1Title"
+            android:id="@+id/player1Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/player1_score"
-            android:text="Player 1"
+            android:contentDescription="@string/player1_human"
+            tools:text="@string/player1_human"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/imageView2"
@@ -107,11 +107,11 @@
             app:layout_constraintStart_toStartOf="@+id/imageView2" />
 
         <TextView
-            android:id="@+id/tvPlayer2Title"
+            android:id="@+id/player2Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/player2_score"
-            android:text="Player 2"
+            android:contentDescription="@string/player2_cpu"
+            tools:text="@string/player2_cpu"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/imageView3"

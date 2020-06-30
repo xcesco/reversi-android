@@ -31,15 +31,13 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
   }
 
   @Override
-  public LiveData<MatchMessage> match(final GameActivity activity, GameType gameType) {
+  public void match(final GameActivity activity, GameType gameType) {
     //if (player1 instanceof Network)
     MutableLiveData<MatchMessage> result = new MutableLiveData<>();
     UserInputReader userInputReader = this::readPlayerMove;
     final ConnectedUser user = client.connect(UserRegistration.of("player2"));
     NetworkMatchEventListener listener = new NetworkMatchEventListener(activity, result, userInputReader);
     client.match(user, listener);
-
-    return result;
   }
 
   static class NetworkMatchEventListener implements MatchEventListener {
@@ -55,11 +53,6 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
 
     @Override
     public void onMatchStart(MatchStartMessage event) {
-      String label1 = Piece.PLAYER_1 == event.getAssignedPiece() ? "local" : "network";
-      String label2 = Piece.PLAYER_2 == event.getAssignedPiece() ? "local" : "network";
-      activity.runOnUiThread(() -> {
-        GameActivityHelper.defineLabels(activity, label1, label2);
-      });
       result.postValue(event);
     }
 
