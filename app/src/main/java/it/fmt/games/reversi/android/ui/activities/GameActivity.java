@@ -1,12 +1,10 @@
 package it.fmt.games.reversi.android.ui.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,10 +21,11 @@ import it.fmt.games.reversi.android.ui.support.GameActivityHelper;
 import it.fmt.games.reversi.android.ui.support.GameType;
 import it.fmt.games.reversi.android.ui.views.AppGridLayout;
 import it.fmt.games.reversi.android.viewmodels.LocalMatchViewModel;
+import it.fmt.games.reversi.android.viewmodels.MatchViewModel;
+import it.fmt.games.reversi.android.viewmodels.NetworkMatchViewModel;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.GameStatus;
-import it.fmt.games.reversi.model.Score;
 import timber.log.Timber;
 
 
@@ -37,17 +36,13 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
   Drawable blackPieceDrawable;
   float rotationAngle;
   public ActivityGameBinding binding;
-  private LocalMatchViewModel viewModel;
+  private MatchViewModel viewModel;
   private GameType gameType;
 
   public static Intent createIntent(Context context, GameType gameType) {
     Intent intent = new Intent(context, GameActivity.class);
     intent.putExtra(GAME_TYPE, gameType.toString());
     return intent;
-  }
-
-  public TextView getTvPlayer2Title() {
-    return binding.player2Title;
   }
 
   public AppGridLayout getAppGridLayout() {
@@ -82,11 +77,15 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
     gameType = GameType.valueOf(gameTypeValue);
     GameActivityHelper.definePieces(this, gameType);
 
-    viewModel = new ViewModelProvider(this).get(LocalMatchViewModel.class);
+    if (GameType.PLAYER_VS_NETWORK == gameType) {
+      viewModel = new ViewModelProvider(this).get(NetworkMatchViewModel.class);
+    } else {
+      viewModel = new ViewModelProvider(this).get(LocalMatchViewModel.class);
+    }
 
-    viewModel.onStartMessageLiveData().observe(this, this::visit);
-    viewModel.onStatusMessageLiveData().observe(this, this::visit);
-    viewModel.onEndMessageLiveData().observe(this, this::visit);
+    viewModel.onStartMessage().observe(this, this::visit);
+    viewModel.onStatusMessage().observe(this, this::visit);
+    viewModel.onEndMessage().observe(this, this::visit);
 
     viewModel.match(this, gameType);
   }

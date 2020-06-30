@@ -18,7 +18,6 @@ import io.reactivex.schedulers.Schedulers;
 import it.fmt.games.reversi.android.exceptions.ReversiRuntimeException;
 import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
-import it.fmt.games.reversi.android.repositories.network.model.MatchMessageVisitor;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMessageVisitorImpl;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMove;
 import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
@@ -123,10 +122,6 @@ public class NetworkClientImpl implements NetworkClient {
     }
   }
 
-  @Override
-  public void match(ConnectedUser user, @NonNull MatchEventListener listener) {
-    this.matchInternal(user, listener);
-  }
 
   void connectWebSocket() {
     webSocketClient.connect();
@@ -179,7 +174,8 @@ public class NetworkClientImpl implements NetworkClient {
             .subscribeOn(Schedulers.computation());
   }
 
-  public void matchInternal(@NonNull ConnectedUser user, @NonNull MatchEventListener listener) {
+  @Override
+  public void match(ConnectedUser user, @NonNull MatchEventListener listener) {
     final MatchMessageVisitorImpl playerHandler = new NetworkPlayerHandler(this, user, listener);
     CompletableFuture<ConnectedUser> userReadyCompletable = new CompletableFuture<>();
     CompletableFuture<ConnectedUser> userAwaitingToStartCompletable = new CompletableFuture<>();

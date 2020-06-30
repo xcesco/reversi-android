@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FFFFE6"
-    >
+    android:background="#FFFFFF">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,8 +13,19 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_marginTop="24dp"
+            android:contentDescription="@string/logo_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo" />
+
         <Button
-            android:id="@+id/btnCPUVsCPU"
+            android:id="@+id/btnHumanVsNetwork"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -24,27 +34,10 @@
             android:background="@drawable/rounded_button"
             android:paddingTop="24dp"
             android:paddingBottom="24dp"
-            android:tag="CPU_VS_CPU"
-            android:text="@string/cpu_vs_cpu"
-            android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/btnHumanVsHuman"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/rounded_button"
-            android:paddingTop="24dp"
-            android:paddingBottom="24dp"
-            android:tag="PLAYER_VS_PLAYER"
-            android:text="@string/player1_vs_player2"
-            android:textColor="@android:color/white"
-            app:layout_constraintBottom_toTopOf="@+id/btnCPUVsHuman"
+            android:tag="PLAYER_VS_NETWORK"
+            android:text="@string/player_vs_network"
+            android:textColor="@color/app_light_blue"
+            app:layout_constraintBottom_toTopOf="@+id/btnHumanVsCPU"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -60,10 +53,28 @@
             android:paddingBottom="24dp"
             android:tag="PLAYER_VS_CPU"
             android:text="@string/player1_vs_CPU2"
-            android:textColor="@android:color/white"
+            android:textColor="@color/app_light_blue"
             app:layout_constraintBottom_toTopOf="@+id/btnHumanVsHuman"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btnHumanVsHuman"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/rounded_button"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
+            android:tag="PLAYER_VS_PLAYER"
+            android:text="@string/player1_vs_player2"
+            android:textColor="@color/app_light_blue"
+            app:layout_constraintBottom_toTopOf="@+id/btnCPUVsHuman"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
 
         <Button
             android:id="@+id/btnCPUVsHuman"
@@ -77,21 +88,30 @@
             android:paddingBottom="24dp"
             android:tag="CPU_VS_PLAYER"
             android:text="@string/cpu_vs_player2"
-            android:textColor="@android:color/white"
+            android:textColor="@color/app_light_blue"
             app:layout_constraintBottom_toTopOf="@+id/btnCPUVsCPU"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="196dp"
-            android:layout_height="196dp"
-            android:layout_marginTop="24dp"
-            android:contentDescription="@string/logo_description"
+        <Button
+            android:id="@+id/btnCPUVsCPU"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/rounded_button"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
+            android:tag="CPU_VS_CPU"
+            android:text="@string/cpu_vs_cpu"
+            android:textColor="@color/app_light_blue"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/logo" />
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
 

@@ -13,8 +13,8 @@ public class GameActivityHelper {
   }
 
   public static void defineLabels(GameActivity activity, PlayerType player1Type, PlayerType player2Type) {
-    int text1 = PlayerType.LOCAL_HUMAN == player1Type ? R.string.player1_human : R.string.player1_cpu;
-    int text2 = PlayerType.LOCAL_HUMAN == player2Type ? R.string.player2_human : R.string.player2_cpu;
+    int text1 = PlayerType.HUMAN_PLAYER == player1Type ? R.string.player1_human : R.string.player1_cpu;
+    int text2 = PlayerType.HUMAN_PLAYER == player2Type ? R.string.player2_human : R.string.player2_cpu;
     activity.binding.player1Title.setText(text1);
     activity.binding.player2Title.setText(text2);
   }

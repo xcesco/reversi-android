@@ -1,7 +1,7 @@
 package it.fmt.games.reversi.android.repositories.network.model;
 
 public enum PlayerType {
-  LOCAL_HUMAN,
+  HUMAN_PLAYER,
   LOCAL_CPU,
-  NETWORK,
+  NETWORK_PLAYER
 }

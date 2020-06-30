@@ -11,8 +11,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
+import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
+import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
 import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
 import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
+import it.fmt.games.reversi.model.Coordinates;
 
 import static org.junit.Assert.assertTrue;
 
@@ -23,7 +27,7 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
   @Test
   public void playerMatchBothHuman() throws IOException, InterruptedException, ExecutionException {
-    String baseUrl = "e26cebedeada.ngrok.io";
+    String baseUrl = "f9e70b111755.ngrok.io";
     final String serverUrl = "https://{baseUrl}/".replace("{baseUrl}", baseUrl);
 
     final CompletableFuture<Boolean> finish1 = new CompletableFuture<>();
@@ -35,14 +39,44 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
     ExecutorService executorService = Executors.newFixedThreadPool(2);
     executorService.submit(() -> {
       final ConnectedUser user = client1.connect(UserRegistration.of("player2"));
-      client1.match(user, new TestNetworkPlayerHandler(client1, user));
+      client1.match(user, new MatchEventListener() {
+        @Override
+        public void onMatchStart(MatchStartMessage event) {
+
+        }
+
+        @Override
+        public Coordinates onMatchPlayerMove(MatchStatusMessage event) {
+          return event.getGameSnapshot().getAvailableMoves().getMovesActivePlayer().get(0);
+        }
+
+        @Override
+        public void onMatchEnd(MatchEndMessage event) {
+
+        }
+      });
       finish1.complete(true);
 
     });
 
     executorService.submit(() -> {
       final ConnectedUser user = client2.connect(UserRegistration.of("player1"));
-      client2.match(user, new TestNetworkPlayerHandler(client2, user));
+      client2.match(user, new MatchEventListener() {
+        @Override
+        public void onMatchStart(MatchStartMessage event) {
+
+        }
+
+        @Override
+        public Coordinates onMatchPlayerMove(MatchStatusMessage event) {
+          return event.getGameSnapshot().getAvailableMoves().getMovesActivePlayer().get(0);
+        }
+
+        @Override
+        public void onMatchEnd(MatchEndMessage event) {
+
+        }
+      });
       finish2.complete(true);
     });
 
@@ -68,7 +102,22 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
     ExecutorService executorService = Executors.newFixedThreadPool(2);
     executorService.submit(() -> {
       final ConnectedUser user = client1.connect(UserRegistration.of("player1"));
-      client1.match(user, new TestNetworkPlayerHandler(client1, user));
+      client1.match(user, new MatchEventListener() {
+        @Override
+        public void onMatchStart(MatchStartMessage event) {
+
+        }
+
+        @Override
+        public Coordinates onMatchPlayerMove(MatchStatusMessage event) {
+          return event.getGameSnapshot().getAvailableMoves().getMovesActivePlayer().get(0);
+        }
+
+        @Override
+        public void onMatchEnd(MatchEndMessage event) {
+
+        }
+      });
       finish1.complete(true);
 
     });

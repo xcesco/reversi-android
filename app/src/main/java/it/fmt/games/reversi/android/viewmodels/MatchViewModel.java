@@ -1,18 +1,22 @@
 package it.fmt.games.reversi.android.viewmodels;
 
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData;
 
-import javax.inject.Inject;
+import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
+import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
+import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
+import it.fmt.games.reversi.android.ui.activities.GameActivity;
+import it.fmt.games.reversi.android.ui.support.GameType;
+import it.fmt.games.reversi.model.Coordinates;
 
-import it.fmt.games.reversi.android.ReversiApplication;
-import it.fmt.games.reversi.android.repositories.persistence.MatchRepository;
+public interface MatchViewModel {
+  LiveData<MatchStartMessage> onStartMessage();
 
-public class MatchViewModel extends ViewModel {
+  LiveData<MatchStatusMessage> onStatusMessage();
 
-    public MatchViewModel() {
-        ReversiApplication.getInjector().inject(this);
-    }
+  LiveData<MatchEndMessage> onEndMessage();
 
-    @Inject
-    MatchRepository matchRepository;
+  void match(GameActivity gameActivity, GameType gameType);
+
+  void readUserMove(Coordinates coordinate);
 }

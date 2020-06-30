@@ -1,6 +1,5 @@
 package it.fmt.games.reversi.android;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Module;

@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     binding.btnHumanVsCPU.setOnClickListener(this::onOpenView);
     binding.btnHumanVsHuman.setOnClickListener(this::onOpenView);
     binding.btnCPUVsCPU.setOnClickListener(this::onOpenView);
+    binding.btnHumanVsNetwork.setOnClickListener(this::onOpenView);
   }
 
   public static Intent createIntent(Context context) {

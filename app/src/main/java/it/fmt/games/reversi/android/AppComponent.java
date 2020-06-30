@@ -3,10 +3,10 @@ package it.fmt.games.reversi.android;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import it.fmt.games.reversi.android.viewmodels.NetworkMatchViewModel;
+import it.fmt.games.reversi.android.viewmodels.AbstractMatchViewModel;
 import it.fmt.games.reversi.android.repositories.network.NetworkClient;
 import it.fmt.games.reversi.android.repositories.persistence.MatchRepository;
-import it.fmt.games.reversi.android.viewmodels.MatchViewModel;
+import it.fmt.games.reversi.android.viewmodels.MatchEventDispatcher;
 
 @Singleton
 @Component(modules = {AppModule.class})
@@ -15,7 +15,7 @@ public interface AppComponent {
 
   NetworkClient provideNetworkClient();
 
-  void inject(MatchViewModel matchViewModel);
+  void inject(MatchEventDispatcher matchEventDispatcher);
 
-  void inject(NetworkMatchViewModel networkMatchViewModel);
+  void inject(AbstractMatchViewModel abstractMatchViewModel);
 }

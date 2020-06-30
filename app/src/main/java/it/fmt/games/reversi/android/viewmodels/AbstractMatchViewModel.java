@@ -7,33 +7,43 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import it.fmt.games.reversi.Player1;
 import it.fmt.games.reversi.Player2;
 import it.fmt.games.reversi.PlayerFactory;
+import it.fmt.games.reversi.android.ReversiApplication;
 import it.fmt.games.reversi.android.repositories.model.AndroidDecisionHandler;
 import it.fmt.games.reversi.android.repositories.model.Move;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
-import it.fmt.games.reversi.android.repositories.network.model.MatchMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
+import it.fmt.games.reversi.android.repositories.persistence.MatchRepository;
 import it.fmt.games.reversi.android.ui.activities.GameActivity;
 import it.fmt.games.reversi.android.ui.support.GameType;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.Piece;
 import it.fmt.games.reversi.model.Player;
 
-public abstract class AbstractMatchViewModel extends ViewModel {
+public abstract class AbstractMatchViewModel extends ViewModel implements MatchEventDispatcher, MatchViewModel {
+  public AbstractMatchViewModel() {
+    ReversiApplication.getInjector().inject(this);
+  }
+
+  @Inject
+  MatchRepository matchRepository;
+
   private final Move userMove = new Move();
 
-  public LiveData<MatchStartMessage> onStartMessageLiveData() {
+  public LiveData<MatchStartMessage> onStartMessage() {
     return startMessageLiveData;
   }
 
-  public LiveData<MatchEndMessage> onEndMessageLiveData() {
+  public LiveData<MatchEndMessage> onEndMessage() {
     return endMessageLiveData;
   }
 
-  public LiveData<MatchStatusMessage> onStatusMessageLiveData() {
+  public LiveData<MatchStatusMessage> onStatusMessage() {
     return statusMessageLiveData;
   }
 

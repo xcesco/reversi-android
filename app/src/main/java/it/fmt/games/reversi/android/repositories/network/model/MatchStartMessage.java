@@ -13,7 +13,7 @@ public class MatchStartMessage extends MatchMessage {
   private final PlayerType player2Type;
 
   @JsonCreator
-  public MatchStartMessage(PlayerType player1Type, PlayerType player2Type, @JsonProperty("playerId") UUID playerId, @JsonProperty("matchId") UUID matchId, @JsonProperty("piece") Piece assignedPiece) {
+  public MatchStartMessage(@JsonProperty("player1Type") PlayerType player1Type, @JsonProperty("player2Type") PlayerType player2Type, @JsonProperty("playerId") UUID playerId, @JsonProperty("matchId") UUID matchId, @JsonProperty("piece") Piece assignedPiece) {
     super(playerId, matchId, MatchMessageType.MATCH_START);
     this.assignedPiece = assignedPiece;
     this.player1Type = player1Type;
