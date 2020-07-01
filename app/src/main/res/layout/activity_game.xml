@@ -21,8 +21,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="164dp"
-            android:layout_height="164dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:contentDescription="@string/logo_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ivPlayerSelector">
+            app:layout_constraintTop_toTopOf="@+id/flSelectorFrame">
 
             <ImageView
                 android:layout_width="64dp"
@@ -50,10 +50,9 @@
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:contentDescription="@string/player1_score"
                 android:textColor="#FFFFFF"
-                tools:text="0"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="0" />
         </FrameLayout>
-
 
 
         <FrameLayout
@@ -62,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ivPlayerSelector">
+            app:layout_constraintTop_toTopOf="@+id/flSelectorFrame">
 
             <ImageView
                 android:layout_width="64dp"
@@ -82,16 +81,44 @@
         </FrameLayout>
 
 
-        <ImageView
-            android:id="@+id/ivPlayerSelector"
+        <FrameLayout
+            android:id="@+id/flSelectorFrame"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:contentDescription="@string/selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
-            app:srcCompat="@drawable/ic_navigation" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+            <ProgressBar
+                android:id="@+id/pbWait"
+                android:layout_width="64dp"
+                android:layout_height="64dp" />
+
+            <ImageView
+                android:id="@+id/ivPlayerSelector"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:contentDescription="@string/selector"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_navigation"
+                tools:visibility="visible" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvWait"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/please_wait"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/flSelectorFrame"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible">
+
+        </TextView>
 
 
         <TextView
@@ -99,24 +126,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/player1_human"
-            tools:text="@string/player1_human"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/imageView2"
             app:layout_constraintEnd_toEndOf="@+id/imageView2"
-            app:layout_constraintStart_toStartOf="@+id/imageView2" />
+            app:layout_constraintStart_toStartOf="@+id/imageView2"
+            tools:text="@string/player1_human" />
 
         <TextView
             android:id="@+id/player2Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/player2_cpu"
-            tools:text="@string/player2_cpu"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/imageView3"
             app:layout_constraintEnd_toEndOf="@+id/imageView3"
-            app:layout_constraintStart_toStartOf="@+id/imageView3" />
+            app:layout_constraintStart_toStartOf="@+id/imageView3"
+            tools:text="@string/player2_cpu" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

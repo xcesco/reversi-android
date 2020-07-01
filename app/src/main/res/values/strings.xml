@@ -29,4 +29,5 @@
     <string name="player2_cpu">CPU 2</string>
     <string name="player_vs_network">PLAYER VS NETWORK</string>
     <string name="player_network">Remote</string>
+    <string name="please_wait">Please wait</string>
 </resources>

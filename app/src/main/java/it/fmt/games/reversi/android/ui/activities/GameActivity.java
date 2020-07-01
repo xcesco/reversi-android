@@ -32,6 +32,18 @@ import timber.log.Timber;
 
 public class GameActivity extends AppCompatActivity implements MatchMessageVisitor, GameRenderer, View.OnClickListener {
 
+  private void showIndicator() {
+    binding.pbWait.setVisibility(View.INVISIBLE);
+    binding.tvWait.setVisibility(View.INVISIBLE);
+    binding.ivPlayerSelector.setVisibility(View.VISIBLE);
+  }
+
+  private void showWait() {
+    binding.pbWait.setVisibility(View.VISIBLE);
+    binding.tvWait.setVisibility(View.VISIBLE);
+    binding.ivPlayerSelector.setVisibility(View.INVISIBLE);
+  }
+
   public static final String GAME_TYPE = "game_type";
   public ActivityGameBinding binding;
   Drawable whitePieceDrawable;
@@ -94,6 +106,8 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
       viewModel = new ViewModelProvider(this).get(LocalMatchViewModel.class);
     }
 
+    showWait();
+
     viewModel.onStartMessage().observe(this, this::visit);
     viewModel.onStatusMessage().observe(this, this::visit);
     viewModel.onEndMessage().observe(this, this::visit);
@@ -129,6 +143,7 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
     player1Type = message.getPlayer1Type();
     player2Type = message.getPlayer2Type();
     GameActivityHelper.defineLabels(this, message.getPlayer1Type(), message.getPlayer2Type());
+    showIndicator();
   }
 
   @Override
@@ -139,8 +154,8 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
 
   @Override
   public void visit(MatchEndMessage message) {
-    Timber.i(message.getMessageType().toString());
     GameStatus status = message.getStatus();
+    Timber.i("finish %s - %s", message.getMessageType().toString(), status);
 
     if (status.isGameOver() && !this.isFinishing()) {
       DialogHelper.showResultDialog(this, status);
