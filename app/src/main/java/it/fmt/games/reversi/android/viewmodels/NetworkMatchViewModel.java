@@ -15,7 +15,9 @@ import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
 import it.fmt.games.reversi.android.ui.activities.GameActivity;
 import it.fmt.games.reversi.android.ui.support.GameType;
 import it.fmt.games.reversi.model.Coordinates;
+import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Piece;
+import it.fmt.games.reversi.model.cpu.RandomDecisionHandler;
 import timber.log.Timber;
 
 public class NetworkMatchViewModel extends AbstractMatchViewModel {
@@ -63,10 +65,13 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
 
     @Override
     public Coordinates onMatchPlayerMove(MatchStatusMessage event) {
-      Timber.i("Relve che tocca muovere %s %s", event.getGameSnapshot().getActivePiece(), event.getGameSnapshot().getAvailableMoves());
+      GameSnapshot gameSnapshot = event.getGameSnapshot();
+      Timber.i("Tocca muovere a %s %s", gameSnapshot.getActivePiece(), gameSnapshot.getAvailableMoves().getMovesActivePlayer());
       matchEventDispatcher.postMatchMove(event);
 
-      if (activePiece == event.getGameSnapshot().getActivePiece()) {
+      if (activePiece == gameSnapshot.getActivePiece() && gameSnapshot.getAvailableMoves().isAnyAvailableMoves()) {
+//        RandomDecisionHandler handler=new RandomDecisionHandler();
+//        Coordinates move=handler.compute(gameSnapshot.getAvailableMoves().getMovesActivePlayer());
         Coordinates move = userInputReader.readInputFor(null,
                 event.getGameSnapshot().getAvailableMoves().getMovesActivePlayer());
 

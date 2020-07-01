@@ -99,6 +99,7 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
     String gameTypeValue = getIntent().getStringExtra(GAME_TYPE);
     gameType = GameType.valueOf(gameTypeValue);
     GameActivityHelper.definePieces(this, gameType);
+    GameActivityHelper.defineTagAndClickListeners(this);
 
     if (GameType.PLAYER_VS_NETWORK == gameType) {
       viewModel = new ViewModelProvider(this).get(NetworkMatchViewModel.class);
@@ -135,7 +136,11 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
   public void onClick(View v) {
     Coordinates coordinate = (Coordinates) v.getTag();
 
-    viewModel.readUserMove(coordinate);
+    Timber.i("try to select %s", coordinate.toString());
+    boolean validMove = viewModel.readUserMove(coordinate);
+    if (validMove) {
+      BoardAndroidDrawer.drawSelected(this, coordinate);
+    }
   }
 
   @Override

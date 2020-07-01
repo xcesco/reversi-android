@@ -18,5 +18,5 @@ public interface MatchViewModel {
 
   void match(GameActivity gameActivity, GameType gameType);
 
-  void readUserMove(Coordinates coordinate);
+  boolean readUserMove(Coordinates coordinate);
 }

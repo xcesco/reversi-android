@@ -24,10 +24,14 @@ import it.fmt.games.reversi.android.repositories.persistence.MatchRepository;
 import it.fmt.games.reversi.android.ui.activities.GameActivity;
 import it.fmt.games.reversi.android.ui.support.GameType;
 import it.fmt.games.reversi.model.Coordinates;
+import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Piece;
 import it.fmt.games.reversi.model.Player;
+import timber.log.Timber;
 
 public abstract class AbstractMatchViewModel extends ViewModel implements MatchEventDispatcher, MatchViewModel {
+  private GameSnapshot latestGameshot;
+
   public AbstractMatchViewModel() {
     ReversiApplication.getInjector().inject(this);
   }
@@ -75,11 +79,15 @@ public abstract class AbstractMatchViewModel extends ViewModel implements MatchE
 
   public abstract void match(final GameActivity activity, GameType gameType);
 
-  public void readUserMove(Coordinates coordinate) {
+  public boolean readUserMove(Coordinates coordinate) {
+    boolean validMove = latestGameshot != null && latestGameshot.getAvailableMoves().getMovesActivePlayer().contains(coordinate);
+    Timber.d("try to set move in %s = %s", coordinate, validMove);
+    if (!validMove) return false;
     synchronized (userMove) {
       userMove.setCoordinates(coordinate);
       userMove.notifyAll();
     }
+    return true;
   }
 
   protected static Pair<Player1, Player2> definePlayers(Piece assignedPiece, GameType gameType) {
@@ -116,6 +124,7 @@ public abstract class AbstractMatchViewModel extends ViewModel implements MatchE
   }
 
   public void postMatchMove(MatchStatusMessage matchStatusMessage) {
+    this.latestGameshot = matchStatusMessage.getGameSnapshot();
     this.statusMessageLiveData.postValue(matchStatusMessage);
   }
 

@@ -16,6 +16,12 @@ import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Piece;
 
 public abstract class BoardAndroidDrawer {
+  public static void drawSelected(GameActivity gameActivity, Coordinates selectedCoords) {
+    AppGridLayout appGridLayout = gameActivity.getAppGridLayout();
+    GridViewItem view = (GridViewItem) appGridLayout.getChildAt(selectedCoords.getRow() * Board.BOARD_SIZE + selectedCoords.getColumn());
+    view.setImageResource(R.drawable.hint_selected_256);
+  }
+
   public static void draw(GameActivity gameActivity, GameSnapshot gameSnapshot, GameType gameType) {
     final boolean showHints = showHints(gameActivity, gameSnapshot.getActivePiece(), gameType);
     final List<Coordinates> availableMoves = gameSnapshot.getAvailableMoves().getMovesActivePlayer();
@@ -27,8 +33,6 @@ public abstract class BoardAndroidDrawer {
     gameSnapshot.getBoard().getCellStream().forEach(item -> {
       Coordinates coords = item.getCoordinates();
       GridViewItem view = (GridViewItem) appGridLayout.getChildAt(coords.getRow() * Board.BOARD_SIZE + coords.getColumn());
-      view.setOnClickListener(gameActivity);
-      view.setTag(coords);
       switch (item.getPiece()) {
         case EMPTY:
           if (showHints && availableMoves.indexOf(coords) >= 0) {

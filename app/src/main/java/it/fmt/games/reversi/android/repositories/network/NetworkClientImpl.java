@@ -1,5 +1,7 @@
 package it.fmt.games.reversi.android.repositories.network;
 
+import android.util.Pair;
+
 import androidx.annotation.NonNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,23 +32,17 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import timber.log.Timber;
-import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
+import ua.naiksoftware.stomp.dto.StompHeader;
 import ua.naiksoftware.stomp.dto.StompMessage;
 
 import static it.fmt.games.reversi.android.repositories.network.support.MatchMessageParser.parser;
 
 public class NetworkClientImpl implements NetworkClient {
-  public static final String HEADER_TYPE = "type";
-  private static final String WS_TOPIC_USER_MATCH_DESTINATION = "/topic/user/{uuid}";
-  private static final String WS_USER_STATUS_REPLY = "/user/status";
-  private static final String WS_APP_USER_DESTINATION = "/app/users/{uuid}/moves";
-  private static final String WS_APP_USER_READY_DESTINATION = "/app/users/{uuid}/ready";
-  private static final String WS_APP_USER_NOT_READY_DESTINATION = "/app/users/{uuid}/not-ready";
   private final ObjectMapper objectMapper;
   private final WebServiceClient webServiceClient;
-  private final StompClient webSocketClient;
-  private Disposable connectionDisposable;
+  private final StompClient stompClient;
+  private Disposable stompDisposable;
 
   public NetworkClientImpl(final String serverUrl) {
     final String webSocketBaseUrl = serverUrl.replace("https", "wss");
@@ -60,40 +56,19 @@ public class NetworkClientImpl implements NetworkClient {
             .client(httpClient).build();
 
     webServiceClient = retrofitJackson.create(WebServiceClient.class);
-    webSocketClient = buildStompOverWebSocketClient(webSocketBaseUrl, httpClient);
+    Pair<StompClient, Disposable> stompBuildResult = StompClientBuilder.build(webSocketBaseUrl, httpClient);
+    stompClient = stompBuildResult.first;
+    stompDisposable = stompBuildResult.second;
   }
 
   public static String getHeaderValue(StompMessage stompMessage, String key) {
     return stompMessage.getStompHeaders()
             .stream().filter(header -> key.equals(header.getKey()))
-            .findFirst().map(header -> header.getValue()).orElse(null);
+            .findFirst().map(StompHeader::getValue).orElse(null);
   }
 
   public ObjectMapper getObjectMapper() {
     return objectMapper;
-  }
-
-  private StompClient buildStompOverWebSocketClient(String webSocketUrl, OkHttpClient httpClient) {
-    webSocketUrl += "api/messages/websocket/";
-    StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, webSocketUrl, null, httpClient);
-    connectionDisposable = stompClient.lifecycle().observeOn(Schedulers.io()).subscribeOn(Schedulers.computation()).subscribe(lifecycleEvent -> {
-      switch (lifecycleEvent.getType()) {
-        case OPENED:
-          Timber.d("Stomp connection OPENED");
-          break;
-        case ERROR:
-          Timber.d(lifecycleEvent.getException(), "Error");
-          break;
-        case CLOSED:
-          Timber.d("Stomp connection CLOSED");
-          break;
-        case FAILED_SERVER_HEARTBEAT:
-          Timber.d("Stomp connection FAILED_SERVER_HEARTBEAT");
-          break;
-      }
-    });
-
-    return stompClient;
   }
 
   private ObjectMapper buildObjectMapper() {
@@ -104,10 +79,10 @@ public class NetworkClientImpl implements NetworkClient {
   }
 
   public void disconnect() {
-    webSocketClient.disconnect();
+    stompClient.disconnect();
 
-    if (connectionDisposable != null) {
-      connectionDisposable.dispose();
+    if (stompDisposable != null) {
+      stompDisposable.dispose();
     }
   }
 
@@ -124,15 +99,15 @@ public class NetworkClientImpl implements NetworkClient {
 
 
   void connectWebSocket() {
-    webSocketClient.connect();
+    stompClient.connect();
   }
 
   public Completable sendMatchMove(UUID userId, Piece piece, UUID matchId, Coordinates move) {
     try {
-      String url = WS_APP_USER_DESTINATION.replace("{uuid}", userId.toString());
+      String url = StompConstants.WS_APP_USER_DESTINATION.replace("{uuid}", userId.toString());
       String payload = objectMapper.writeValueAsString(MatchMove.of(matchId, userId, piece, move));
       Timber.i("%s send message %s", piece, payload);
-      return webSocketClient.send(url, payload).observeOn(Schedulers.io()).subscribeOn(Schedulers.computation());
+      return stompClient.send(url, payload).observeOn(Schedulers.io()).subscribeOn(Schedulers.computation());
     } catch (JsonProcessingException e) {
       Timber.e(e);
     }
@@ -143,15 +118,15 @@ public class NetworkClientImpl implements NetworkClient {
     String url;
     UserStatus status;
     if (ready) {
-      url = WS_APP_USER_READY_DESTINATION.replace("{uuid}", user.getId().toString());
+      url = StompConstants.WS_APP_USER_READY_DESTINATION.replace("{uuid}", user.getId().toString());
       status = UserStatus.READY_TO_PLAY;
     } else {
-      url = WS_APP_USER_NOT_READY_DESTINATION.replace("{uuid}", user.getId().toString());
+      url = StompConstants.WS_APP_USER_NOT_READY_DESTINATION.replace("{uuid}", user.getId().toString());
       status = UserStatus.NOT_READY_TO_PLAY;
     }
 
     Timber.i("%s send %s to %s", user.getName(), status, url);
-    return webSocketClient.send(url, "")
+    return stompClient.send(url, "")
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.computation())
             .subscribe(() -> {
@@ -168,8 +143,8 @@ public class NetworkClientImpl implements NetworkClient {
   }
 
   private Flowable<StompMessage> observeUserStatus(ConnectedUser user) {
-    Timber.d("%s observer %s", user.getName(), WS_USER_STATUS_REPLY);
-    return webSocketClient.topic(WS_USER_STATUS_REPLY)
+    Timber.d("%s observer %s", user.getName(), StompConstants.WS_USER_STATUS_REPLY);
+    return stompClient.topic(StompConstants.WS_USER_STATUS_REPLY)
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.computation());
   }
@@ -190,8 +165,8 @@ public class NetworkClientImpl implements NetworkClient {
             userNotReadyCompletable);
 
     final ConnectedUser player = user;
-    String url = WS_TOPIC_USER_MATCH_DESTINATION.replace("{uuid}", user.getId().toString());
-    Disposable watchMatchDisposable = webSocketClient
+    String url = StompConstants.WS_TOPIC_USER_MATCH_DESTINATION.replace("{uuid}", user.getId().toString());
+    Disposable watchMatchDisposable = stompClient
             .topic(url)
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.computation())

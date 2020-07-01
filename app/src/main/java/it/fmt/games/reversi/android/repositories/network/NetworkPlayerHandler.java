@@ -47,7 +47,7 @@ public class NetworkPlayerHandler extends MatchMessageVisitorImpl {
         Timber.i("user %s do nothing", user.getName());
       }
     } else {
-      Timber.i("player %s detects match has status %s",
+      Timber.i("user %s detects match has status %s",
               playerPiece, gameSnapshot.getStatus()
       );
     }
@@ -55,10 +55,9 @@ public class NetworkPlayerHandler extends MatchMessageVisitorImpl {
 
   @Override
   public void visit(MatchEndMessage message) {
-    Timber.i("player %s receives match end: %s (%s - %s)", user.getName(), message.getStatus(),
+    Timber.i("user %s receives match end: %s (%s - %s)", user.getName(), message.getStatus(),
             message.getScore().getPlayer1Score(), message.getScore().getPlayer2Score());
-    super.visit(message);
     listener.onMatchEnd(message);
-
+    super.visit(message);
   }
 }
