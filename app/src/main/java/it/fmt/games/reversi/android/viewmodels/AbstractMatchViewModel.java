@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -32,6 +34,8 @@ public abstract class AbstractMatchViewModel extends ViewModel implements MatchE
 
   @Inject
   MatchRepository matchRepository;
+
+  protected Executor executor = Executors.newSingleThreadExecutor();
 
   private final Move userMove = new Move();
 

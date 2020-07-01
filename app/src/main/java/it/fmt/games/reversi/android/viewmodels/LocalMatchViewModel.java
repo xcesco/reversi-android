@@ -18,8 +18,6 @@ import it.fmt.games.reversi.model.Piece;
 
 public class LocalMatchViewModel extends AbstractMatchViewModel {
 
-  private Executor executor = Executors.newSingleThreadExecutor();
-
   public void match(final GameActivity activity, GameType gameType) {
     Pair<Player1, Player2> players = definePlayers(Piece.PLAYER_1, gameType);
     final Player1 player1 = players.first;

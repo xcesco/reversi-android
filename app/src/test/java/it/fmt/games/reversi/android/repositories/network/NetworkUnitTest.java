@@ -16,7 +16,9 @@ import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
 import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
 import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
+import it.fmt.games.reversi.android.viewmodels.NetworkMatchViewModel;
 import it.fmt.games.reversi.model.Coordinates;
+import it.fmt.games.reversi.model.Piece;
 
 import static org.junit.Assert.assertTrue;
 
@@ -54,6 +56,16 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
         public void onMatchEnd(MatchEndMessage event) {
 
         }
+      }, new NetworkMatchViewModel.CurrentPieceStorage() {
+        @Override
+        public Piece getActivePiece() {
+          return null;
+        }
+
+        @Override
+        public void setActivePiece(Piece activePiece) {
+
+        }
       });
       finish1.complete(true);
 
@@ -74,6 +86,16 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
         @Override
         public void onMatchEnd(MatchEndMessage event) {
+
+        }
+      }, new NetworkMatchViewModel.CurrentPieceStorage() {
+        @Override
+        public Piece getActivePiece() {
+          return null;
+        }
+
+        @Override
+        public void setActivePiece(Piece activePiece) {
 
         }
       });
@@ -115,6 +137,16 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
         @Override
         public void onMatchEnd(MatchEndMessage event) {
+
+        }
+      }, new NetworkMatchViewModel.CurrentPieceStorage() {
+        @Override
+        public Piece getActivePiece() {
+          return null;
+        }
+
+        @Override
+        public void setActivePiece(Piece activePiece) {
 
         }
       });

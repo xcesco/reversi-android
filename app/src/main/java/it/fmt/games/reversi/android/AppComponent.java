@@ -7,6 +7,7 @@ import it.fmt.games.reversi.android.viewmodels.AbstractMatchViewModel;
 import it.fmt.games.reversi.android.repositories.network.NetworkClient;
 import it.fmt.games.reversi.android.repositories.persistence.MatchRepository;
 import it.fmt.games.reversi.android.viewmodels.MatchEventDispatcher;
+import it.fmt.games.reversi.android.viewmodels.NetworkMatchViewModel;
 
 @Singleton
 @Component(modules = {AppModule.class})
@@ -17,5 +18,5 @@ public interface AppComponent {
 
   void inject(MatchEventDispatcher matchEventDispatcher);
 
-  void inject(AbstractMatchViewModel abstractMatchViewModel);
+  void inject(NetworkMatchViewModel abstractMatchViewModel);
 }

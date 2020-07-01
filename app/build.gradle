@@ -75,8 +75,8 @@ dependencies {
 
     // OkHttp
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
-    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.7.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.0'
 
     // web-service/web-socket
     // https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit

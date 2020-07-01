@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
 import it.fmt.games.reversi.android.ui.activities.GameActivity;
 import it.fmt.games.reversi.android.R;
 import it.fmt.games.reversi.android.ui.views.AppGridLayout;
@@ -16,7 +17,7 @@ import it.fmt.games.reversi.model.Piece;
 
 public abstract class BoardAndroidDrawer {
   public static void draw(GameActivity gameActivity, GameSnapshot gameSnapshot, GameType gameType) {
-    final boolean showHints = showHints(gameSnapshot.getActivePiece(), gameType);
+    final boolean showHints = showHints(gameActivity, gameSnapshot.getActivePiece(), gameType);
     final List<Coordinates> availableMoves = gameSnapshot.getAvailableMoves().getMovesActivePlayer();
     final List<Coordinates> capturedMoves = gameSnapshot.getLastMove() != null ? gameSnapshot.getLastMove().getCapturedEnemyPiecesCoords() : new ArrayList<>();
     AppGridLayout appGridLayout = gameActivity.getAppGridLayout();
@@ -54,7 +55,7 @@ public abstract class BoardAndroidDrawer {
     });
   }
 
-  private static boolean showHints(Piece activePiece, GameType gameType) {
+  private static boolean showHints(GameActivity gameActivity, Piece activePiece, GameType gameType) {
     switch (gameType) {
       case CPU_VS_CPU:
         return false;
@@ -62,6 +63,10 @@ public abstract class BoardAndroidDrawer {
         return activePiece == Piece.PLAYER_1;
       case CPU_VS_PLAYER:
         return activePiece == Piece.PLAYER_2;
+      case PLAYER_VS_NETWORK:
+        return (activePiece == Piece.PLAYER_1 && gameActivity.getPlayer1Type() != PlayerType.NETWORK_PLAYER) ||
+                (activePiece == Piece.PLAYER_2 && gameActivity.getPlayer2Type() != PlayerType.NETWORK_PLAYER);
+      case PLAYER_VS_PLAYER:
       default:
         return true;
     }

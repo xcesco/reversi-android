@@ -15,6 +15,7 @@ import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMessageVisitor;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
+import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
 import it.fmt.games.reversi.android.ui.support.BoardAndroidDrawer;
 import it.fmt.games.reversi.android.ui.support.DialogHelper;
 import it.fmt.games.reversi.android.ui.support.GameActivityHelper;
@@ -32,17 +33,27 @@ import timber.log.Timber;
 public class GameActivity extends AppCompatActivity implements MatchMessageVisitor, GameRenderer, View.OnClickListener {
 
   public static final String GAME_TYPE = "game_type";
+  public ActivityGameBinding binding;
   Drawable whitePieceDrawable;
   Drawable blackPieceDrawable;
   float rotationAngle;
-  public ActivityGameBinding binding;
   private MatchViewModel viewModel;
   private GameType gameType;
+  private PlayerType player1Type;
+  private PlayerType player2Type;
 
   public static Intent createIntent(Context context, GameType gameType) {
     Intent intent = new Intent(context, GameActivity.class);
     intent.putExtra(GAME_TYPE, gameType.toString());
     return intent;
+  }
+
+  public PlayerType getPlayer1Type() {
+    return player1Type;
+  }
+
+  public PlayerType getPlayer2Type() {
+    return player2Type;
   }
 
   public AppGridLayout getAppGridLayout() {
@@ -115,6 +126,8 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
 
   @Override
   public void visit(MatchStartMessage message) {
+    player1Type = message.getPlayer1Type();
+    player2Type = message.getPlayer2Type();
     GameActivityHelper.defineLabels(this, message.getPlayer1Type(), message.getPlayer2Type());
   }
 

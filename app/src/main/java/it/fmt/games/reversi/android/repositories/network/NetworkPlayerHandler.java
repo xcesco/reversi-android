@@ -38,9 +38,9 @@ public class NetworkPlayerHandler extends MatchMessageVisitorImpl {
     GameSnapshot gameSnapshot = message.getGameSnapshot();
     Piece playerPiece = gameSnapshot.getActivePiece();
 
+    Coordinates move = listener.onMatchPlayerMove(message);
     if (gameSnapshot.getStatus() == GameStatus.RUNNING) {
       if (gameSnapshot.getActivePiece() == assignedPiece && gameSnapshot.getAvailableMoves().getMovesActivePlayer().size() > 0) {
-        Coordinates move = listener.onMatchPlayerMove(message);
         Timber.i("user %s decides to move on %s", playerPiece, move);
         client.sendMatchMove(message.getPlayerId(), gameSnapshot.getActivePiece(), message.getMatchId(), move).subscribe();
       } else {

@@ -11,7 +11,6 @@ import javax.inject.Singleton;
 
 import it.fmt.games.reversi.android.repositories.network.MatchEventListener;
 import it.fmt.games.reversi.android.repositories.network.NetworkClient;
-import it.fmt.games.reversi.android.repositories.network.NetworkClientImpl;
 import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMessage;
 import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
@@ -36,14 +35,14 @@ public class MatchRepository {
     connectedUser = null;
     networkClient.disconnect();
   }
-
-  public LiveData<MatchMessage> match(@NonNull MatchEventListener listener) {
-    MutableLiveData<MatchMessage> result = new MutableLiveData<>();
-
-    Executors.newSingleThreadExecutor().execute(() -> {
-      networkClient.match(connectedUser, listener);
-    });
-
-    return result;
-  }
+//
+//  public LiveData<MatchMessage> match(@NonNull MatchEventListener listener) {
+//    MutableLiveData<MatchMessage> result = new MutableLiveData<>();
+//
+//    Executors.newSingleThreadExecutor().execute(() -> {
+//      networkClient.match(connectedUser, listener, listener);
+//    });
+//
+//    return result;
+//  }
 }
