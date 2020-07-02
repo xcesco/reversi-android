@@ -50,6 +50,7 @@ Game is available on [Play store](https://play.google.com/store/apps/details?id=
  https://developers.google.com/games/services/console/enabling
 
  886691898919-ck0lcchsjt5s90ovr1a3g21afbehqvle.apps.googleusercontent.com
+
 ### How to get certifcate sha
 https://stackoverflow.com/questions/27609442/how-to-get-the-sha-1-fingerprint-certificate-in-android-studio-for-debug-mode
 debug
@@ -63,6 +64,7 @@ release
 
 #ViewBinding
 - https://developer.android.com/topic/libraries/view-binding#java
+- https://stackoverflow.com/questions/60664346/what-is-the-right-way-of-android-view-binding-in-the-recyclerview-adapter-class
 
  ## Logger
  Timber

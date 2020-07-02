@@ -1,22 +1,28 @@
-package it.fmt.games.reversi.android.ui.activities;
+package it.fmt.games.reversi.android.ui.fragments;
 
-import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
+import java.util.Objects;
+
 import it.fmt.games.reversi.GameRenderer;
-import it.fmt.games.reversi.android.databinding.ActivityGameBinding;
+import it.fmt.games.reversi.android.databinding.FragmentMatchBinding;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMessageVisitor;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
 import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
+import it.fmt.games.reversi.android.ui.fragments.support.FragmentUtils;
 import it.fmt.games.reversi.android.ui.support.BoardAndroidDrawer;
 import it.fmt.games.reversi.android.ui.support.DialogHelper;
 import it.fmt.games.reversi.android.ui.support.GameActivityHelper;
@@ -31,8 +37,64 @@ import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.GameStatus;
 import timber.log.Timber;
 
+public class MatchFragment extends Fragment implements MatchMessageVisitor, GameRenderer, GameContainer {
 
-public class GameActivity extends AppCompatActivity implements MatchMessageVisitor, GameRenderer, GameContainer {
+  public static final String GAME_TYPE = "game_type";
+  Drawable whitePieceDrawable;
+  Drawable blackPieceDrawable;
+  float rotationAngle;
+  private FragmentMatchBinding binding;
+  private MatchViewModel viewModel;
+  private GameType gameType;
+  private PlayerType player1Type;
+  private PlayerType player2Type;
+
+  @Override
+  public View onCreateView(
+          LayoutInflater inflater, ViewGroup container,
+          Bundle savedInstanceState
+  ) {
+    binding = FragmentMatchBinding.inflate(getLayoutInflater());
+    View view = binding.getRoot();
+
+    String gameTypeValue = null; //getIntent().getStringExtra(GAME_TYPE);
+    gameType = GameType.valueOf(gameTypeValue);
+    GameActivityHelper.definePieces(requireActivity(), this, gameType);
+    GameActivityHelper.defineTagAndClickListeners(this);
+
+    if (GameType.PLAYER_VS_NETWORK == gameType) {
+      viewModel = new ViewModelProvider(this).get(NetworkMatchViewModel.class);
+    } else {
+      viewModel = new ViewModelProvider(this).get(LocalMatchViewModel.class);
+    }
+
+    FragmentUtils.configureHomeButton(requireActivity(), true);
+
+    showWait();
+    String playerName = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+            .getString("userName", "Player");
+
+    viewModel.onStartMessage().observe(getViewLifecycleOwner(), this::visit);
+    viewModel.onStatusMessage().observe(getViewLifecycleOwner(), this::visit);
+    viewModel.onEndMessage().observe(getViewLifecycleOwner(), this::visit);
+    viewModel.match(playerName, gameType);
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+//  @Override
+//  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//    menu.clear();
+//    super.onCreateOptionsMenu(menu, inflater);
+//  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    binding = null;
+  }
 
   private void showIndicator() {
     binding.pbWait.setVisibility(View.INVISIBLE);
@@ -46,79 +108,39 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
     binding.ivPlayerSelector.setVisibility(View.INVISIBLE);
   }
 
-  public static final String GAME_TYPE = "game_type";
-  public ActivityGameBinding binding;
-  Drawable whitePieceDrawable;
-  Drawable blackPieceDrawable;
-  float rotationAngle;
-  private MatchViewModel viewModel;
-  private GameType gameType;
-  private PlayerType player1Type;
-  private PlayerType player2Type;
-
-  public static Intent createIntent(Context context, GameType gameType) {
-    Intent intent = new Intent(context, GameActivity.class);
-    intent.putExtra(GAME_TYPE, gameType.toString());
-    return intent;
-  }
-
+  @Override
   public PlayerType getPlayer1Type() {
     return player1Type;
   }
 
+  @Override
   public PlayerType getPlayer2Type() {
     return player2Type;
   }
 
+  @Override
   public AppGridLayout getAppGridLayout() {
     return binding.gridLayout;
   }
 
+  @Override
   public Drawable getWhitePieceDrawable() {
     return whitePieceDrawable;
   }
 
+  @Override
   public void setWhitePieceDrawable(Drawable whitePieceDrawable) {
     this.whitePieceDrawable = whitePieceDrawable;
   }
 
+  @Override
   public Drawable getBlackPieceDrawable() {
     return blackPieceDrawable;
   }
 
+  @Override
   public void setBlackPieceDrawable(Drawable blackPieceDrawable) {
     this.blackPieceDrawable = blackPieceDrawable;
-  }
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    binding = ActivityGameBinding.inflate(getLayoutInflater());
-    View view = binding.getRoot();
-    setContentView(view);
-
-    String gameTypeValue = getIntent().getStringExtra(GAME_TYPE);
-    gameType = GameType.valueOf(gameTypeValue);
-    GameActivityHelper.definePieces(this, this, gameType);
-    GameActivityHelper.defineTagAndClickListeners(this);
-
-    if (GameType.PLAYER_VS_NETWORK == gameType) {
-      viewModel = new ViewModelProvider(this).get(NetworkMatchViewModel.class);
-    } else {
-      viewModel = new ViewModelProvider(this).get(LocalMatchViewModel.class);
-    }
-
-    //userName
-    String playerName = PreferenceManager.getDefaultSharedPreferences(this)
-            .getString("userName", "Player");
-
-    showWait();
-
-    viewModel.onStartMessage().observe(this, this::visit);
-    viewModel.onStatusMessage().observe(this, this::visit);
-    viewModel.onEndMessage().observe(this, this::visit);
-    viewModel.match(playerName, gameType);
   }
 
   @Override
@@ -128,6 +150,7 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
     BoardAndroidDrawer.draw(this, gameSnapshot, gameType);
   }
 
+  @Override
   public void setRotationAngle(float rotationAngle) {
     this.rotationAngle = rotationAngle;
   }
@@ -172,7 +195,7 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
   public void visit(MatchStartMessage message) {
     player1Type = message.getPlayer1Type();
     player2Type = message.getPlayer2Type();
-    GameActivityHelper.defineLabels(this, message.getPlayer1Type(), message.getPlayer2Type());
+    GameActivityHelper.defineLabels(getActivity(), this, message);
     showIndicator();
   }
 
@@ -187,9 +210,8 @@ public class GameActivity extends AppCompatActivity implements MatchMessageVisit
     GameStatus status = message.getStatus();
     Timber.i("finish %s - %s", message.getMessageType().toString(), status);
 
-    if (status.isGameOver() && !this.isFinishing()) {
-      DialogHelper.showResultDialog(this, status);
+    if (status.isGameOver()) {
+      DialogHelper.showResultDialog(getActivity(), status);
     }
   }
-
 }

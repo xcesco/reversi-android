@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.PlayedMatchesFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="#FFFFE6">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:contentDescription="@string/logo_description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/logo" />
+
+            <FrameLayout
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/flSelectorFrame">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:contentDescription="@string/player1_score"
+                    app:srcCompat="@drawable/black_256" />
+
+                <TextView
+                    android:id="@+id/tvPlayer1Score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:contentDescription="@string/player1_score"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    tools:text="0" />
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/flSelectorFrame">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:contentDescription="@string/player2_score"
+                    app:srcCompat="@drawable/white_256" />
+
+                <TextView
+                    android:id="@+id/tvPlayer2Score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:contentDescription="@string/player2_score"
+                    android:textColor="#4E4D4D"
+                    android:textSize="20sp"
+                    tools:text="0" />
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:id="@+id/flSelectorFrame"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+                <ProgressBar
+                    android:id="@+id/pbWait"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp" />
+
+                <ImageView
+                    android:id="@+id/ivPlayerSelector"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:contentDescription="@string/selector"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_navigation"
+                    tools:visibility="visible" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tvWait"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/please_wait"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@+id/flSelectorFrame"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="visible">
+
+            </TextView>
+
+
+            <TextView
+                android:id="@+id/player1Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/player1_human"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/imageView2"
+                app:layout_constraintEnd_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toStartOf="@+id/imageView2"
+                tools:text="@string/player1_human" />
+
+            <TextView
+                android:id="@+id/player2Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/player2_cpu"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/imageView3"
+                app:layout_constraintEnd_toEndOf="@+id/imageView3"
+                app:layout_constraintStart_toStartOf="@+id/imageView3"
+                tools:text="@string/player2_cpu" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <it.fmt.games.reversi.android.ui.views.AppGridLayout
+                android:id="@+id/gridLayout"
+                android:layout_width="@integer/AppGridWidth"
+                android:layout_height="@integer/AppGridHeight"
+                android:layout_margin="12dp"
+                android:background="@drawable/board_2048"
+                android:columnCount="8"
+                android:rowCount="8"
+                android:rowOrderPreserved="true"
+                android:useDefaultMargins="false"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!-- row 0 -->
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board00"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board01"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board02"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board03"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board04"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board05"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board06"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board07"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <!-- row 1 -->
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board10"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board11"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board12"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board13"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board14"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board15"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board16"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board17"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <!-- row 2 -->
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board20"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board21"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board22"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board23"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board24"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board25"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board26"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board27"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <!-- row 3 -->
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board30"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board31"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board32"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board33"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent"
+                    tools:srcCompat="@drawable/black_256" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board34"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent"
+                    tools:srcCompat="@drawable/white_256" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board35"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board36"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board37"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <!-- row 4 -->
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board40"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board41"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board42"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board43"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent"
+                    tools:srcCompat="@drawable/white_256" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board44"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent"
+                    tools:srcCompat="@drawable/black_256" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board45"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board46"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board47"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <!-- row 5 -->
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board50"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board51"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board52"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board53"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board54"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board55"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board56"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board57"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <!-- row 6 -->
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board60"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board61"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board62"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board63"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board64"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board65"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board66"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board67"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <!-- row 7 -->
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board70"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board71"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board72"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board73"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board74"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board75"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board76"
+                    style="@style/AppGridItemLight"
+                    app:srcCompat="@drawable/transparent" />
+
+                <it.fmt.games.reversi.android.ui.views.GridViewItem
+                    android:id="@+id/board77"
+                    style="@style/AppGridItemDark"
+                    app:srcCompat="@drawable/transparent" />
+
+
+            </it.fmt.games.reversi.android.ui.views.AppGridLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

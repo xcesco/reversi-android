@@ -19,7 +19,15 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         setProperty("archivesBaseName", "$applicationId-$versionName")
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }
     }
+
 
     Properties properties = new Properties()
     properties.load(project.rootProject.file("local.properties").newDataInputStream())
@@ -35,10 +43,12 @@ android {
     }
     buildTypes {
         debug {
+            buildConfigField "boolean", "AUTOMATIC_NETWORK_PLAYER", 'true'
             buildConfigField "long", "THINKING_TIME", '100'
             buildConfigField "boolean", "LOG_ENABLED", "true"
         }
         release {
+            buildConfigField "boolean", "AUTOMATIC_NETWORK_PLAYER", 'false'
             buildConfigField "long", "THINKING_TIME", '1200'
             buildConfigField "boolean", "LOG_ENABLED", "false"
 
@@ -63,6 +73,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
     def lifecycle_version = '2.2.0'
     def nav_version = '2.3.0'
+    def room_version = '2.2.5'
 
     // Java language implementation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
@@ -72,13 +83,17 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.preference:preference:1.1.1'
+
+    // room
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     // reversi
     implementation 'it.fmt.games.reversi:reversi-core:1.1.2:jdk8'
 
-    // OkHttp
+    // OkHttp - do not upgrade.. some problem about crypto library
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.7.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.7.0'

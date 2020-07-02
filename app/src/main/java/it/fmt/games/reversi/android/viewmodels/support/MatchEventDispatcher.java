@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android.viewmodels;
+package it.fmt.games.reversi.android.viewmodels.support;
 
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;

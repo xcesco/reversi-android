@@ -1,5 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/launcherFragment">
 
+    <fragment
+        android:id="@+id/matchFragment"
+        android:name="it.fmt.games.reversi.android.ui.fragments.MatchFragment"
+        android:label="@string/played_matches_label"
+        tools:layout="@layout/fragment_match"/>
+    <fragment
+        android:id="@+id/playedMatchesFragment"
+        android:name="it.fmt.games.reversi.android.ui.fragments.PlayedMatchesFragment"
+        android:label="match_fragment_label"
+        tools:layout="@layout/fragment_played_match"/>
+    <fragment
+        android:id="@+id/launcherFragment"
+        android:name="it.fmt.games.reversi.android.ui.fragments.LauncherFragment"
+        android:label="fragment_launcher"
+        tools:layout="@layout/fragment_launcher" >
+        <action
+            android:id="@+id/action_settings"
+            app:destination="@id/settingsFragment"
+            app:launchSingleTop="false" />
+        <action
+            android:id="@+id/action_played_matches"
+            app:destination="@id/playedMatchesFragment" />
+        <action
+            android:id="@+id/action_match"
+            app:destination="@id/matchFragment" />
+        <argument
+            android:name="showHomeButton"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="it.fmt.games.reversi.android.ui.fragments.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>

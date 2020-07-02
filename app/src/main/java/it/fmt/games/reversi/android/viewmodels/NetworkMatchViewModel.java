@@ -3,6 +3,7 @@ package it.fmt.games.reversi.android.viewmodels;
 import javax.inject.Inject;
 
 import it.fmt.games.reversi.UserInputReader;
+import it.fmt.games.reversi.android.BuildConfig;
 import it.fmt.games.reversi.android.ReversiApplication;
 import it.fmt.games.reversi.android.repositories.network.MatchEventListener;
 import it.fmt.games.reversi.android.repositories.network.NetworkClient;
@@ -12,8 +13,10 @@ import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
 import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
 import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
-import it.fmt.games.reversi.android.ui.activities.GameActivity;
+import it.fmt.games.reversi.android.repositories.persistence.PlayedMatchRepository;
 import it.fmt.games.reversi.android.ui.support.GameType;
+import it.fmt.games.reversi.android.viewmodels.support.AbstractMatchViewModel;
+import it.fmt.games.reversi.android.viewmodels.support.MatchEventDispatcher;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Piece;
@@ -23,6 +26,9 @@ import timber.log.Timber;
 public class NetworkMatchViewModel extends AbstractMatchViewModel {
 
   @Inject
+  PlayedMatchRepository playedMatchRepository;
+
+  @Inject
   NetworkClient client;
 
   public NetworkMatchViewModel() {
@@ -30,22 +36,22 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
   }
 
   @Override
-  public void match(final GameActivity activity, GameType gameType) {
-    //if (player1 instanceof Network)
+  public void match(String playerName, GameType gameType) {
     executor.execute(() -> {
-      final ConnectedUser user = client.connect(UserRegistration.of("local"));
+      final ConnectedUser user = client.connect(UserRegistration.of(playerName));
       final UserInputReader userInputReader = this::readPlayerMove;
-      // final GameRenderer gamerRendererWrapper = new AndroidRendererWrapper(this, player1, player2);
       NetworkMatchEventListener listener = new NetworkMatchEventListener(this, userInputReader);
       client.match(user, listener);
     });
   }
 
 
-  static class NetworkMatchEventListener implements MatchEventListener {
+  class NetworkMatchEventListener implements MatchEventListener {
     private final MatchEventDispatcher matchEventDispatcher;
     private final UserInputReader userInputReader;
-    private Piece activePiece;
+    private Piece assignedPiece;
+    private String player1Name;
+    private String player2Name;
 
     public NetworkMatchEventListener(MatchEventDispatcher matchEventDispatcher, UserInputReader userInputReader) {
       this.matchEventDispatcher = matchEventDispatcher;
@@ -54,9 +60,13 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
 
     @Override
     public void onMatchStart(MatchStartMessage event) {
-      activePiece = event.getAssignedPiece();
-      MatchStartMessage newMessage = new MatchStartMessage(Piece.PLAYER_1 == activePiece ? PlayerType.HUMAN_PLAYER : PlayerType.NETWORK_PLAYER,
-              Piece.PLAYER_2 == activePiece ? PlayerType.HUMAN_PLAYER : PlayerType.NETWORK_PLAYER,
+      assignedPiece = event.getAssignedPiece();
+      player1Name = event.getPlayer1Name();
+      player2Name = event.getPlayer2Name();
+      MatchStartMessage newMessage = new MatchStartMessage(Piece.PLAYER_1 == assignedPiece ? PlayerType.HUMAN_PLAYER : PlayerType.NETWORK_PLAYER,
+              event.getPlayer1Name(),
+              Piece.PLAYER_2 == assignedPiece ? PlayerType.HUMAN_PLAYER : PlayerType.NETWORK_PLAYER,
+              event.getPlayer2Name(),
               event.getPlayerId(),
               event.getMatchId(),
               Piece.PLAYER_1);
@@ -69,11 +79,15 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
       Timber.i("Tocca muovere a %s %s", gameSnapshot.getActivePiece(), gameSnapshot.getAvailableMoves().getMovesActivePlayer());
       matchEventDispatcher.postMatchMove(event);
 
-      if (activePiece == gameSnapshot.getActivePiece() && gameSnapshot.getAvailableMoves().isAnyAvailableMoves()) {
-//        RandomDecisionHandler handler=new RandomDecisionHandler();
-//        Coordinates move=handler.compute(gameSnapshot.getAvailableMoves().getMovesActivePlayer());
-        Coordinates move = userInputReader.readInputFor(null,
-                event.getGameSnapshot().getAvailableMoves().getMovesActivePlayer());
+      if (assignedPiece == gameSnapshot.getActivePiece() && gameSnapshot.getAvailableMoves().isAvailableMovesForActivePlayer()) {
+        RandomDecisionHandler handler = new RandomDecisionHandler();
+        Coordinates move;
+        if (BuildConfig.AUTOMATIC_NETWORK_PLAYER) {
+          move = handler.compute(gameSnapshot.getAvailableMoves().getMovesActivePlayer());
+        } else {
+          move = userInputReader.readInputFor(null,
+                  event.getGameSnapshot().getAvailableMoves().getMovesActivePlayer());
+        }
 
         return move;
       } else {
@@ -84,6 +98,7 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
 
     @Override
     public void onMatchEnd(MatchEndMessage event) {
+      playedMatchRepository.insert(player1Name, player2Name, event.getStatus(), event.getScore(), assignedPiece);
       matchEventDispatcher.postMatchEnd(event);
     }
   }

@@ -16,7 +16,7 @@ public interface MatchViewModel {
 
   LiveData<MatchEndMessage> onEndMessage();
 
-  void match(GameActivity gameActivity, GameType gameType);
+  void match(String playerName, GameType gameType);
 
   boolean readUserMove(Coordinates coordinate);
 }

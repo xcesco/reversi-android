@@ -48,7 +48,7 @@ public class NetworkClientImpl implements NetworkClient {
     final String webSocketBaseUrl = serverUrl.replace("https", "wss");
     OkHttpClient httpClient = HttpClientBuilder.buildHttpClient();
 
-    objectMapper = buildObjectMapper();
+    objectMapper = JSONMapperFactory.createMapper();
 
     Retrofit retrofitJackson = new Retrofit.Builder()
             .baseUrl(serverUrl)
@@ -65,17 +65,6 @@ public class NetworkClientImpl implements NetworkClient {
     return stompMessage.getStompHeaders()
             .stream().filter(header -> key.equals(header.getKey()))
             .findFirst().map(StompHeader::getValue).orElse(null);
-  }
-
-  public ObjectMapper getObjectMapper() {
-    return objectMapper;
-  }
-
-  private ObjectMapper buildObjectMapper() {
-    ObjectMapper objectMapper = JSONMapperFactory.createMapper();
-    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-    return objectMapper;
   }
 
   public void disconnect() {
@@ -144,7 +133,8 @@ public class NetworkClientImpl implements NetworkClient {
 
   private Flowable<StompMessage> observeUserStatus(ConnectedUser user) {
     Timber.d("%s observer %s", user.getName(), StompConstants.WS_USER_STATUS_REPLY);
-    return stompClient.topic(StompConstants.WS_USER_STATUS_REPLY)
+    return stompClient
+            .topic(StompConstants.WS_USER_STATUS_REPLY)
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.computation());
   }
@@ -211,6 +201,8 @@ public class NetworkClientImpl implements NetworkClient {
     watchUserStatusDisposable.dispose();
     watchMatchDisposable.dispose();
     sendUserNotReadyDisposable.dispose();
+
+    this.disconnect();
   }
 
   private Disposable watchUserStatus(ConnectedUser user,
@@ -219,7 +211,7 @@ public class NetworkClientImpl implements NetworkClient {
                                      final CompletableFuture<ConnectedUser> userInGameFuture,
                                      final CompletableFuture<ConnectedUser> userNotReadyCompletable) {
     return observeUserStatus(user).subscribe(stompMessage -> {
-      ConnectedUser userChanged = getObjectMapper().readValue(stompMessage.getPayload(), ConnectedUser.class);
+      ConnectedUser userChanged = objectMapper.readValue(stompMessage.getPayload(), ConnectedUser.class);
       Timber.i("%s receives user status is %s", userChanged.getName(), userChanged.getStatus());
 
       switch (userChanged.getStatus()) {

@@ -1,0 +1,32 @@
+{
+  "matches": [
+    {
+      "player1": "BOT",
+      "player2": "xcesco",
+      "gameStatus": "PLAYER1_WIN",
+      "player1Score": 20,
+      "player2Score": 2,
+      "date" : "12 gen 2020 14:30",
+      "winner": true
+    },
+    {
+      "player1": "BOT",
+      "player2": "xcesco",
+      "gameStatus": "PLAYER1_WIN",
+      "player1Score": 40,
+      "player2Score": 20,
+      "date" : "12 feb 2020 14:30",
+      "winner": false
+    },
+    {
+      "player1": "BOT",
+      "player2": "xcesco",
+      "gameStatus": "PLAYER2_WIN",
+      "player1Score": 20,
+      "player2Score": 40,
+      "date" : "12 giu 2020 14:30",
+      "winner": true
+    }
+
+  ]
+}

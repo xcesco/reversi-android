@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android.viewmodels;
+package it.fmt.games.reversi.android.viewmodels.support;
 
 import androidx.core.util.Pair;
 import androidx.lifecycle.LiveData;
@@ -20,9 +20,9 @@ import it.fmt.games.reversi.android.repositories.model.Move;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
-import it.fmt.games.reversi.android.repositories.persistence.MatchRepository;
-import it.fmt.games.reversi.android.ui.activities.GameActivity;
+import it.fmt.games.reversi.android.repositories.persistence.PlayedMatchRepository;
 import it.fmt.games.reversi.android.ui.support.GameType;
+import it.fmt.games.reversi.android.viewmodels.MatchViewModel;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Piece;
@@ -37,9 +37,9 @@ public abstract class AbstractMatchViewModel extends ViewModel implements MatchE
   }
 
   @Inject
-  MatchRepository matchRepository;
+  PlayedMatchRepository matchRepository;
 
-  protected Executor executor = Executors.newSingleThreadExecutor();
+  protected static Executor executor = Executors.newSingleThreadExecutor();
 
   private final Move userMove = new Move();
 
@@ -77,7 +77,7 @@ public abstract class AbstractMatchViewModel extends ViewModel implements MatchE
     return userMove.getCoordinates() == null || list.indexOf(userMove.getCoordinates()) == -1;
   }
 
-  public abstract void match(final GameActivity activity, GameType gameType);
+  public abstract void match(String playerName, GameType gameType);
 
   public boolean readUserMove(Coordinates coordinate) {
     boolean validMove = latestGameshot != null && latestGameshot.getAvailableMoves().getMovesActivePlayer().contains(coordinate);

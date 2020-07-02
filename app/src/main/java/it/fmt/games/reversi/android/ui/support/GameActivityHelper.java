@@ -1,5 +1,6 @@
 package it.fmt.games.reversi.android.ui.support;
 
+import android.content.Context;
 import android.view.View;
 
 import java.util.stream.IntStream;
@@ -15,20 +16,20 @@ import it.fmt.games.reversi.model.Piece;
 import it.fmt.games.reversi.model.Score;
 
 public class GameActivityHelper {
-  public static void definePieces(GameActivity activity, GameType gameType) {
-    activity.setWhitePieceDrawable(activity.getDrawable(R.drawable.white_256));
-    activity.setBlackPieceDrawable(activity.getDrawable(R.drawable.black_256));
-    activity.setRotationAngle(-90f);
+  public static void definePieces(Context context, GameContainer container, GameType gameType) {
+    container.setWhitePieceDrawable(context.getDrawable(R.drawable.white_256));
+    container.setBlackPieceDrawable(context.getDrawable(R.drawable.black_256));
+    container.setRotationAngle(-90f);
   }
 
-  public static void defineTagAndClickListeners(GameActivity gameActivity) {
-    AppGridLayout appGridLayout = gameActivity.getAppGridLayout();
+  public static void defineTagAndClickListeners(GameContainer gameContainer) {
+    AppGridLayout appGridLayout = gameContainer.getAppGridLayout();
 
     IntStream.range(0, Board.BOARD_SIZE * Board.BOARD_SIZE).forEach(index ->
     {
       Coordinates coords = Coordinates.of(index % Board.BOARD_SIZE, index / Board.BOARD_SIZE);
       View view = appGridLayout.getChildAt(coords.getRow() * Board.BOARD_SIZE + coords.getColumn());
-      view.setOnClickListener(gameActivity);
+      view.setOnClickListener(gameContainer);
       view.setTag(coords);
     });
   }
@@ -40,9 +41,9 @@ public class GameActivityHelper {
     activity.binding.player2Title.setText(text2);
   }
 
-  public static void showPlayerScore(GameActivity activity, Score score) {
-    activity.binding.tvPlayer1Score.setText("" + score.getPlayer1Score());
-    activity.binding.tvPlayer2Score.setText("" + score.getPlayer2Score());
+  public static void showPlayerScore(GameContainer container, Score score) {
+    container.setPlayer1Score("" + score.getPlayer1Score());
+    container.setPlayer2Score("" + score.getPlayer2Score());
   }
 
   private static int resolveText(Piece player, PlayerType playerType) {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:icon="@drawable/ic_settings_24">
+
+    <PreferenceCategory android:title="Main category">
+        <EditTextPreference
+            android:defaultValue="Player"
+            android:key="userName"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="Define the username in network matches"
+            android:title="Username" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
