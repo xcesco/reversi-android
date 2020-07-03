@@ -5,8 +5,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 import it.fmt.games.reversi.android.repositories.network.NetworkClient;
 import it.fmt.games.reversi.android.repositories.persistence.PlayedMatchRepository;
+import it.fmt.games.reversi.android.viewmodels.LocalMatchViewModel;
 import it.fmt.games.reversi.android.viewmodels.PlayedMatchesViewModel;
-import it.fmt.games.reversi.android.viewmodels.support.MatchEventDispatcher;
 import it.fmt.games.reversi.android.viewmodels.NetworkMatchViewModel;
 
 @Singleton
@@ -16,7 +16,9 @@ public interface AppComponent {
 
   NetworkClient provideNetworkClient();
 
-  void inject(MatchEventDispatcher matchEventDispatcher);
+  void inject(NetworkMatchViewModel viewModel);
+
+  void inject(LocalMatchViewModel viewModel);
 
   void inject(PlayedMatchesViewModel viewModel);
 }

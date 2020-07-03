@@ -1,16 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:icon="@drawable/ic_settings_24">
 
-    <PreferenceCategory android:title="Main category">
+    <PreferenceCategory
+        android:summary="@string/prefs_network_category_summary"
+        android:title="@string/prefs_network_category">
         <EditTextPreference
             android:defaultValue="Player"
-            android:key="userName"
+            android:key="prefs_network_player_name"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="Define the username in network matches"
-            android:title="Username" />
+            android:summary="@string/prefs_network_player_summary"
+            android:title="@string/prefs_network_player_title"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:summary="@string/prefs_local_category_summary"
+        android:title="@string/prefs_local_category">
+        <EditTextPreference
+            android:defaultValue="@string/default_player1_name"
+            android:key="prefs_local_player1_name"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/prefs_local_player1_summary"
+            android:title="@string/prefs_local_player1_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            android:defaultValue="@string/default_player2_name"
+            android:key="prefs_local_player2_name"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/prefs_local_player2_summary"
+            android:title="@string/prefs_local_player2_title"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            android:defaultValue="RANDOM"
+            android:entries="@array/local_cpu_entries"
+            android:entryValues="@array/local_cpu_values"
+            android:key="list_preference_1"
+            android:title="@string/prefs_local_cpu_type"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
 </PreferenceScreen>

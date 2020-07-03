@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">FMT Reversi</string>
+
+    <!-- invariant string -->
+    <string name="logo_description">logo</string>
+    <string name="match_player1_score_description">player1 punteggio</string>
+    <string name="match_player2_score_description">player2 punteggio</string>
+    <string name="match_selector_decription">selettore</string>
+    <string name="activity_title">FMT Reversi</string>
+    <string name="OK">OK</string>
+    <string name="default_player1_name">Player 1</string>
+    <string name="default_player2_name">Player 2</string>
+    <string name="match_player1_cpu">CPU</string>
+    <string name="match_player2_cpu">CPU</string>
+
+    <!-- actions -->
+    <string name="action_settings">Impostazioni</string>
+    <string name="action_check">Controlla Server</string>
+    <string name="action_played_matches">Partite giocate</string>
+    <string name="action_demo">Demo</string>
+    <string name="action_clear_played_matches_history">Cancella tutto</string>
+
+    <!-- launcher -->
+    <string name="launcher_cpu_vs_player2">CPU vs Player 2</string>
+    <string name="launcher_player1_vs_player2">Player 1 vs Player 2</string>
+    <string name="launcher_player1_vs_CPU2">Player 1 vs CPU</string>
+    <string name="launcher_cpu_vs_cpu">CPU vs CPU </string>
+    <string name="launcher_player_vs_network">player vs player remoto</string>
+
+    <!-- played matches -->
+    <string name="played_match_no_data">Nessuna partita trovata</string>
+
+    <!-- Player label -->
+    <string name="match_player1_human_description">Player 1</string>
+    <string name="match_player2_human_description">Player 2</string>
+
+    <string name="player_network">Remoto</string>
+    <string name="please_wait">Attendere prego</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="played_matches_label">Partite giocate</string>
+
+    <!-- preferences -->
+    <string name="prefs_network_category">Rete</string>
+    <string name="prefs_network_player_title">Nome del giocatore in rete</string>
+    <string name="prefs_network_player_summary">Nome del giocatore durante le partite in rete</string>
+    <string name="prefs_network_category_summary">Impostazioni per le partite in rete</string>
+    <string name="prefs_local_category">Gioco standalone</string>
+    <string name="prefs_local_player1_title">Nome player 1</string>
+    <string name="prefs_local_player2_title">Nome player 2</string>
+    <string name="prefs_local_category_summary">Impostazioni per le partite locali</string>
+    <string name="prefs_local_player1_summary">Nome del player 1 durante le partite locali</string>
+    <string name="prefs_local_player2_summary">Nome del player 2 durante le partite locali</string>
+    <string name="prefs_local_cpu_random">Scelta casuale</string>
+    <string name="prefs_local_cpu_simple">Sceglie la prima mossa</string>
+
+    <!-- dialog error -->
+    <string name="dialgo_error_title">Errore</string>
+    <string name="dialog_error_message">Si è verificato un errore durante la partita. L\'incontro verrà terminato.</string>
+    <string name="prefs_local_cpu_type">Tipo CPU</string>
+    <string name="play_another_game">Gioca un\'altra partita</string>
+    <string name="back_to_board">Torna alla scacchiera</string>
+    <string name="dialog_delete_confirmation_title">Conferma cancellazione</string>
+    <string name="dialog_delete_confirmation_message">Vuoi cancellare tutti i dati sulle partite precedenti?</string>
+    <string name="dialog_delete_confirmed_message">Tutti i dati sulle partite precedenti sono stati cancellati</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+</resources>

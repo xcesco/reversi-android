@@ -66,6 +66,10 @@ release
 - https://developer.android.com/topic/libraries/view-binding#java
 - https://stackoverflow.com/questions/60664346/what-is-the-right-way-of-android-view-binding-in-the-recyclerview-adapter-class
 
+#Navigation
+- https://developer.android.com/guide/navigation/navigation-pass-data
+- https://www.raywenderlich.com/6014-the-navigation-architecture-component-tutorial-getting-started#toc-anchor-012
+
  ## Logger
  Timber
  - https://levelup.gitconnected.com/timber-a-logging-library-for-android-56c431cd7300

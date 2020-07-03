@@ -1,3 +1,5 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="launcher_image_size">128dp</dimen>
+    <dimen name="launcher_button_horizontal_margin">64dp</dimen>
+    <dimen name="launcher_button_vertical_padding">8dp</dimen>
 </resources>

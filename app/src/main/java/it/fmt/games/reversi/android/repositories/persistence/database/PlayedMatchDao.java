@@ -2,7 +2,6 @@ package it.fmt.games.reversi.android.repositories.persistence.database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -16,6 +15,6 @@ public interface PlayedMatchDao {
   @Insert
   long insert(PlayedMatch match);
 
-  @Delete
-  void delete(PlayedMatch match);
+  @Query("DELETE FROM played_matches")
+  void deleteAll();
 }

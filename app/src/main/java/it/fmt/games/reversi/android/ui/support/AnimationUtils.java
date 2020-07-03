@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 
 import it.fmt.games.reversi.android.ui.views.GridViewItem;
 
-public abstract class AnimationHelper {
+public abstract class AnimationUtils {
     public static void animatePieceFlip(GridViewItem view, Drawable startPiece, Drawable endkPiece, int animDuration) {
         view.setImageDrawable(startPiece);
         view.setScaleY(1.0f);

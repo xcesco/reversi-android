@@ -11,12 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import java.util.Objects;
 
 import it.fmt.games.reversi.android.R;
 import it.fmt.games.reversi.android.databinding.FragmentLauncherBinding;
 import it.fmt.games.reversi.android.ui.fragments.support.FragmentUtils;
+import it.fmt.games.reversi.android.ui.support.GameType;
 
 import static androidx.navigation.fragment.NavHostFragment.findNavController;
 
@@ -35,17 +37,22 @@ public class LauncherFragment extends Fragment {
     binding = FragmentLauncherBinding.inflate(getLayoutInflater());
     View view = binding.getRoot();
 
-    binding.btnHumanVsNetwork.setOnClickListener(btn -> findNavController(this).navigate(R.id.action_settings));
-    binding.btnCPUVsHuman.setOnClickListener(btn -> findNavController(this).navigate(R.id.action_settings));
-    binding.btnHumanVsCPU.setOnClickListener(btn -> findNavController(this).navigate(R.id.action_settings));
-    binding.btnHumanVsHuman.setOnClickListener(btn -> findNavController(this).navigate(R.id.action_settings));
-    binding.btnCPUVsCPU.setOnClickListener(btn -> findNavController(this).navigate(R.id.action_settings));
+    binding.btnHumanVsNetwork.setOnClickListener(this::gotoMatch);
+    binding.btnCPUVsHuman.setOnClickListener(this::gotoMatch);
+    binding.btnHumanVsCPU.setOnClickListener(this::gotoMatch);
+    binding.btnHumanVsHuman.setOnClickListener(this::gotoMatch);
 
     FragmentUtils.configureHomeButton(requireActivity(), false);
-
     setHasOptionsMenu(true);
 
     return view;
+  }
+
+  private void gotoMatch(View view) {
+    GameType gameType = GameType.valueOf(view.getTag().toString());
+    LauncherFragmentDirections.ActionMatch action = LauncherFragmentDirections.actionMatch()
+            .setGameType(gameType);
+    findNavController(this).navigate(action);
   }
 
   @Override

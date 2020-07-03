@@ -7,15 +7,19 @@ import it.fmt.games.reversi.Player1;
 import it.fmt.games.reversi.Player2;
 import it.fmt.games.reversi.Reversi;
 import it.fmt.games.reversi.UserInputReader;
+import it.fmt.games.reversi.android.ReversiApplication;
+import it.fmt.games.reversi.android.ui.support.CpuType;
 import it.fmt.games.reversi.android.ui.support.GameType;
-import it.fmt.games.reversi.android.viewmodels.support.AbstractMatchViewModel;
-import it.fmt.games.reversi.android.viewmodels.support.AndroidRendererWrapper;
 import it.fmt.games.reversi.model.Piece;
 
 public class LocalMatchViewModel extends AbstractMatchViewModel {
 
-  public void match(String playerName, GameType gameType) {
-    Pair<Player1, Player2> players = definePlayers(Piece.PLAYER_1, gameType);
+  public LocalMatchViewModel() {
+    ReversiApplication.getInjector().inject(this);
+  }
+
+  public void match(String playerName, GameType gameType, CpuType cpuType) {
+    Pair<Player1, Player2> players = definePlayers(Piece.PLAYER_1, gameType, cpuType);
     final Player1 player1 = players.first;
     final Player2 player2 = players.second;
     final UserInputReader userInputReader = this::readPlayerMove;

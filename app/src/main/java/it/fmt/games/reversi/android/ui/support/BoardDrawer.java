@@ -14,7 +14,7 @@ import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Piece;
 
-public abstract class BoardAndroidDrawer {
+public abstract class BoardDrawer {
   public static void drawSelected(GameContainer gameContainer, Coordinates selectedCoords) {
     AppGridLayout appGridLayout = gameContainer.getAppGridLayout();
     GridViewItem view = (GridViewItem) appGridLayout.getChildAt(selectedCoords.getRow() * Board.BOARD_SIZE + selectedCoords.getColumn());
@@ -42,14 +42,14 @@ public abstract class BoardAndroidDrawer {
           break;
         case PLAYER_1:
           if (capturedMoves.indexOf(coords) >= 0) {
-            AnimationHelper.animatePieceFlip(view, whitePiece, blackPiece, 500);
+            AnimationUtils.animatePieceFlip(view, whitePiece, blackPiece, 500);
           } else {
             view.setImageDrawable(blackPiece);
           }
           break;
         case PLAYER_2:
           if (capturedMoves.indexOf(coords) >= 0) {
-            AnimationHelper.animatePieceFlip(view, blackPiece, whitePiece, 500);
+            AnimationUtils.animatePieceFlip(view, blackPiece, whitePiece, 500);
           } else {
             view.setImageDrawable(whitePiece);
           }

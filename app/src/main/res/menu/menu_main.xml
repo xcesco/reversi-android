@@ -16,4 +16,17 @@
         android:title="@string/action_settings"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/menu_check"
+        android:icon="@drawable/ic_backend_check_24"
+        android:orderInCategory="300"
+        android:title="@string/action_check"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_demo"
+        android:orderInCategory="400"
+        android:title="@string/action_demo"
+        app:showAsAction="never" />
+
 </menu>

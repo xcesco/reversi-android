@@ -11,6 +11,33 @@
     android:paddingBottom="8dp"
     tools:context=".ui.adapters.PlayedMatchAdapter">
 
+    <TextView
+        android:id="@+id/played_match_p2_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/played_match_player2"
+        app:layout_constraintStart_toStartOf="@+id/played_match_player2"
+        tools:text="@sample/matches.json/matches/player2Score" />
+
+    <TextView
+        android:id="@+id/played_match_p1_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/played_match_player1"
+        app:layout_constraintStart_toStartOf="@+id/played_match_player1"
+        tools:text="@sample/matches.json/matches/player1Score" />
+
+    <TextView
+        android:id="@+id/played_match_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="@sample/matches.json/matches/gameStatus" />
+
     <ImageView
         android:id="@+id/played_match_img"
         android:layout_width="48dp"
@@ -24,20 +51,20 @@
         android:id="@+id/played_match_player1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:textAppearance="@android:style/TextAppearance.Material.Body1"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/played_match_img"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@sample/matches.json/matches/player1" />
 
     <TextView
-        android:id="@+id/tv_vs"
+        android:id="@+id/played_match_vs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="vs"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:textAppearance="@android:style/TextAppearance.Material.Body1"
         app:layout_constraintEnd_toStartOf="@+id/played_match_player2"
         app:layout_constraintStart_toEndOf="@+id/played_match_player1"
         app:layout_constraintTop_toTopOf="parent" />
@@ -48,8 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:textAppearance="@android:style/TextAppearance.Material.Body1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_vs"
+        app:layout_constraintStart_toEndOf="@+id/played_match_vs"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@sample/matches.json/matches/player2" />
 

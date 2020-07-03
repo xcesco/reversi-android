@@ -22,4 +22,8 @@ public class PlayedMatchesViewModel extends ViewModel {
   public LiveData<List<PlayedMatch>> getAll() {
     return playedMatchRepository.getAll();
   }
+
+  public void deleteAll() {
+    playedMatchRepository.deleteAll();
+  }
 }

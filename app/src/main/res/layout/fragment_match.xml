@@ -6,20 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.PlayedMatchesFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -58,7 +44,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:contentDescription="@string/player1_score"
+                    android:contentDescription="@string/match_player1_score_description"
                     app:srcCompat="@drawable/black_256" />
 
                 <TextView
@@ -66,7 +52,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
-                    android:contentDescription="@string/player1_score"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     tools:text="0" />
@@ -84,7 +69,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:contentDescription="@string/player2_score"
+                    android:contentDescription="@string/match_player2_score_description"
                     app:srcCompat="@drawable/white_256" />
 
                 <TextView
@@ -92,7 +77,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
-                    android:contentDescription="@string/player2_score"
                     android:textColor="#4E4D4D"
                     android:textSize="20sp"
                     tools:text="0" />
@@ -117,7 +101,7 @@
                     android:id="@+id/ivPlayerSelector"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:contentDescription="@string/selector"
+                    android:contentDescription="@string/match_selector_decription"
                     android:visibility="invisible"
                     app:srcCompat="@drawable/ic_navigation"
                     tools:visibility="visible" />
@@ -143,25 +127,25 @@
                 android:id="@+id/player1Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/player1_human"
+                android:contentDescription="@string/match_player1_human_description"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/imageView2"
                 app:layout_constraintEnd_toEndOf="@+id/imageView2"
                 app:layout_constraintStart_toStartOf="@+id/imageView2"
-                tools:text="@string/player1_human" />
+                tools:text="@string/match_player1_human_description" />
 
             <TextView
                 android:id="@+id/player2Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/player2_cpu"
+                android:contentDescription="@string/match_player2_cpu"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/imageView3"
                 app:layout_constraintEnd_toEndOf="@+id/imageView3"
                 app:layout_constraintStart_toStartOf="@+id/imageView3"
-                tools:text="@string/player2_cpu" />
+                tools:text="@string/match_player2_cpu" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

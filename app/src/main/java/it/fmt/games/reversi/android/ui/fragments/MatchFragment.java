@@ -1,11 +1,8 @@
 package it.fmt.games.reversi.android.ui.fragments;
 
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -13,19 +10,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
-import java.util.Objects;
-
 import it.fmt.games.reversi.GameRenderer;
 import it.fmt.games.reversi.android.databinding.FragmentMatchBinding;
+import it.fmt.games.reversi.android.repositories.network.model.ErrorStatus;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMessageVisitor;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
 import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
 import it.fmt.games.reversi.android.ui.fragments.support.FragmentUtils;
-import it.fmt.games.reversi.android.ui.support.BoardAndroidDrawer;
-import it.fmt.games.reversi.android.ui.support.DialogHelper;
-import it.fmt.games.reversi.android.ui.support.GameActivityHelper;
+import it.fmt.games.reversi.android.ui.support.BoardDrawer;
+import it.fmt.games.reversi.android.ui.support.AppDialogUtils;
+import it.fmt.games.reversi.android.ui.support.CpuType;
+import it.fmt.games.reversi.android.ui.support.GameContainerUtils;
 import it.fmt.games.reversi.android.ui.support.GameContainer;
 import it.fmt.games.reversi.android.ui.support.GameType;
 import it.fmt.games.reversi.android.ui.views.AppGridLayout;
@@ -38,8 +35,6 @@ import it.fmt.games.reversi.model.GameStatus;
 import timber.log.Timber;
 
 public class MatchFragment extends Fragment implements MatchMessageVisitor, GameRenderer, GameContainer {
-
-  public static final String GAME_TYPE = "game_type";
   Drawable whitePieceDrawable;
   Drawable blackPieceDrawable;
   float rotationAngle;
@@ -48,6 +43,7 @@ public class MatchFragment extends Fragment implements MatchMessageVisitor, Game
   private GameType gameType;
   private PlayerType player1Type;
   private PlayerType player2Type;
+  private boolean alreadyShowError;
 
   @Override
   public View onCreateView(
@@ -57,38 +53,43 @@ public class MatchFragment extends Fragment implements MatchMessageVisitor, Game
     binding = FragmentMatchBinding.inflate(getLayoutInflater());
     View view = binding.getRoot();
 
-    String gameTypeValue = null; //getIntent().getStringExtra(GAME_TYPE);
-    gameType = GameType.valueOf(gameTypeValue);
-    GameActivityHelper.definePieces(requireActivity(), this, gameType);
-    GameActivityHelper.defineTagAndClickListeners(this);
+    gameType = MatchFragmentArgs.fromBundle(getArguments()).getGameType();
+    GameContainerUtils.definePieces(requireActivity(), this, gameType);
+    GameContainerUtils.defineTagAndClickListeners(this);
 
+    String playerName = null;
+    CpuType cpuType = null;
     if (GameType.PLAYER_VS_NETWORK == gameType) {
       viewModel = new ViewModelProvider(this).get(NetworkMatchViewModel.class);
+      playerName = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+              .getString("prefs_network_player_name", "Player");
     } else {
       viewModel = new ViewModelProvider(this).get(LocalMatchViewModel.class);
+      cpuType = CpuType.valueOf(PreferenceManager.getDefaultSharedPreferences(requireActivity())
+              .getString("prefs_local_cpu_type", CpuType.RANDOM.toString()));
     }
 
     FragmentUtils.configureHomeButton(requireActivity(), true);
 
     showWait();
-    String playerName = PreferenceManager.getDefaultSharedPreferences(requireActivity())
-            .getString("userName", "Player");
 
     viewModel.onStartMessage().observe(getViewLifecycleOwner(), this::visit);
     viewModel.onStatusMessage().observe(getViewLifecycleOwner(), this::visit);
     viewModel.onEndMessage().observe(getViewLifecycleOwner(), this::visit);
-    viewModel.match(playerName, gameType);
+    viewModel.onErrorStatus().observe(getViewLifecycleOwner(), this::onErrorStatus);
+    viewModel.match(playerName, gameType, cpuType);
 
     setHasOptionsMenu(true);
 
     return view;
   }
 
-//  @Override
-//  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//    menu.clear();
-//    super.onCreateOptionsMenu(menu, inflater);
-//  }
+  private void onErrorStatus(ErrorStatus errorStatus) {
+    if (!alreadyShowError) {
+      AppDialogUtils.showErrorDialog(this);
+      alreadyShowError = true;
+    }
+  }
 
   @Override
   public void onDestroyView() {
@@ -145,9 +146,9 @@ public class MatchFragment extends Fragment implements MatchMessageVisitor, Game
 
   @Override
   public void render(GameSnapshot gameSnapshot) {
-    GameActivityHelper.showPlayerScore(this, gameSnapshot.getScore());
+    GameContainerUtils.showPlayerScore(this, gameSnapshot.getScore());
     animatePlayerSelection();
-    BoardAndroidDrawer.draw(this, gameSnapshot, gameType);
+    BoardDrawer.draw(this, gameSnapshot, gameType);
   }
 
   @Override
@@ -187,7 +188,7 @@ public class MatchFragment extends Fragment implements MatchMessageVisitor, Game
     Timber.i("try to select %s", coordinate.toString());
     boolean validMove = viewModel.readUserMove(coordinate);
     if (validMove) {
-      BoardAndroidDrawer.drawSelected(this, coordinate);
+      BoardDrawer.drawSelected(this, coordinate);
     }
   }
 
@@ -195,7 +196,7 @@ public class MatchFragment extends Fragment implements MatchMessageVisitor, Game
   public void visit(MatchStartMessage message) {
     player1Type = message.getPlayer1Type();
     player2Type = message.getPlayer2Type();
-    GameActivityHelper.defineLabels(getActivity(), this, message);
+    GameContainerUtils.defineLabels(getActivity(), this, message);
     showIndicator();
   }
 
@@ -211,7 +212,7 @@ public class MatchFragment extends Fragment implements MatchMessageVisitor, Game
     Timber.i("finish %s - %s", message.getMessageType().toString(), status);
 
     if (status.isGameOver()) {
-      DialogHelper.showResultDialog(getActivity(), status);
+      AppDialogUtils.showResultDialog(this, status);
     }
   }
 }

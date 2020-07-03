@@ -14,26 +14,13 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activities.ReversiActivity"
-            android:label="@string/title_activity_reversi"
+            android:label="@string/activity_title"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.activities.GameActivity"
-            android:label="@string/title_activity_game"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.activities.MainActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
     </application>
 

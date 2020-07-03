@@ -18,6 +18,7 @@ import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import it.fmt.games.reversi.android.exceptions.ReversiRuntimeException;
+import it.fmt.games.reversi.android.repositories.model.ErrorEventDispatcher;
 import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMessageVisitorImpl;
@@ -41,14 +42,15 @@ import static it.fmt.games.reversi.android.repositories.network.support.MatchMes
 public class NetworkClientImpl implements NetworkClient {
   private final ObjectMapper objectMapper;
   private final WebServiceClient webServiceClient;
-  private final StompClient stompClient;
+  private final String webSocketBaseUrl;
+  private final OkHttpClient httpClient;
+  private StompClient stompClient;
   private Disposable stompDisposable;
 
   public NetworkClientImpl(final String serverUrl) {
-    final String webSocketBaseUrl = serverUrl.replace("https", "wss");
-    OkHttpClient httpClient = HttpClientBuilder.buildHttpClient();
-
-    objectMapper = JSONMapperFactory.createMapper();
+    this.webSocketBaseUrl = serverUrl.replace("https", "wss");
+    this.httpClient = HttpClientBuilder.buildHttpClient();
+    this.objectMapper = JSONMapperFactory.createMapper();
 
     Retrofit retrofitJackson = new Retrofit.Builder()
             .baseUrl(serverUrl)
@@ -56,9 +58,6 @@ public class NetworkClientImpl implements NetworkClient {
             .client(httpClient).build();
 
     webServiceClient = retrofitJackson.create(WebServiceClient.class);
-    Pair<StompClient, Disposable> stompBuildResult = StompClientBuilder.build(webSocketBaseUrl, httpClient);
-    stompClient = stompBuildResult.first;
-    stompDisposable = stompBuildResult.second;
   }
 
   public static String getHeaderValue(StompMessage stompMessage, String key) {
@@ -68,7 +67,9 @@ public class NetworkClientImpl implements NetworkClient {
   }
 
   public void disconnect() {
-    stompClient.disconnect();
+    if (stompClient != null && stompClient.isConnected()) {
+      stompClient.disconnect();
+    }
 
     if (stompDisposable != null) {
       stompDisposable.dispose();
@@ -76,18 +77,24 @@ public class NetworkClientImpl implements NetworkClient {
   }
 
 
-  public ConnectedUser connect(final UserRegistration userInfo) {
+  public ConnectedUser connect(final UserRegistration userInfo, final ErrorEventDispatcher errorEventDispatcher) {
     try {
-      connectWebSocket();
+      connectWebSocket(errorEventDispatcher);
       return webServiceClient.connect(userInfo).execute().body();
     } catch (IOException e) {
       Timber.e(e);
-      throw new ReversiRuntimeException(e);
+      // if websocket does not connect, an error is already dispatched
+      // throw new ReversiRuntimeException(e);
+      return null;
     }
+
   }
 
 
-  void connectWebSocket() {
+  void connectWebSocket(ErrorEventDispatcher errorEventDispatcher) {
+    Pair<StompClient, Disposable> stompBuildResult = StompClientBuilder.build(webSocketBaseUrl, httpClient, errorEventDispatcher);
+    stompClient = stompBuildResult.first;
+    stompDisposable = stompBuildResult.second;
     stompClient.connect();
   }
 
@@ -99,8 +106,8 @@ public class NetworkClientImpl implements NetworkClient {
       return stompClient.send(url, payload).observeOn(Schedulers.io()).subscribeOn(Schedulers.computation());
     } catch (JsonProcessingException e) {
       Timber.e(e);
+      throw new ReversiRuntimeException(e);
     }
-    return null;
   }
 
   private Disposable sendUserStatus(final ConnectedUser user, boolean ready) {

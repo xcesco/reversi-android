@@ -2,10 +2,11 @@ package it.fmt.games.reversi.android.viewmodels;
 
 import androidx.lifecycle.LiveData;
 
+import it.fmt.games.reversi.android.repositories.network.model.ErrorStatus;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
-import it.fmt.games.reversi.android.ui.activities.GameActivity;
+import it.fmt.games.reversi.android.ui.support.CpuType;
 import it.fmt.games.reversi.android.ui.support.GameType;
 import it.fmt.games.reversi.model.Coordinates;
 
@@ -16,7 +17,9 @@ public interface MatchViewModel {
 
   LiveData<MatchEndMessage> onEndMessage();
 
-  void match(String playerName, GameType gameType);
+  LiveData<ErrorStatus> onErrorStatus();
+
+  void match(String playerName, GameType gameType, CpuType cpuType);
 
   boolean readUserMove(Coordinates coordinate);
 }

@@ -40,7 +40,7 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
     ExecutorService executorService = Executors.newFixedThreadPool(2);
     executorService.submit(() -> {
-      final ConnectedUser user = client1.connect(UserRegistration.of("player2"));
+      final ConnectedUser user = client1.connect(UserRegistration.of("player2"), null);
       client1.match(user, new MatchEventListener() {
         @Override
         public void onMatchStart(MatchStartMessage event) {
@@ -56,23 +56,13 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
         public void onMatchEnd(MatchEndMessage event) {
 
         }
-      }, new NetworkMatchViewModel.CurrentPieceStorage() {
-        @Override
-        public Piece getActivePiece() {
-          return null;
-        }
-
-        @Override
-        public void setActivePiece(Piece activePiece) {
-
-        }
       });
       finish1.complete(true);
 
     });
 
     executorService.submit(() -> {
-      final ConnectedUser user = client2.connect(UserRegistration.of("player1"));
+      final ConnectedUser user = client2.connect(UserRegistration.of("player1"), null);
       client2.match(user, new MatchEventListener() {
         @Override
         public void onMatchStart(MatchStartMessage event) {
@@ -86,16 +76,6 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
         @Override
         public void onMatchEnd(MatchEndMessage event) {
-
-        }
-      }, new NetworkMatchViewModel.CurrentPieceStorage() {
-        @Override
-        public Piece getActivePiece() {
-          return null;
-        }
-
-        @Override
-        public void setActivePiece(Piece activePiece) {
 
         }
       });
@@ -123,7 +103,7 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
     ExecutorService executorService = Executors.newFixedThreadPool(2);
     executorService.submit(() -> {
-      final ConnectedUser user = client1.connect(UserRegistration.of("player1"));
+      final ConnectedUser user = client1.connect(UserRegistration.of("player1"), null);
       client1.match(user, new MatchEventListener() {
         @Override
         public void onMatchStart(MatchStartMessage event) {
@@ -137,16 +117,6 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
         @Override
         public void onMatchEnd(MatchEndMessage event) {
-
-        }
-      }, new NetworkMatchViewModel.CurrentPieceStorage() {
-        @Override
-        public Piece getActivePiece() {
-          return null;
-        }
-
-        @Override
-        public void setActivePiece(Piece activePiece) {
 
         }
       });

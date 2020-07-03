@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,6 +23,7 @@ import timber.log.Timber;
 
 @Singleton
 public class PlayedMatchRepository {
+  private final Executor executor = Executors.newSingleThreadExecutor();
 
   private final AppDatabase dataSource;
 
@@ -47,5 +50,9 @@ public class PlayedMatchRepository {
     match.winner = (assignedPiece == Piece.PLAYER_1 && gameStatus == GameStatus.PLAYER1_WIN) || (assignedPiece == Piece.PLAYER_2 && gameStatus == GameStatus.PLAYER2_WIN);
     long id = dataSource.userDao().insert(match);
     Timber.i("match inserted with id %s: ", id);
+  }
+
+  public void deleteAll() {
+    executor.execute(() -> dataSource.userDao().deleteAll());
   }
 }

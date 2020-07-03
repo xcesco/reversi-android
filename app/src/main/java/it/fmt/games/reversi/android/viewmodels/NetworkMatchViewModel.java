@@ -5,18 +5,20 @@ import javax.inject.Inject;
 import it.fmt.games.reversi.UserInputReader;
 import it.fmt.games.reversi.android.BuildConfig;
 import it.fmt.games.reversi.android.ReversiApplication;
+import it.fmt.games.reversi.android.exceptions.ReversiRuntimeException;
 import it.fmt.games.reversi.android.repositories.network.MatchEventListener;
 import it.fmt.games.reversi.android.repositories.network.NetworkClient;
 import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
+import it.fmt.games.reversi.android.repositories.network.model.ErrorStatus;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
 import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
 import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
 import it.fmt.games.reversi.android.repositories.persistence.PlayedMatchRepository;
+import it.fmt.games.reversi.android.ui.support.CpuType;
 import it.fmt.games.reversi.android.ui.support.GameType;
-import it.fmt.games.reversi.android.viewmodels.support.AbstractMatchViewModel;
-import it.fmt.games.reversi.android.viewmodels.support.MatchEventDispatcher;
+import it.fmt.games.reversi.android.repositories.model.MatchEventDispatcher;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Piece;
@@ -24,7 +26,6 @@ import it.fmt.games.reversi.model.cpu.RandomDecisionHandler;
 import timber.log.Timber;
 
 public class NetworkMatchViewModel extends AbstractMatchViewModel {
-
   @Inject
   PlayedMatchRepository playedMatchRepository;
 
@@ -36,12 +37,17 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
   }
 
   @Override
-  public void match(String playerName, GameType gameType) {
+  public void match(String playerName, GameType gameType, CpuType cpuType) {
     executor.execute(() -> {
-      final ConnectedUser user = client.connect(UserRegistration.of(playerName));
-      final UserInputReader userInputReader = this::readPlayerMove;
-      NetworkMatchEventListener listener = new NetworkMatchEventListener(this, userInputReader);
-      client.match(user, listener);
+      try {
+        final ConnectedUser user = client.connect(UserRegistration.of(playerName), NetworkMatchViewModel.this);
+        if (user == null) throw new ReversiRuntimeException();
+        final UserInputReader userInputReader = this::readPlayerMove;
+        NetworkMatchEventListener listener = new NetworkMatchEventListener(this, userInputReader);
+        client.match(user, listener);
+      } catch (Exception e) {
+        postErrorStatus(new ErrorStatus());
+      }
     });
   }
 

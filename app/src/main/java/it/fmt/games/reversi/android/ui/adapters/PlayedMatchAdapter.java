@@ -41,6 +41,9 @@ public class PlayedMatchAdapter extends CustomAdapter<PlayedMatch, PlayedMatchVi
     holder.binding.playedMatchPlayer2.setText(item.player2);
     holder.binding.playedMatchDate.setText(dateFormat.format(item.date));
     holder.binding.playedMatchImg.setImageResource(item.winner ? R.drawable.winner : R.drawable.looser);
+    holder.binding.playedMatchP1Score.setText(""+item.player1Score);
+    holder.binding.playedMatchP2Score.setText(""+item.player2Score);
+    holder.binding.playedMatchStatus.setText(item.gameStatus.toString().replace("_", " "));
   }
 
 }

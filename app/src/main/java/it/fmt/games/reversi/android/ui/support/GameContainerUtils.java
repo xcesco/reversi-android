@@ -4,18 +4,16 @@ import android.content.Context;
 import android.view.View;
 
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import it.fmt.games.reversi.android.R;
 import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
-import it.fmt.games.reversi.android.ui.activities.GameActivity;
 import it.fmt.games.reversi.android.ui.views.AppGridLayout;
 import it.fmt.games.reversi.model.Board;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.Piece;
 import it.fmt.games.reversi.model.Score;
 
-public class GameActivityHelper {
+public class GameContainerUtils {
   public static void definePieces(Context context, GameContainer container, GameType gameType) {
     container.setWhitePieceDrawable(context.getDrawable(R.drawable.white_256));
     container.setBlackPieceDrawable(context.getDrawable(R.drawable.black_256));

@@ -9,7 +9,12 @@
         android:id="@+id/matchFragment"
         android:name="it.fmt.games.reversi.android.ui.fragments.MatchFragment"
         android:label="@string/played_matches_label"
-        tools:layout="@layout/fragment_match"/>
+        tools:layout="@layout/fragment_match">
+        <argument
+            android:name="gameType"
+            app:argType="it.fmt.games.reversi.android.ui.support.GameType"
+            android:defaultValue="CPU_VS_CPU" />
+    </fragment>
     <fragment
         android:id="@+id/playedMatchesFragment"
         android:name="it.fmt.games.reversi.android.ui.fragments.PlayedMatchesFragment"
