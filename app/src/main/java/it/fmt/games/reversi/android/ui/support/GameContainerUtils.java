@@ -3,9 +3,14 @@ package it.fmt.games.reversi.android.ui.support;
 import android.content.Context;
 import android.view.View;
 
+import androidx.preference.PreferenceManager;
+
+import com.google.android.gms.common.util.Strings;
+
 import java.util.stream.IntStream;
 
 import it.fmt.games.reversi.android.R;
+import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
 import it.fmt.games.reversi.android.ui.views.AppGridLayout;
 import it.fmt.games.reversi.model.Board;
@@ -32,11 +37,11 @@ public class GameContainerUtils {
     });
   }
 
-  public static void defineLabels(GameActivity activity, PlayerType player1Type, PlayerType player2Type) {
-    int text1 = resolveText(Piece.PLAYER_1, player1Type);
-    int text2 = resolveText(Piece.PLAYER_2, player2Type);
-    activity.binding.player1Title.setText(text1);
-    activity.binding.player2Title.setText(text2);
+  public static void defineLabels(Context context, GameContainer container, MatchStartMessage message) {
+    String text1 = resolveText(context, Piece.PLAYER_1, message.getPlayer1Name(), message.getPlayer1Type());
+    String text2 = resolveText(context, Piece.PLAYER_2, message.getPlayer2Name(), message.getPlayer2Type());
+    container.setPlayer1Title(text1);
+    container.setPlayer2Title(text2);
   }
 
   public static void showPlayerScore(GameContainer container, Score score) {
@@ -44,17 +49,27 @@ public class GameContainerUtils {
     container.setPlayer2Score("" + score.getPlayer2Score());
   }
 
-  private static int resolveText(Piece player, PlayerType playerType) {
-    switch (playerType) {
+  private static String resolveText(Context context, Piece player, String name, PlayerType playerType) {
+    if (!Strings.isEmptyOrWhitespace(name)) return name;
 
+    String playerName1 = PreferenceManager.getDefaultSharedPreferences(context)
+            .getString("prefs_local_player1_name", context.getResources().getString(R.string.default_player1_name));
+    String playerName2 = PreferenceManager.getDefaultSharedPreferences(context)
+            .getString("prefs_local_player2_name", context.getResources().getString(R.string.default_player2_name));
+
+    int res;
+    switch (playerType) {
       case LOCAL_CPU:
-        return Piece.PLAYER_1 == player ? R.string.player1_cpu : R.string.player2_cpu;
+        res = Piece.PLAYER_1 == player ? R.string.match_player1_cpu : R.string.match_player2_cpu;
+        return context.getResources().getString(res);
       case NETWORK_PLAYER:
-        return R.string.player_network;
+        res = R.string.player_network;
+        return context.getResources().getString(res);
       case HUMAN_PLAYER:
       default:
-        return Piece.PLAYER_1 == player ? R.string.player1_human : R.string.player2_human;
-
+        return Piece.PLAYER_1 == player ? playerName1 : playerName2;
     }
   }
+
+
 }

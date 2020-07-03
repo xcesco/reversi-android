@@ -75,7 +75,7 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
               event.getPlayer2Name(),
               event.getPlayerId(),
               event.getMatchId(),
-              Piece.PLAYER_1);
+              assignedPiece);
       matchEventDispatcher.postMatchStart(newMessage);
     }
 

@@ -30,18 +30,13 @@ public class AndroidRendererWrapper implements GameRenderer {
     if (GameStatus.RUNNING == gameSnapshot.getStatus()) {
       if (!started) {
         started = true;
-        eventDispatcher.postMatchStart(new MatchStartMessage(player1Type, player2Type, null, null, Piece.PLAYER_1));
-        //listener.onMatchStart();
+        eventDispatcher.postMatchStart(new MatchStartMessage(player1Type, null, player2Type, null, null, null, Piece.PLAYER_1));
       }
-      //listener.onMatchPlayerMove(new MatchStatusMessage(null, null, gameSnapshot));
       eventDispatcher.postMatchMove(new MatchStatusMessage(null, null, gameSnapshot));
     } else {
-      // render final status
-      //listener.onMatchPlayerMove(new MatchStatusMessage(null, null, gameSnapshot));
       eventDispatcher.postMatchMove(new MatchStatusMessage(null, null, gameSnapshot));
       // propagate result
       eventDispatcher.postMatchEnd(new MatchEndMessage(null, null, gameSnapshot.getStatus(), gameSnapshot.getScore()));
-      //listener.onMatchEnd(new MatchEndMessage(null, null, gameSnapshot.getStatus(), gameSnapshot.getScore()));
     }
   }
 }
