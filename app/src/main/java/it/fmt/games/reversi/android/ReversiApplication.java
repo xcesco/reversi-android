@@ -33,11 +33,12 @@ public class ReversiApplication extends Application {
     private void build() {
         context = this;
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        } else {
-            Timber.plant(new CrashReportingTree());
-        }
+        Timber.plant(new Timber.DebugTree());
+//        if (BuildConfig.DEBUG) {
+//            Timber.plant(new Timber.DebugTree());
+//        } else {
+//            Timber.plant(new CrashReportingTree());
+//        }
 
         injector = DaggerAppComponent.builder().build();
     }

@@ -2,7 +2,7 @@ package it.fmt.games.reversi.android.repositories.network;
 
 import androidx.annotation.NonNull;
 
-import it.fmt.games.reversi.android.repositories.model.ErrorEventDispatcher;
+import it.fmt.games.reversi.android.viewmodels.model.ErrorEventDispatcher;
 import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
 import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
 

@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import it.fmt.games.reversi.model.Board;
 import it.fmt.games.reversi.model.Coordinates;
@@ -28,9 +26,6 @@ public abstract class JSONMapperFactory {
     module.addSerializer(Board.class, new BoardSerializer());
     module.addDeserializer(Board.class, new BoardDeserializer());
     mapper.registerModule(module);
-
-    mapper.registerModule(new Jdk8Module());
-    mapper.registerModule(new JavaTimeModule());
 
     return mapper;
   }

@@ -7,7 +7,7 @@ import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
 import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
-import it.fmt.games.reversi.android.repositories.model.MatchEventDispatcher;
+import it.fmt.games.reversi.android.viewmodels.model.MatchEventDispatcher;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.GameStatus;
 import it.fmt.games.reversi.model.Piece;

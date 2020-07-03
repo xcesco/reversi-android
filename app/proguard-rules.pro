@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+# Preserve all annotations.
+-keepattributes *Annotation*
+# Lascia inalterate tutti gli enum
+-keep class java.lang.Enum {*;}
+-keep class * extends java.lang.Enum {*;}

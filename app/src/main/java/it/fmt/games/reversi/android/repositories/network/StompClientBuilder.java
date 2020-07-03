@@ -4,7 +4,7 @@ import android.util.Pair;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import it.fmt.games.reversi.android.repositories.model.ErrorEventDispatcher;
+import it.fmt.games.reversi.android.viewmodels.model.ErrorEventDispatcher;
 import it.fmt.games.reversi.android.repositories.network.model.ErrorStatus;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;

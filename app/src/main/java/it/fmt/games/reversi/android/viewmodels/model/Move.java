@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android.repositories.model;
+package it.fmt.games.reversi.android.viewmodels.model;
 
 import it.fmt.games.reversi.model.Coordinates;
 

@@ -42,7 +42,7 @@ public abstract class AppDialogUtils {
     FragmentActivity activity = fragment.requireActivity();
 
     (new AlertDialog.Builder(activity))
-            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setIcon(R.drawable.ic_warning_24)
             .setTitle(R.string.dialgo_error_title)
             .setMessage(R.string.dialog_error_message)
             .setPositiveButton(R.string.OK, (dialog, which) -> {

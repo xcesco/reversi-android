@@ -28,5 +28,4 @@
         android:orderInCategory="400"
         android:title="@string/action_demo"
         app:showAsAction="never" />
-
 </menu>

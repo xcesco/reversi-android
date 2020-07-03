@@ -1,8 +1,7 @@
-package it.fmt.games.reversi.android.repositories.model;
+package it.fmt.games.reversi.android.viewmodels.model;
 
 import org.jetbrains.annotations.NotNull;
 
-import it.fmt.games.reversi.android.repositories.network.model.ErrorStatus;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;

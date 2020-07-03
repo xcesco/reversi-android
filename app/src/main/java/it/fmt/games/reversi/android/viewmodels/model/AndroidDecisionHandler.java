@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android.repositories.model;
+package it.fmt.games.reversi.android.viewmodels.model;
 
 import java.util.List;
 

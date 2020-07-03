@@ -5,7 +5,6 @@ import android.util.Pair;
 import androidx.annotation.NonNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -18,7 +17,7 @@ import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import it.fmt.games.reversi.android.exceptions.ReversiRuntimeException;
-import it.fmt.games.reversi.android.repositories.model.ErrorEventDispatcher;
+import it.fmt.games.reversi.android.viewmodels.model.ErrorEventDispatcher;
 import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMessageVisitorImpl;
