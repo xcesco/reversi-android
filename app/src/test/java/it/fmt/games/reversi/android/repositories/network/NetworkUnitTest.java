@@ -2,6 +2,7 @@ package it.fmt.games.reversi.android.repositories.network;
 
 import net.lachlanmckee.timberjunit.TimberTestRule;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -11,12 +12,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import it.fmt.games.reversi.android.repositories.network.model.ErrorStatus;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
 import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
 import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
 import it.fmt.games.reversi.android.viewmodels.NetworkMatchViewModel;
+import it.fmt.games.reversi.android.viewmodels.model.ErrorEventDispatcher;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.Piece;
 
@@ -40,7 +43,12 @@ public class NetworkUnitTest extends AbstractNetworkUnitTest {
 
     ExecutorService executorService = Executors.newFixedThreadPool(2);
     executorService.submit(() -> {
-      final ConnectedUser user = client1.connect(UserRegistration.of("player2"), null);
+      final ConnectedUser user = client1.connect(UserRegistration.of("player2"), new ErrorEventDispatcher() {
+        @Override
+        public void postErrorStatus(@NotNull ErrorStatus errorStatus) {
+
+        }
+      });
       client1.match(user, new MatchEventListener() {
         @Override
         public void onMatchStart(MatchStartMessage event) {

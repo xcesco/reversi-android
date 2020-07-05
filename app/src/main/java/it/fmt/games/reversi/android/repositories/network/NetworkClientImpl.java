@@ -11,21 +11,23 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import it.fmt.games.reversi.android.exceptions.ReversiRuntimeException;
-import it.fmt.games.reversi.android.viewmodels.model.ErrorEventDispatcher;
 import it.fmt.games.reversi.android.repositories.network.model.ConnectedUser;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
-import it.fmt.games.reversi.android.repositories.network.model.MatchMessageVisitorImpl;
 import it.fmt.games.reversi.android.repositories.network.model.MatchMove;
 import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
 import it.fmt.games.reversi.android.repositories.network.model.UserStatus;
 import it.fmt.games.reversi.android.repositories.network.support.HttpClientBuilder;
 import it.fmt.games.reversi.android.repositories.network.support.JSONMapperFactory;
+import it.fmt.games.reversi.android.viewmodels.model.ErrorEventDispatcher;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.Piece;
 import okhttp3.OkHttpClient;
@@ -45,11 +47,15 @@ public class NetworkClientImpl implements NetworkClient {
   private final OkHttpClient httpClient;
   private StompClient stompClient;
   private Disposable stompDisposable;
+  private final ExecutorService gameExecutor;
+  private final Scheduler gameScheduler;
 
   public NetworkClientImpl(final String serverUrl) {
     this.webSocketBaseUrl = serverUrl.replace("https", "wss");
     this.httpClient = HttpClientBuilder.buildHttpClient();
     this.objectMapper = JSONMapperFactory.createMapper();
+    this.gameExecutor = Executors.newCachedThreadPool();
+    this.gameScheduler = Schedulers.from(gameExecutor);
 
     Retrofit retrofitJackson = new Retrofit.Builder()
             .baseUrl(serverUrl)
@@ -75,7 +81,6 @@ public class NetworkClientImpl implements NetworkClient {
     }
   }
 
-
   public ConnectedUser connect(final UserRegistration userInfo, final ErrorEventDispatcher errorEventDispatcher) {
     try {
       connectWebSocket(errorEventDispatcher);
@@ -86,9 +91,7 @@ public class NetworkClientImpl implements NetworkClient {
       // throw new ReversiRuntimeException(e);
       return null;
     }
-
   }
-
 
   void connectWebSocket(ErrorEventDispatcher errorEventDispatcher) {
     Pair<StompClient, Disposable> stompBuildResult = StompClientBuilder.build(webSocketBaseUrl, httpClient, errorEventDispatcher);
@@ -102,7 +105,9 @@ public class NetworkClientImpl implements NetworkClient {
       String url = StompConstants.WS_APP_USER_DESTINATION.replace("{uuid}", userId.toString());
       String payload = objectMapper.writeValueAsString(MatchMove.of(matchId, userId, piece, move));
       Timber.i("%s send message %s", piece, payload);
-      return stompClient.send(url, payload).observeOn(Schedulers.io()).subscribeOn(Schedulers.computation());
+      return stompClient.send(url, payload)
+              .subscribeOn(gameScheduler)
+              .observeOn(gameScheduler);
     } catch (JsonProcessingException e) {
       Timber.e(e);
       throw new ReversiRuntimeException(e);
@@ -122,8 +127,8 @@ public class NetworkClientImpl implements NetworkClient {
 
     Timber.i("%s send %s to %s", user.getName(), status, url);
     return stompClient.send(url, "")
-            .observeOn(Schedulers.io())
-            .subscribeOn(Schedulers.computation())
+            .observeOn(gameScheduler)
+            .subscribeOn(gameScheduler)
             .subscribe(() -> {
               Timber.i("%s set status %s", user.getName(), status);
             });
@@ -141,77 +146,89 @@ public class NetworkClientImpl implements NetworkClient {
     Timber.d("%s observer %s", user.getName(), StompConstants.WS_USER_STATUS_REPLY);
     return stompClient
             .topic(StompConstants.WS_USER_STATUS_REPLY)
-            .observeOn(Schedulers.io())
-            .subscribeOn(Schedulers.computation());
+            .subscribeOn(gameScheduler)
+            .observeOn(gameScheduler);
   }
 
   @Override
   public void match(ConnectedUser user, @NonNull MatchEventListener listener) {
-    final MatchMessageVisitorImpl playerHandler = new NetworkPlayerHandler(this, user, listener);
+    final NetworkPlayerHandler playerHandler = new NetworkPlayerHandler(this, user, listener);
     CompletableFuture<ConnectedUser> userReadyCompletable = new CompletableFuture<>();
     CompletableFuture<ConnectedUser> userAwaitingToStartCompletable = new CompletableFuture<>();
     CompletableFuture<ConnectedUser> userInGameCompletable = new CompletableFuture<>();
     CompletableFuture<ConnectedUser> userNotReadyCompletable = new CompletableFuture<>();
 
-    // prepare user to match
-    Disposable watchUserStatusDisposable = watchUserStatus(user,
-            userReadyCompletable,
-            userAwaitingToStartCompletable,
-            userInGameCompletable,
-            userNotReadyCompletable);
-
-    final ConnectedUser player = user;
-    String url = StompConstants.WS_TOPIC_USER_MATCH_DESTINATION.replace("{uuid}", user.getId().toString());
-    Disposable watchMatchDisposable = stompClient
-            .topic(url)
-            .observeOn(Schedulers.io())
-            .subscribeOn(Schedulers.computation())
-            .subscribe(stompMessage -> parser(player, objectMapper, stompMessage, playerHandler));
-
-    Disposable sendUserReadDisposable = sendUserReady(user);
-
+    Disposable watchUserStatusDisposable = null;
+    Disposable watchMatchDisposable = null;
+    Disposable sendUserReadDisposable = null;
+    Disposable sendUserNotReadyDisposable = null;
     try {
-      // user AWAITING TO START
-      user = userAwaitingToStartCompletable.get();
-    } catch (ExecutionException | InterruptedException e) {
-      Timber.e(e);
-      throw new ReversiRuntimeException(e);
+
+      // prepare user to match
+      watchUserStatusDisposable = watchUserStatus(user,
+              userReadyCompletable,
+              userAwaitingToStartCompletable,
+              userInGameCompletable,
+              userNotReadyCompletable);
+
+      final ConnectedUser player = user;
+      String url = StompConstants.WS_TOPIC_USER_MATCH_DESTINATION.replace("{uuid}", user.getId().toString());
+      watchMatchDisposable = stompClient
+              .topic(url)
+              .subscribeOn(gameScheduler)
+              .observeOn(gameScheduler)
+              .subscribe(stompMessage -> parser(player, objectMapper, stompMessage, playerHandler));
+
+      sendUserReadDisposable = sendUserReady(user);
+
+      try {
+        // user AWAITING TO START
+        user = userAwaitingToStartCompletable.get();
+      } catch (ExecutionException | InterruptedException e) {
+        Timber.e(e);
+        throw new ReversiRuntimeException(e);
+      }
+
+      MatchEndMessage finalMessage;
+      try {
+        // match end event
+        finalMessage = playerHandler.getMatchEndMessage();
+      } catch (ExecutionException | InterruptedException e) {
+        Timber.e(e);
+        throw new ReversiRuntimeException(e);
+      }
+      Timber.i("Match finished");
+      Timber.i("%s receives result %s: %s - %s ", user.getName(),
+              finalMessage.getStatus(),
+              finalMessage.getScore().getPlayer1Score(),
+              finalMessage.getScore().getPlayer2Score());
+
+      sendUserNotReadyDisposable = sendUserNotReady(user);
+
+      try {
+        // user AWAITING TO START
+        user = userNotReadyCompletable.get();
+        Timber.i("%s has final status %s ", user.getName(), user.getStatus());
+      } catch (ExecutionException | InterruptedException e) {
+        Timber.e(e);
+        throw new ReversiRuntimeException(e);
+      }
+
+    } finally {
+      if (sendUserReadDisposable != null) sendUserReadDisposable.dispose();
+      if (watchUserStatusDisposable != null) watchUserStatusDisposable.dispose();
+      if (watchMatchDisposable != null) watchMatchDisposable.dispose();
+      if (sendUserNotReadyDisposable != null) sendUserNotReadyDisposable.dispose();
     }
-
-    MatchEndMessage finalMessage;
-    try {
-      // match end event
-      finalMessage = playerHandler.getMatchEndMessage();
-    } catch (ExecutionException | InterruptedException e) {
-      Timber.e(e);
-      throw new ReversiRuntimeException(e);
-    }
-    Timber.i("Match finished");
-    Timber.i("%s receives result %s: %s - %s ", user.getName(),
-            finalMessage.getStatus(),
-            finalMessage.getScore().getPlayer1Score(),
-            finalMessage.getScore().getPlayer2Score());
-
-    Disposable sendUserNotReadyDisposable = sendUserNotReady(user);
-
-    try {
-      // user AWAITING TO START
-      user = userNotReadyCompletable.get();
-      Timber.i("%s has final status %s ", user.getName(), user.getStatus());
-    } catch (ExecutionException | InterruptedException e) {
-      Timber.e(e);
-      throw new ReversiRuntimeException(e);
-    }
-
-    sendUserReadDisposable.dispose();
-    watchUserStatusDisposable.dispose();
-    watchMatchDisposable.dispose();
-    sendUserNotReadyDisposable.dispose();
-
     this.disconnect();
   }
 
-  private Disposable watchUserStatus(ConnectedUser user,
+  @Override
+  public void executeAsync(Runnable task) {
+    this.gameExecutor.submit(task);
+  }
+
+  private Disposable watchUserStatus(final ConnectedUser user,
                                      final CompletableFuture<ConnectedUser> userReadyCompletable,
                                      final CompletableFuture<ConnectedUser> userAwaitingToStartCompletable,
                                      final CompletableFuture<ConnectedUser> userInGameFuture,

@@ -10,6 +10,7 @@ import it.fmt.games.reversi.UserInputReader;
 import it.fmt.games.reversi.android.ReversiApplication;
 import it.fmt.games.reversi.android.ui.support.CpuType;
 import it.fmt.games.reversi.android.ui.support.GameType;
+import it.fmt.games.reversi.android.viewmodels.model.AndroidRendererWrapper;
 import it.fmt.games.reversi.model.Piece;
 
 public class LocalMatchViewModel extends AbstractMatchViewModel {

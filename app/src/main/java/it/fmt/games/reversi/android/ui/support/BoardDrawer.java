@@ -32,10 +32,13 @@ public abstract class BoardDrawer {
     gameSnapshot.getBoard().getCellStream().forEach(item -> {
       Coordinates coords = item.getCoordinates();
       GridViewItem view = (GridViewItem) appGridLayout.getChildAt(coords.getRow() * Board.BOARD_SIZE + coords.getColumn());
+      // only in available moves we found the coords
+      view.setTag(null);
       switch (item.getPiece()) {
         case EMPTY:
           if (showHints && availableMoves.indexOf(coords) >= 0) {
             view.setImageResource(R.drawable.hint_256);
+            view.setTag(coords);
           } else {
             view.setImageResource(R.drawable.transparent);
           }
@@ -56,6 +59,17 @@ public abstract class BoardDrawer {
           break;
       }
     });
+  }
+
+  public static void removeHints(GameContainer container) {
+    AppGridLayout appGridLayout = container.getAppGridLayout();
+    for (int i = 0; i < appGridLayout.getChildCount(); i++) {
+      GridViewItem view = (GridViewItem) appGridLayout.getChildAt(i);
+      if (view.getTag() != null) {
+        view.setTag(null);
+        view.setImageResource(R.drawable.transparent);
+      }
+    }
   }
 
   private static boolean showHints(GameContainer container, Piece activePiece, GameType gameType) {

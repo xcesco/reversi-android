@@ -32,7 +32,7 @@ import timber.log.Timber;
 public abstract class AbstractMatchViewModel extends ViewModel implements MatchEventDispatcher, MatchViewModel {
   private GameSnapshot latestGameshot;
 
-  protected ExecutorService executor = Executors.newSingleThreadExecutor();
+  protected ExecutorService executor = Executors.newCachedThreadPool();
 
   private final Move userMove = new Move();
 

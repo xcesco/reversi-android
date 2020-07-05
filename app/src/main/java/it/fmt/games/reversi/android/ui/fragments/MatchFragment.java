@@ -183,12 +183,14 @@ public class MatchFragment extends Fragment implements MatchMessageVisitor, Game
 
   @Override
   public void onClick(View v) {
-    Coordinates coordinate = (Coordinates) v.getTag();
+    if (v.getTag() != null) {
+      Coordinates coordinate = (Coordinates) v.getTag();
 
-    Timber.i("try to select %s", coordinate.toString());
-    boolean validMove = viewModel.readUserMove(coordinate);
-    if (validMove) {
-      BoardDrawer.drawSelected(this, coordinate);
+      Timber.i("try to select %s", coordinate.toString());
+      boolean validMove = viewModel.readUserMove(coordinate);
+      if (validMove) {
+        BoardDrawer.drawSelected(this, coordinate);
+      }
     }
   }
 
@@ -210,7 +212,7 @@ public class MatchFragment extends Fragment implements MatchMessageVisitor, Game
   public void visit(MatchEndMessage message) {
     GameStatus status = message.getStatus();
     Timber.i("finish %s - %s", message.getMessageType().toString(), status);
-
+    BoardDrawer.removeHints(this);
     if (status.isGameOver()) {
       AppDialogUtils.showResultDialog(this, status);
     }

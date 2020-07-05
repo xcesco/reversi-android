@@ -38,19 +38,22 @@ public class NetworkPlayerHandler extends MatchMessageVisitorImpl {
     GameSnapshot gameSnapshot = message.getGameSnapshot();
     Piece playerPiece = gameSnapshot.getActivePiece();
 
-    Coordinates move = listener.onMatchPlayerMove(message);
-    if (gameSnapshot.getStatus() == GameStatus.RUNNING) {
-      if (gameSnapshot.getActivePiece() == assignedPiece && gameSnapshot.getAvailableMoves().getMovesActivePlayer().size() > 0) {
-        Timber.i("user %s decides to move on %s", playerPiece, move);
-        client.sendMatchMove(message.getPlayerId(), gameSnapshot.getActivePiece(), message.getMatchId(), move).subscribe();
+    // needed to avoid blocks
+    client.executeAsync(() -> {
+      Coordinates move = listener.onMatchPlayerMove(message);
+      if (gameSnapshot.getStatus() == GameStatus.RUNNING) {
+        if (move != null && gameSnapshot.getActivePiece() == assignedPiece && gameSnapshot.getAvailableMoves().getMovesActivePlayer().size() > 0) {
+          Timber.i("user %s decides to move on %s", playerPiece, move);
+          client.sendMatchMove(message.getPlayerId(), gameSnapshot.getActivePiece(), message.getMatchId(), move).subscribe();
+        } else {
+          Timber.i("user %s do nothing", user.getName());
+        }
       } else {
-        Timber.i("user %s do nothing", user.getName());
+        Timber.i("user %s detects match has status %s",
+                playerPiece, gameSnapshot.getStatus()
+        );
       }
-    } else {
-      Timber.i("user %s detects match has status %s",
-              playerPiece, gameSnapshot.getStatus()
-      );
-    }
+    });
   }
 
   @Override

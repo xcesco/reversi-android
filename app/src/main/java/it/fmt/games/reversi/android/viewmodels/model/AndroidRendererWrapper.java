@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android.viewmodels;
+package it.fmt.games.reversi.android.viewmodels.model;
 
 import it.fmt.games.reversi.GameRenderer;
 import it.fmt.games.reversi.Player1;

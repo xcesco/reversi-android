@@ -38,11 +38,12 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
 
   @Override
   public void match(String playerName, GameType gameType, CpuType cpuType) {
+    final UserInputReader userInputReader = this::readPlayerMove;
+
     executor.execute(() -> {
       try {
         final ConnectedUser user = client.connect(UserRegistration.of(playerName), NetworkMatchViewModel.this);
         if (user == null) throw new ReversiRuntimeException();
-        final UserInputReader userInputReader = this::readPlayerMove;
         NetworkMatchEventListener listener = new NetworkMatchEventListener(this, userInputReader);
         client.match(user, listener);
       } catch (Exception e) {
@@ -50,7 +51,6 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
       }
     });
   }
-
 
   class NetworkMatchEventListener implements MatchEventListener {
     private final MatchEventDispatcher matchEventDispatcher;
@@ -86,9 +86,9 @@ public class NetworkMatchViewModel extends AbstractMatchViewModel {
       matchEventDispatcher.postMatchMove(event);
 
       if (assignedPiece == gameSnapshot.getActivePiece() && gameSnapshot.getAvailableMoves().isAvailableMovesForActivePlayer()) {
-        RandomDecisionHandler handler = new RandomDecisionHandler();
         Coordinates move;
         if (BuildConfig.AUTOMATIC_NETWORK_PLAYER) {
+          RandomDecisionHandler handler = new RandomDecisionHandler();
           move = handler.compute(gameSnapshot.getAvailableMoves().getMovesActivePlayer());
         } else {
           move = userInputReader.readInputFor(null,

@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 import it.fmt.games.reversi.android.R;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
+import it.fmt.games.reversi.android.ui.fragments.MatchFragment;
 import it.fmt.games.reversi.android.ui.views.AppGridLayout;
 import it.fmt.games.reversi.model.Board;
 import it.fmt.games.reversi.model.Coordinates;
@@ -33,7 +34,6 @@ public class GameContainerUtils {
       Coordinates coords = Coordinates.of(index % Board.BOARD_SIZE, index / Board.BOARD_SIZE);
       View view = appGridLayout.getChildAt(coords.getRow() * Board.BOARD_SIZE + coords.getColumn());
       view.setOnClickListener(gameContainer);
-      view.setTag(coords);
     });
   }
 
@@ -70,6 +70,5 @@ public class GameContainerUtils {
         return Piece.PLAYER_1 == player ? playerName1 : playerName2;
     }
   }
-
 
 }

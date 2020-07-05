@@ -11,5 +11,7 @@ public interface NetworkClient {
 
   void match(ConnectedUser user, @NonNull MatchEventListener listener);
 
+  void executeAsync(Runnable task);
+
   void disconnect();
 }
