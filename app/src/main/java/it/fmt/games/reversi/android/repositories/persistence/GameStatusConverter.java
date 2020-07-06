@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android.repositories.persistence.database;
+package it.fmt.games.reversi.android.repositories.persistence;
 
 import androidx.room.TypeConverter;
 

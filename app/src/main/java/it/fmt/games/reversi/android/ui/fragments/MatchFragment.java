@@ -21,7 +21,7 @@ import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
 import it.fmt.games.reversi.android.ui.fragments.support.FragmentUtils;
 import it.fmt.games.reversi.android.ui.support.BoardDrawer;
 import it.fmt.games.reversi.android.ui.support.AppDialogUtils;
-import it.fmt.games.reversi.android.ui.support.CpuType;
+import it.fmt.games.reversi.android.viewmodels.model.CpuType;
 import it.fmt.games.reversi.android.ui.support.GameContainerUtils;
 import it.fmt.games.reversi.android.ui.support.GameContainer;
 import it.fmt.games.reversi.android.ui.support.GameType;

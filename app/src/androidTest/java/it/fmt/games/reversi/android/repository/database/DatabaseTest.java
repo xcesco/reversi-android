@@ -12,8 +12,8 @@ import org.junit.runner.RunWith;
 import java.util.Date;
 
 import it.fmt.games.reversi.android.ReversiApplication;
-import it.fmt.games.reversi.android.repositories.persistence.database.AppDatabase;
-import it.fmt.games.reversi.android.repositories.persistence.database.PlayedMatch;
+import it.fmt.games.reversi.android.repositories.persistence.AppDatabase;
+import it.fmt.games.reversi.android.repositories.persistence.PlayedMatch;
 import it.fmt.games.reversi.model.GameStatus;
 import timber.log.Timber;
 

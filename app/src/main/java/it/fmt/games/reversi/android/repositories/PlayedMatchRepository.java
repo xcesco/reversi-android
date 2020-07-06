@@ -1,4 +1,4 @@
-package it.fmt.games.reversi.android.repositories.persistence;
+package it.fmt.games.reversi.android.repositories;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Room;
@@ -14,8 +14,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import it.fmt.games.reversi.android.ReversiApplication;
-import it.fmt.games.reversi.android.repositories.persistence.database.AppDatabase;
-import it.fmt.games.reversi.android.repositories.persistence.database.PlayedMatch;
+import it.fmt.games.reversi.android.repositories.persistence.AppDatabase;
+import it.fmt.games.reversi.android.repositories.persistence.PlayedMatch;
 import it.fmt.games.reversi.model.GameStatus;
 import it.fmt.games.reversi.model.Piece;
 import it.fmt.games.reversi.model.Score;

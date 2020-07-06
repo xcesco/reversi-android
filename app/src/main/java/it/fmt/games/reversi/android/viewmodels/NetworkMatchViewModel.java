@@ -15,8 +15,8 @@ import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
 import it.fmt.games.reversi.android.repositories.network.model.PlayerType;
 import it.fmt.games.reversi.android.repositories.network.model.UserRegistration;
-import it.fmt.games.reversi.android.repositories.persistence.PlayedMatchRepository;
-import it.fmt.games.reversi.android.ui.support.CpuType;
+import it.fmt.games.reversi.android.repositories.PlayedMatchRepository;
+import it.fmt.games.reversi.android.viewmodels.model.CpuType;
 import it.fmt.games.reversi.android.ui.support.GameType;
 import it.fmt.games.reversi.android.viewmodels.model.MatchEventDispatcher;
 import it.fmt.games.reversi.model.Coordinates;

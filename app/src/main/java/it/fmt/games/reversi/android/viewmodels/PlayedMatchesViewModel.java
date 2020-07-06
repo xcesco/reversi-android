@@ -8,8 +8,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import it.fmt.games.reversi.android.ReversiApplication;
-import it.fmt.games.reversi.android.repositories.persistence.PlayedMatchRepository;
-import it.fmt.games.reversi.android.repositories.persistence.database.PlayedMatch;
+import it.fmt.games.reversi.android.repositories.PlayedMatchRepository;
+import it.fmt.games.reversi.android.repositories.persistence.PlayedMatch;
 
 public class PlayedMatchesViewModel extends ViewModel {
   @Inject

@@ -2,7 +2,6 @@ package it.fmt.games.reversi.android.ui.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,7 +13,7 @@ import java.util.Locale;
 
 import it.fmt.games.reversi.android.R;
 import it.fmt.games.reversi.android.databinding.PlayedMatchItemBinding;
-import it.fmt.games.reversi.android.repositories.persistence.database.PlayedMatch;
+import it.fmt.games.reversi.android.repositories.persistence.PlayedMatch;
 
 public class PlayedMatchAdapter extends CustomAdapter<PlayedMatch, PlayedMatchViewHolder> {
 

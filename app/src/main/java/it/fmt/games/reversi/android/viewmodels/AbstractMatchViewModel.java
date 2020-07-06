@@ -21,7 +21,7 @@ import it.fmt.games.reversi.android.repositories.network.model.ErrorStatus;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
-import it.fmt.games.reversi.android.ui.support.CpuType;
+import it.fmt.games.reversi.android.viewmodels.model.CpuType;
 import it.fmt.games.reversi.android.ui.support.GameType;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;

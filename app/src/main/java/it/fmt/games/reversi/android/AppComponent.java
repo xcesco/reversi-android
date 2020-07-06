@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import it.fmt.games.reversi.android.repositories.network.NetworkClient;
-import it.fmt.games.reversi.android.repositories.persistence.PlayedMatchRepository;
+import it.fmt.games.reversi.android.repositories.PlayedMatchRepository;
 import it.fmt.games.reversi.android.viewmodels.LocalMatchViewModel;
 import it.fmt.games.reversi.android.viewmodels.PlayedMatchesViewModel;
 import it.fmt.games.reversi.android.viewmodels.NetworkMatchViewModel;
