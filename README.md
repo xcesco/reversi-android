@@ -4,7 +4,9 @@
 
 # Reversi for Android
 This is the Android version of the project <a href="https://github.com/xcesco/reversi">fmt-reversi</a>. More information
-on main project can be found at <a href="https://github.com/xcesco/reversi">reversi github</a> repository. 
+on main project can be found at <a href="https://github.com/xcesco/reversi">reversi github</a> repository.
+
+This client supports network games! It's possible to play with your friends.. everyone from his device!
 
 ## The game
 There are different set of rules applied to Reversi. Our project take its from [Wikipedia](https://en.wikipedia.org/wiki/Reversi) 
@@ -18,11 +20,6 @@ To compile the project you need:
  
 Use Android Studio github integration to clone and import the project.
 
-## Used libraries and frameworks
-In addition to the standard libraries, I used the following libraries in this project:
-
- - [butterknife](https://jakewharton.github.io/butterknife/)
-
 ## Store availability
 Game is available on [Play store](https://play.google.com/store/apps/details?id=it.fmt.games.reversi.android)
 
@@ -35,46 +32,25 @@ Game is available on [Play store](https://play.google.com/store/apps/details?id=
  </row>
  </table>
 
+ ### How to get certifcate sha
+How to extract shar1 from certificate in Android Studio
+ https://stackoverflow.com/questions/27609442/how-to-get-the-sha-1-fingerprint-certificate-in-android-studio-for-debug-mode
+
  ## Used libraries
- - https://square.github.io/retrofit/
- - https://square.github.io/okhttp/
- dagger
-
- ### Scarlet
- https://proandroiddev.com/websockets-with-scarlet-7d3e2235dc03
-
- https://github.com/NaikSoftware/StompProtocolAndroid
- https://stackoverflow.com/questions/41675194/is-it-possible-to-use-stomp-with-okhttp3-websocket
-
- ## Google Game Service
- https://developers.google.com/games/services/console/enabling
-
- 886691898919-ck0lcchsjt5s90ovr1a3g21afbehqvle.apps.googleusercontent.com
-
-### How to get certifcate sha
-https://stackoverflow.com/questions/27609442/how-to-get-the-sha-1-fingerprint-certificate-in-android-studio-for-debug-mode
-debug
-B1:B0:5B:41:EA:08:48:14:2E:A8:D4:AC:F9:17:F0:A8:04:4B:2E:07
-release
-42:01:E6:E7:B1:29:63:E0:B0:50:27:87:41:BC:C2:79:E8:D6:61:A7
-
- ### Firebase Analytics
- ### Firebase Crashlytics
-- https://firebase.google.com/docs/crashlytics/get-started?authuser=0&platform=android
-
-#ViewBinding
-- https://developer.android.com/topic/libraries/view-binding#java
-- https://stackoverflow.com/questions/60664346/what-is-the-right-way-of-android-view-binding-in-the-recyclerview-adapter-class
-
-#Navigation
-- https://developer.android.com/guide/navigation/navigation-pass-data
-- https://www.raywenderlich.com/6014-the-navigation-architecture-component-tutorial-getting-started#toc-anchor-012
-
- ## Logger
- Timber
- - https://levelup.gitconnected.com/timber-a-logging-library-for-android-56c431cd7300
- - https://github.com/JakeWharton/timber
- - https://github.com/JakeWharton/timber/blob/dd94a22/timber-sample/src/main/java/com/example/timber/ExampleApp.java
-
-Timber on JUNIT
-- https://github.com/LachlanMcKee/timber-junit-rule
+ - Retrofit: https://square.github.io/retrofit/
+ - Okhttp: https://square.github.io/okhttp/
+ - Websocket & STOMP protocol: https://github.com/NaikSoftware/StompProtocolAndroid
+ - ViewBinding:
+    - https://developer.android.com/topic/libraries/view-binding#java
+    - https://stackoverflow.com/questions/60664346/what-is-the-right-way-of-android-view-binding-in-the-recyclerview-adapter-class
+ - Daggger: https://github.com/google/dagger
+ - Navigation component:
+    - https://developer.android.com/guide/navigation/navigation-pass-data
+    - https://www.raywenderlich.com/6014-the-navigation-architecture-component-tutorial-getting-started#toc-anchor-012
+ - ModelView & Live data components: https://developer.android.com/topic/libraries/architecture/livedata
+ - Timber:
+    - https://levelup.gitconnected.com/timber-a-logging-library-for-android-56c431cd7300
+    - https://github.com/JakeWharton/timber
+    - https://github.com/JakeWharton/timber/blob/dd94a22/timber-sample/src/main/java/com/example/timber/ExampleApp.java
+    - https://github.com/LachlanMcKee/timber-junit-rule
+ - Firebase: https://firebase.google.com/docs/crashlytics/get-started?authuser=0&platform=android
