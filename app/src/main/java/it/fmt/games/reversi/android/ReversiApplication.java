@@ -34,11 +34,11 @@ public class ReversiApplication extends Application {
         context = this;
 
         Timber.plant(new Timber.DebugTree());
-//        if (BuildConfig.DEBUG) {
-//            Timber.plant(new Timber.DebugTree());
-//        } else {
-//            Timber.plant(new CrashReportingTree());
-//        }
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        } else {
+            Timber.plant(new CrashReportingTree());
+        }
 
         injector = DaggerAppComponent.builder().build();
     }

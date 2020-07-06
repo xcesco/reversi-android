@@ -2,6 +2,8 @@ package it.fmt.games.reversi.android.viewmodels;
 
 import androidx.core.util.Pair;
 
+import java.util.concurrent.Executors;
+
 import it.fmt.games.reversi.GameRenderer;
 import it.fmt.games.reversi.Player1;
 import it.fmt.games.reversi.Player2;
@@ -26,7 +28,7 @@ public class LocalMatchViewModel extends AbstractMatchViewModel {
     final UserInputReader userInputReader = this::readPlayerMove;
     final GameRenderer gamerRendererWrapper = new AndroidRendererWrapper(this, player1, player2);
 
-    executor.execute(() -> {
+    Executors.newSingleThreadExecutor().submit(() -> {
       Reversi reversi = new Reversi(gamerRendererWrapper, userInputReader, player1, player2);
       reversi.play();
     });

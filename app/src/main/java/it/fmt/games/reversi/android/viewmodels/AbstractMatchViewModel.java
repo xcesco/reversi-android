@@ -8,21 +8,19 @@ import androidx.lifecycle.ViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import it.fmt.games.reversi.Player1;
 import it.fmt.games.reversi.Player2;
 import it.fmt.games.reversi.PlayerFactory;
-import it.fmt.games.reversi.android.viewmodels.model.AndroidDecisionHandler;
-import it.fmt.games.reversi.android.viewmodels.model.MatchEventDispatcher;
-import it.fmt.games.reversi.android.viewmodels.model.Move;
 import it.fmt.games.reversi.android.repositories.network.model.ErrorStatus;
 import it.fmt.games.reversi.android.repositories.network.model.MatchEndMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStartMessage;
 import it.fmt.games.reversi.android.repositories.network.model.MatchStatusMessage;
-import it.fmt.games.reversi.android.viewmodels.model.CpuType;
 import it.fmt.games.reversi.android.ui.support.GameType;
+import it.fmt.games.reversi.android.viewmodels.model.AndroidDecisionHandler;
+import it.fmt.games.reversi.android.viewmodels.model.CpuType;
+import it.fmt.games.reversi.android.viewmodels.model.MatchEventDispatcher;
+import it.fmt.games.reversi.android.viewmodels.model.Move;
 import it.fmt.games.reversi.model.Coordinates;
 import it.fmt.games.reversi.model.GameSnapshot;
 import it.fmt.games.reversi.model.Piece;
@@ -30,11 +28,41 @@ import it.fmt.games.reversi.model.Player;
 import timber.log.Timber;
 
 public abstract class AbstractMatchViewModel extends ViewModel implements MatchEventDispatcher, MatchViewModel {
-  private GameSnapshot latestGameshot;
-
-  protected ExecutorService executor = Executors.newCachedThreadPool();
-
   private final Move userMove = new Move();
+  private GameSnapshot latestGameshot;
+  private MutableLiveData<MatchStartMessage> startMessageLiveData = new MutableLiveData<>();
+  private MutableLiveData<MatchEndMessage> endMessageLiveData = new MutableLiveData<>();
+  private MutableLiveData<MatchStatusMessage> statusMessageLiveData = new MutableLiveData<>();
+  private MutableLiveData<ErrorStatus> errorStatusLiveData = new MutableLiveData<>();
+
+  protected static Pair<Player1, Player2> definePlayers(Piece assignedPiece, GameType gameType, CpuType cpuType) {
+    Player1 player1 = null;
+    Player2 player2 = null;
+
+    switch (gameType) {
+      case PLAYER_VS_PLAYER:
+        player1 = PlayerFactory.createHumanPlayer1();
+        player2 = PlayerFactory.createHumanPlayer2();
+        break;
+      case PLAYER_VS_CPU:
+        player1 = PlayerFactory.createHumanPlayer1();
+        player2 = PlayerFactory.createCpuPlayer2(new AndroidDecisionHandler(cpuType));
+        break;
+      case CPU_VS_PLAYER:
+        player1 = PlayerFactory.createCpuPlayer1(new AndroidDecisionHandler(cpuType));
+        player2 = PlayerFactory.createHumanPlayer2();
+        break;
+      case CPU_VS_CPU:
+        player1 = PlayerFactory.createCpuPlayer1(new AndroidDecisionHandler(cpuType));
+        player2 = PlayerFactory.createCpuPlayer2(new AndroidDecisionHandler(cpuType));
+        break;
+      case PLAYER_VS_NETWORK:
+      default:
+        break;
+    }
+
+    return Pair.create(player1, player2);
+  }
 
   public LiveData<MatchStartMessage> onStartMessage() {
     return startMessageLiveData;
@@ -51,11 +79,6 @@ public abstract class AbstractMatchViewModel extends ViewModel implements MatchE
   public LiveData<ErrorStatus> onErrorStatus() {
     return errorStatusLiveData;
   }
-
-  private MutableLiveData<MatchStartMessage> startMessageLiveData = new MutableLiveData<>();
-  private MutableLiveData<MatchEndMessage> endMessageLiveData = new MutableLiveData<>();
-  private MutableLiveData<MatchStatusMessage> statusMessageLiveData = new MutableLiveData<>();
-  private MutableLiveData<ErrorStatus> errorStatusLiveData = new MutableLiveData<>();
 
   protected Coordinates readPlayerMove(Player player, List<Coordinates> list) {
     synchronized (userMove) {
@@ -88,35 +111,6 @@ public abstract class AbstractMatchViewModel extends ViewModel implements MatchE
     return true;
   }
 
-  protected static Pair<Player1, Player2> definePlayers(Piece assignedPiece, GameType gameType, CpuType cpuType) {
-    Player1 player1 = null;
-    Player2 player2 = null;
-
-    switch (gameType) {
-      case PLAYER_VS_PLAYER:
-        player1 = PlayerFactory.createHumanPlayer1();
-        player2 = PlayerFactory.createHumanPlayer2();
-        break;
-      case PLAYER_VS_CPU:
-        player1 = PlayerFactory.createHumanPlayer1();
-        player2 = PlayerFactory.createCpuPlayer2(new AndroidDecisionHandler(cpuType));
-        break;
-      case CPU_VS_PLAYER:
-        player1 = PlayerFactory.createCpuPlayer1(new AndroidDecisionHandler(cpuType));
-        player2 = PlayerFactory.createHumanPlayer2();
-        break;
-      case CPU_VS_CPU:
-        player1 = PlayerFactory.createCpuPlayer1(new AndroidDecisionHandler(cpuType));
-        player2 = PlayerFactory.createCpuPlayer2(new AndroidDecisionHandler(cpuType));
-        break;
-      case PLAYER_VS_NETWORK:
-      default:
-        break;
-    }
-
-    return Pair.create(player1, player2);
-  }
-
   @Override
   public void postMatchStart(@NotNull MatchStartMessage matchStartMessage) {
     this.startMessageLiveData.postValue(matchStartMessage);
@@ -138,9 +132,4 @@ public abstract class AbstractMatchViewModel extends ViewModel implements MatchE
     this.errorStatusLiveData.postValue(errorStatus);
   }
 
-  @Override
-  protected void onCleared() {
-    super.onCleared();
-    this.executor.shutdown();
-  }
 }
