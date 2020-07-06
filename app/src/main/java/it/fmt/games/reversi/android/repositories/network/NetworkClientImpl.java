@@ -173,6 +173,7 @@ public class NetworkClientImpl implements NetworkClient {
 
       final ConnectedUser player = user;
       String url = StompConstants.WS_TOPIC_USER_MATCH_DESTINATION.replace("{uuid}", user.getId().toString());
+      // obvserve match events
       watchMatchDisposable = stompClient
               .topic(url)
               .subscribeOn(gameScheduler)
@@ -206,7 +207,7 @@ public class NetworkClientImpl implements NetworkClient {
       sendUserNotReadyDisposable = sendUserNotReady(user);
 
       try {
-        // user AWAITING TO START
+        // user return to not ready status
         user = userNotReadyCompletable.get();
         Timber.i("%s has final status %s ", user.getName(), user.getStatus());
       } catch (ExecutionException | InterruptedException e) {
